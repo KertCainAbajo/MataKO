@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
+use Illuminate\Validation\Rule;
 
 class AuthController extends Controller
 {
@@ -57,6 +58,22 @@ class AuthController extends Controller
     public function user(Request $request): JsonResponse
     {
         return response()->json(['user' => $request->user()]);
+    }
+
+    public function updateUser(Request $request): JsonResponse
+    {
+        $user = $request->user();
+        $data = $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'email', 'max:255', Rule::unique('users', 'email')->ignore($user->id)],
+            'phone' => ['nullable', 'string', 'max:20'],
+            'age' => ['required', 'integer', 'min:18', 'max:120'],
+            'role' => ['required', 'in:student,professional'],
+        ]);
+
+        $user->update($data);
+
+        return response()->json(['user' => $user->fresh()]);
     }
 
     public function logout(Request $request): JsonResponse

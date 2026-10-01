@@ -6,6 +6,7 @@ import '../services/api_service.dart';
 import '../theme/app_colors.dart';
 import 'home_screen.dart';
 import 'register_screen.dart';
+import 'welcome_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({
@@ -65,6 +66,17 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
+  void _goBack() {
+    final navigator = Navigator.of(context);
+    if (navigator.canPop()) {
+      navigator.pop();
+      return;
+    }
+    navigator.pushReplacement(
+      MaterialPageRoute<void>(builder: (_) => const WelcomeScreen()),
+    );
+  }
+
   @override
   void dispose() {
     _email.dispose();
@@ -88,7 +100,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       alignment: Alignment.centerLeft,
                       child: IconButton(
                         tooltip: context.tr('Back'),
-                        onPressed: () => Navigator.of(context).maybePop(),
+                        onPressed: _goBack,
                         icon: const Icon(Icons.arrow_back),
                         color: AppColors.navy,
                       ),
