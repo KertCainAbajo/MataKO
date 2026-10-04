@@ -9,36 +9,55 @@ use Illuminate\Support\Facades\DB;
 
 class AssessmentController extends Controller
 {
-    private const SYMPTOMS = ['Eye pain', 'Dry eyes', 'Blurred vision', 'Headache', 'Eye fatigue'];
+    // Questionnaires in the order shown in the app; they differ only in the last question.
+    // Answers are 0 (Never), 1 (Occasionally), 2 (Often or Always).
+    private const STUDENT_SYMPTOMS = [
+        'Burning sensation', 'Itchy eyes', 'Foreign body sensation', 'Watery eyes',
+        'Excessive blinking', 'Eye redness', 'Eye pain', 'Heavy eyelids',
+        'Dry eyes', 'Blurred vision', 'Double vision', 'Difficulty focusing',
+        'Light sensitivity', 'Colored halos', 'Worsening vision', 'Worsening vision (Q16)',
+    ];
+
+    private const PROFESSIONAL_SYMPTOMS = [
+        'Burning sensation', 'Itchy eyes', 'Foreign body sensation', 'Watery eyes',
+        'Excessive blinking', 'Eye redness', 'Eye pain', 'Heavy eyelids',
+        'Dry eyes', 'Blurred vision', 'Double vision', 'Difficulty focusing',
+        'Light sensitivity', 'Colored halos', 'Worsening vision', 'Headache',
+    ];
 
     public function store(Request $request): JsonResponse
     {
+        $symptoms = $request->user()->role === 'professional' ? self::PROFESSIONAL_SYMPTOMS : self::STUDENT_SYMPTOMS;
+        $maxAnswer = 2;
+
         $data = $request->validate([
-            'answers' => ['required', 'array', 'size:5'],
-            'answers.*' => ['required', 'integer', 'between:0,3'],
+            'answers' => ['required', 'array', 'size:'.count($symptoms)],
+            'answers.*' => ['required', 'integer', 'between:0,'.$maxAnswer],
         ]);
 
         // Require one answer for each known symptom, so incomplete forms cannot be scored.
         $answers = $data['answers'];
-        $missing = array_diff(self::SYMPTOMS, array_keys($answers));
-        $unknown = array_diff(array_keys($answers), self::SYMPTOMS);
+        $missing = array_diff($symptoms, array_keys($answers));
+        $unknown = array_diff(array_keys($answers), $symptoms);
         if ($missing || $unknown) {
             return response()->json([
-                'message' => 'Answer each of the five listed symptoms.',
-                'errors' => ['answers' => ['Answer each of the five listed symptoms.']],
+                'message' => 'Answer each of the listed questions.',
+                'errors' => ['answers' => ['Answer each of the listed questions.']],
             ], 422);
         }
 
+        // Low up to a third of the maximum score, medium up to two thirds, high above that.
         $score = array_sum($answers);
-        $risk = $score <= 5 ? 'LOW' : ($score <= 10 ? 'MEDIUM' : 'HIGH');
+        $maxScore = count($symptoms) * $maxAnswer;
+        $risk = $score * 3 <= $maxScore ? 'LOW' : ($score * 3 <= $maxScore * 2 ? 'MEDIUM' : 'HIGH');
 
-        $assessment = DB::transaction(function () use ($request, $answers, $score, $risk) {
+        $assessment = DB::transaction(function () use ($request, $answers, $symptoms, $score, $risk) {
             $assessment = $request->user()->assessments()->create([
                 'total_score' => $score,
                 'risk_level' => $risk,
             ]);
 
-            foreach (self::SYMPTOMS as $name) {
+            foreach ($symptoms as $name) {
                 $assessment->symptoms()->create(['symptom_name' => $name, 'value' => $answers[$name]]);
             }
 
