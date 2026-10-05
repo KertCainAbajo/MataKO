@@ -8,8 +8,8 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
-use Illuminate\Validation\ValidationException;
 use Illuminate\Validation\Rule;
+use Illuminate\Validation\ValidationException;
 
 class AuthController extends Controller
 {
@@ -30,6 +30,7 @@ class AuthController extends Controller
         $data['password'] = Hash::make($data['password']);
         unset($data['password_confirmation']);
         $user = User::create($data);
+        $user->forceFill(['last_login_at' => now()])->save();
         $token = $user->createToken('mobile-app')->plainTextToken;
 
         return response()->json(['user' => $user, 'token' => $token], 201);
@@ -46,8 +47,13 @@ class AuthController extends Controller
 
         $user = User::where('email', $data['email'])->first();
         if (! $user || ! Hash::check($data['password'], $user->password)) {
-            throw ValidationException::withMessages(['email' => ['The provided credentials are incorrect.']]);
+            throw ValidationException::withMessages(['email' => [__('The provided credentials are incorrect.')]]);
         }
+        if ($user->isDisabled()) {
+            throw ValidationException::withMessages(['email' => [__('This account has been disabled. Please contact the MataKo team.')]]);
+        }
+
+        $user->forceFill(['last_login_at' => now()])->save();
 
         return response()->json([
             'user' => $user,
@@ -81,6 +87,6 @@ class AuthController extends Controller
         // Revoke only the token used for this request, leaving other signed-in devices active.
         $request->user()->currentAccessToken()->delete();
 
-        return response()->json(['message' => 'Logged out successfully.']);
+        return response()->json(['message' => __('Logged out successfully.')]);
     }
 }

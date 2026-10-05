@@ -25,6 +25,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import Slider from '@react-native-community/slider';
+import translatedStrings from './translations/strings.json';
 
 const packagerHost = Constants.expoConfig?.hostUri?.split(':')[0];
 const defaultApiHost = Platform.OS === 'android' ? '10.0.2.2' : packagerHost || '127.0.0.1';
@@ -232,7 +233,32 @@ function useCountdown(total, onDone) {
     stop: () => { setStatus('idle'); setRemaining(total); },
   };
 }
-// Professional Tips page. Items are [icon, icon colour, title, text].
+// Student Tips page. Items are [icon, icon colour, title, text].
+const STUDENT_TIPS = [
+  { id: 'daily', icon: 'eye', title: 'Daily Eye Care', text: 'Simple habits to keep your eyes healthy during class, study, and screen time.', items: [
+    ['water', '#2E90FA', 'Stay Hydrated', 'Drink 8 glasses of water daily to keep your eyes naturally lubricated.'],
+    ['sunny', '#F5C518', 'Wear Sunglasses', 'Protect your eyes from UV rays when outdoors, even on cloudy days.'],
+    ['moon', '#7A5AF8', 'Get Quality Sleep', 'Aim for 7–8 hours of sleep to allow your eyes to rest and recover.'],
+  ] },
+  { id: 'screen', icon: 'desktop', title: 'Screen Use', text: 'Manage screen brightness, reduce glare, and use blue light filters while studying.', items: [
+    ['time', '#16A34A', '30-30-30 Rule', 'Every 30 minutes, look at something 30 feet away for 30 seconds.'],
+    ['sunny', '#98A2B3', 'Adjust Brightness', 'Match your screen brightness to your study area so it is not brighter than the room.'],
+    ['glasses', '#2E90FA', 'Use a Blue Light Filter', 'Turn on night mode or a blue light filter during evening study sessions.'],
+  ] },
+  { id: 'study', icon: 'book', title: 'Study Habits', text: 'Prevent eye strain with proper posture, printed notes, and timed visual breaks.', items: [
+    ['body', '#2E90FA', 'Keep Good Posture', 'Sit upright with your screen slightly below eye level and about an arm’s length away.'],
+    ['document-text', '#F5C518', 'Use Printed Notes', 'Review printed notes or books when you can to give your eyes a break from screens.'],
+    ['alarm', '#E5121B', 'Take Timed Breaks', 'Rest your eyes for a few minutes after every study session or online class.'],
+  ] },
+  { id: 'lifestyle', icon: 'heart', title: 'Lifestyle & Wellness', text: 'Balance screen-heavy routines with good sleep, eye-friendly foods, and physical activity.', items: [
+    ['nutrition', '#16A34A', 'Eat Eye-Healthy Foods', 'Include carrots, leafy greens, and fish rich in omega-3 in your diet.'],
+    ['barbell', '#7A5AF8', 'Eye Exercises', 'Practice simple eye movements and focus exercises daily.'],
+    ['person', '#2E90FA', 'Regular Check-ups', 'Visit an eye doctor annually for comprehensive eye examinations.'],
+  ] },
+];
+const DEFAULT_DAILY_TIP = 'Remember to blink more often while using your screen. The 30-30-30 rule can help reduce eye strain.';
+const DEFAULT_FACTS = [['alert-circle', 'Staring at a screen reduces your blink rate by up to 60%!'], ['moon', 'Blue light exposure before sleep can delay melatonin release']];
+// Professional Tips page, same item format.
 const PROFESSIONAL_TIPS = [
   { id: 'daily', icon: 'eye', title: 'Daily Eye Care', text: 'Easy techniques to reduce eye fatigue throughout your workday.', items: [
     ['water', '#2E90FA', 'Stay Hydrated', 'Drink 8 glasses of water daily to keep your eyes naturally lubricated.'],
@@ -254,7 +280,18 @@ const PROFESSIONAL_TIPS = [
     ['person', '#2E90FA', 'Regular Check-ups', 'Visit an eye doctor annually for comprehensive eye examinations.'],
   ] },
 ];
-const maxScore = (assessment) => (assessment?.symptoms?.length === STUDENT_QUESTIONS.length ? STUDENT_QUESTIONS.length * 2 : SYMPTOMS.length * 3);
+// Assessments record their own maximum; older ones are inferred from how many answers they have.
+const maxScore = (assessment) => assessment?.max_score || (assessment?.symptoms?.length === SYMPTOMS.length ? SYMPTOMS.length * 3 : (assessment?.symptoms?.length || STUDENT_QUESTIONS.length) * 2);
+// The original five-symptom assessment, scored out of 15, keeps its old result screen.
+const isLegacyAssessment = (assessment) => maxScore(assessment) === SYMPTOMS.length * 3;
+const BUNDLED_QUESTION_IMAGES = Object.fromEntries(STUDENT_QUESTIONS.map((item, index) => [`q${index + 1}`, item.image]));
+const API_ORIGIN = API_URL.replace(/\/api\/?$/, '');
+// Questions from the server; images are either built-in mascots or files uploaded in the admin.
+const fromServerQuestions = (questions) => questions.map((item) => ({
+  symptom: item.symptom,
+  question: item.question,
+  image: item.image_path ? { uri: `${API_ORIGIN}${item.image_path}` } : BUNDLED_QUESTION_IMAGES[item.image_key] || require('./assets/images/student.png'),
+}));
 const LANGUAGES = ['English', 'Filipino', 'Cebuano'];
 
 const translations = {
@@ -266,8 +303,8 @@ const translations = {
     'Sign In': 'Mag-sign in', 'Sign Up': 'Mag-sign up', 'Email Address': 'Email Address',
     'Password': 'Password', 'Remember me': 'Tandaan ako', 'Forgot Password?': 'Nakalimutan ang password?',
     'Create Account': 'Gumawa ng account', 'Full Name': 'Buong pangalan', 'Phone Number': 'Numero ng telepono',
-    'Age': 'Edad', 'Confirm Password': 'Kumpirmahin ang password', 'Home': 'Home',
-    'Progress': 'Progreso', 'Eye Care': 'Pangangalaga sa mata', 'Tips': 'Mga payo', 'Settings': 'Settings',
+    'Age': 'Edad', 'Confirm Password': 'Kumpirmahin ang password', 'Home': 'Tahanan',
+    'Progress': 'Progreso', 'Eye Care': 'Pangangalaga sa mata', 'Tips': 'Mga payo', 'Settings': 'Mga Setting',
     'Start Self-Assessment': 'Simulan ang pagsusuri sa mata', 'Assessment History': 'Kasaysayan ng pagsusuri',
     'See my result': 'Tingnan ang resulta', 'Your result': 'Iyong resulta', 'Back to dashboard': 'Bumalik sa dashboard',
     'None': 'Wala', 'Sometimes': 'Minsan', 'Often': 'Madalas', 'Always': 'Palagi',
@@ -463,6 +500,12 @@ Object.assign(translations.Cebuano, {
 });
 
 const LanguageContext = createContext('English');
+// Interface and built-in content strings: { English: [Filipino, Cebuano] }.
+Object.entries(translatedStrings).forEach(([english, [filipino, cebuano]]) => {
+  translations.Filipino[english] ??= filipino;
+  translations.Cebuano[english] ??= cebuano;
+});
+
 // Icons follow the display theme like text does.
 function Icon({ color, ...props }) {
   return <Ionicons color={paint(color)} {...props} />;
@@ -481,6 +524,19 @@ function Text({ children, style, ...props }) {
   return <NativeText style={themedStyle} {...props}>{translateChild(children)}</NativeText>;
 }
 
+// The language chosen in the app; set while App renders so helpers outside components can use it.
+let currentLanguage = 'English';
+const LANGUAGE_CODES = { English: 'en', Filipino: 'fil', Cebuano: 'ceb' };
+const translate = (value) => translations[currentLanguage]?.[value] || value;
+const dateLocale = () => ({ Filipino: 'fil-PH', Cebuano: 'ceb-PH' })[currentLanguage] || 'en-US';
+const formatDate = (value, options) => {
+  try { return new Date(value).toLocaleDateString(dateLocale(), options); } catch { return new Date(value).toLocaleDateString('en-US', options); }
+};
+// Adds translations sent by the server (for content admins edit) to the app's dictionary.
+const mergeTranslations = (incoming) => {
+  ['Filipino', 'Cebuano'].forEach((language) => Object.assign(translations[language], incoming?.[language] || {}));
+};
+
 async function request(path, { token, method = 'GET', body } = {}) {
   let response;
   try {
@@ -488,18 +544,21 @@ async function request(path, { token, method = 'GET', body } = {}) {
       method,
       headers: {
         Accept: 'application/json',
+        'Accept-Language': LANGUAGE_CODES[currentLanguage] || 'en',
         'Content-Type': 'application/json',
         ...(token ? { Authorization: `Bearer ${token}` } : {}),
       },
       ...(body ? { body: JSON.stringify(body) } : {}),
     });
   } catch {
-    throw new Error(`Cannot connect to Laravel at ${API_URL}. Keep the phone and computer on the same Wi-Fi, start Laravel with --host 0.0.0.0, and check that Windows allows port 8000.`);
+    throw new Error(`${translate('Cannot connect to the MataKo server. Check your internet connection and try again.')}\n\n${API_URL}`);
   }
   const data = await response.json().catch(() => ({}));
   if (!response.ok) {
     const firstErrors = data.errors ? Object.values(data.errors).flat() : [];
-    throw new Error(firstErrors[0] || data.message || 'Request failed. Please try again.');
+    const error = new Error(firstErrors[0] || data.message || translate('Request failed. Please try again.'));
+    error.status = response.status;
+    throw error;
   }
   return data;
 }
@@ -513,6 +572,9 @@ export default function App() {
   const [user, setUser] = useState(null);
   const [assessments, setAssessments] = useState([]);
   const [result, setResult] = useState(null);
+  // Loaded from the server so admins can change them; null means use the copies built into the app.
+  const [serverQuestions, setServerQuestions] = useState(null);
+  const [serverContent, setServerContent] = useState(null);
   const [legalTab, setLegalTab] = useState('Terms of Service');
   const [legalOrigin, setLegalOrigin] = useState('register');
   const [legalAccepted, setLegalAccepted] = useState(false);
@@ -522,6 +584,7 @@ export default function App() {
   // Display theme from Eye Care Settings; textContrast is a percentage where 85 is the design's default.
   const [display, setDisplay] = useState({ dark: false, highContrast: false, textContrast: 85 });
   applyTheme({ ...display, monochrome });
+  currentLanguage = language;
   const updateDisplay = (changes) => setDisplay((current) => {
     const next = { ...current, ...changes };
     AsyncStorage.setItem('matako_display', JSON.stringify(next)).catch(() => {});
@@ -668,7 +731,7 @@ export default function App() {
         setAssessments(history.assessments || []);
       })
       .catch((error) => {
-        if (error.message.includes('Unauthenticated') || error.message.includes('401')) {
+        if (error.status === 401) {
           AsyncStorage.removeItem('matako_token');
           setToken(null);
           setScreen('login');
@@ -689,7 +752,7 @@ export default function App() {
       setUser(data.user);
       return true;
     } catch (error) {
-      Alert.alert(t('Edit Profile'), error.message);
+      Alert.alert(t('Edit Profile'), t(error.message));
       return false;
     } finally { setLoading(false); }
   };
@@ -703,7 +766,7 @@ export default function App() {
       setUser(data.user);
       setScreen('home');
     } catch (error) {
-      Alert.alert(t('Sign In'), error.message);
+      Alert.alert(t('Sign In'), t(error.message));
     } finally { setLoading(false); }
   };
 
@@ -719,7 +782,7 @@ export default function App() {
       setUser(data.user);
       setScreen('welcomeNew');
     } catch (error) {
-      Alert.alert(t('Create Account'), error.message);
+      Alert.alert(t('Create Account'), t(error.message));
     } finally { setLoading(false); }
   };
 
@@ -733,6 +796,27 @@ export default function App() {
     setScreen('welcome');
   };
 
+  useEffect(() => {
+    if (!token) return undefined;
+    let active = true;
+    request('/content', { token }).then((data) => {
+      if (!active) return;
+      mergeTranslations(data.translations);
+      setServerContent(data);
+    }).catch(() => {});
+    return () => { active = false; };
+  }, [token, user?.role]);
+
+  const startAssessment = async () => {
+    setServerQuestions(null);
+    setScreen('assessment');
+    try {
+      const data = await request('/questions', { token });
+      mergeTranslations(data.translations);
+      if (data.questions?.length) setServerQuestions(fromServerQuestions(data.questions));
+    } catch {}
+  };
+
   const submitAssessment = async (answers) => {
     setLoading(true);
     try {
@@ -740,7 +824,7 @@ export default function App() {
       setResult(data);
       setScreen('result');
     } catch (error) {
-      Alert.alert(t('Self-assessment'), error.message);
+      Alert.alert(t('Self-assessment'), t(error.message));
     } finally { setLoading(false); }
   };
 
@@ -748,7 +832,7 @@ export default function App() {
     try {
       const data = await request('/assessments', { token });
       setAssessments(data.assessments || []);
-    } catch (error) { Alert.alert('MataKo', error.message); }
+    } catch (error) { Alert.alert('MataKo', t(error.message)); }
   };
 
   const openHistoryResult = async (id) => {
@@ -756,7 +840,7 @@ export default function App() {
       const data = await request(`/assessment/${id}`, { token });
       setResult(data);
       setScreen('result');
-    } catch (error) { Alert.alert('MataKo', error.message); }
+    } catch (error) { Alert.alert('MataKo', t(error.message)); }
   };
 
   const header = (title, onBack) => (
@@ -851,9 +935,9 @@ export default function App() {
 
   const renderHome = () => <Home
     user={user} assessments={assessments} remindersOn={remindersOn} remindersToday={remindersToday} appMinutes={appMinutes} monochrome={monochrome}
-    display={display} onDisplay={updateDisplay}
+    display={display} onDisplay={updateDisplay} serverContent={serverContent}
     dailyStats={dailyStats} milestoneDates={milestoneDates} exerciseLog={exerciseLog} onCompleteExercise={completeExercise}
-    selectedTab={homeTab} onTab={setHomeTab} onAssessment={() => setScreen('assessment')}
+    selectedTab={homeTab} onTab={setHomeTab} onAssessment={startAssessment}
     onNotification={() => setScreen('notifications')} onHistory={openHistoryResult}
     onReminder={setRemindersOn} onMonochrome={(enabled) => { setMonochrome(enabled); AsyncStorage.setItem('matako_monochrome', String(enabled)).catch(() => {}); }} onLogout={logOut} onLanguage={saveLanguage} onSaveProfile={updateProfile} loading={loading}
     language={language} onLegal={(tab) => { setLegalTab(tab); setLegalOrigin('home'); setScreen('legal'); }}
@@ -862,13 +946,13 @@ export default function App() {
 
   const renderAssessment = () => {
     const student = user?.role !== 'professional';
-    return <SelfAssessment questions={student ? STUDENT_QUESTIONS : PROFESSIONAL_QUESTIONS} introImage={student ? require('./assets/images/student.png') : require('./assets/images/assessment/intro-professional.png')} name={user?.name?.split(' ')[0]} onBack={() => setScreen('home')} onSubmit={submitAssessment} loading={loading} t={t} header={header} />;
+    return <SelfAssessment questions={serverQuestions || (student ? STUDENT_QUESTIONS : PROFESSIONAL_QUESTIONS)} introImage={student ? require('./assets/images/student.png') : require('./assets/images/assessment/intro-professional.png')} name={user?.name?.split(' ')[0]} onBack={() => setScreen('home')} onSubmit={submitAssessment} loading={loading} t={t} header={header} />;
   };
 
   const renderResult = () => {
     const assessment = result?.assessment || {};
-    if (maxScore(assessment) === STUDENT_QUESTIONS.length * 2) {
-      return <AssessmentResult assessment={assessment} t={t} header={header} onRetake={() => setScreen('assessment')} onHome={async () => { await refreshHistory(); setScreen('home'); }} />;
+    if (!isLegacyAssessment(assessment)) {
+      return <AssessmentResult assessment={assessment} results={serverContent?.results} t={t} header={header} onRetake={startAssessment} onHome={async () => { await refreshHistory(); setScreen('home'); }} />;
     }
     const risk = assessment.risk_level || 'LOW';
     const riskColor = risk === 'HIGH' ? '#B54708' : risk === 'MEDIUM' ? ORANGE : NAVY;
@@ -1091,11 +1175,7 @@ function FeatureGlyph({ kind }) {
     <View style={styles.clipboardLine} />
     <View style={styles.clipboardLine} />
   </View>;
-  if (kind === 'tips') return <View style={styles.heartShape}>
-    <View style={styles.heartBody} />
-    <View style={styles.heartLobeLeft} />
-    <View style={styles.heartLobeRight} />
-  </View>;
+  if (kind === 'tips') return <Icon name="heart" size={22} color={ORANGE} />;
   if (kind === 'reminders') return <View style={styles.clockIcon}><View style={styles.clockHandLong} /><View style={styles.clockHandShort} /></View>;
   return <View style={styles.gearShape}>
     {[0, 45, 90, 135].map((angle) => <View key={angle} style={[styles.gearBar, { transform: [{ rotate: `${angle}deg` }] }]} />)}
@@ -1159,7 +1239,7 @@ function EyeTipGlyph() {
   </View>;
 }
 
-function Home({ user, assessments, remindersOn, remindersToday, appMinutes, monochrome, display, onDisplay, dailyStats, milestoneDates, exerciseLog, onCompleteExercise, selectedTab, onTab, onAssessment, onNotification, onHistory, onReminder, onMonochrome, onLogout, onLanguage, language, onLegal, onRefresh, onSaveProfile, loading, t, card, button }) {
+function Home({ user, assessments, remindersOn, remindersToday, appMinutes, monochrome, display, onDisplay, serverContent, dailyStats, milestoneDates, exerciseLog, onCompleteExercise, selectedTab, onTab, onAssessment, onNotification, onHistory, onReminder, onMonochrome, onLogout, onLanguage, language, onLegal, onRefresh, onSaveProfile, loading, t, card, button }) {
   const [editingProfile, setEditingProfile] = useState(false);
   const [featurePrompt, setFeaturePrompt] = useState(null);
   const [progressView, setProgressView] = useState('overview');
@@ -1240,7 +1320,7 @@ function Home({ user, assessments, remindersOn, remindersToday, appMinutes, mono
       {feature('reminders', 'Set Screen Break Reminders', 'Schedule healthy breaks from screens', confirmRemindersOpen)}
       {feature('settings', 'Eye Care Settings', 'Manage your device preferences for your eye care', confirmSettingsOpen)}
       {card(<><Text style={styles.cardTitle}>{t("Today's Progress")}</Text><View style={styles.statRow}><Text style={styles.stat}>{remindersToday}{'\n'}<Text style={styles.smallText}>{t('Screen breaks')}</Text></Text><Text style={styles.stat}>{appMinutes < 60 ? `${appMinutes}m` : `${Math.floor(appMinutes / 60)}h ${appMinutes % 60}m`}{'\n'}<Text style={styles.smallText}>{t('Time in MataKo')}</Text></Text></View></>)}
-      {card(<View style={styles.tipRow}><View style={styles.tipIconCircle}><EyeTipGlyph /></View><View style={styles.flex}><Text style={styles.cardTitle}>{t("Today's Eye Tip")}</Text><Text style={styles.bodyText}>{t('Remember to blink more often while using your screen. The 30-30-30 rule can help reduce eye strain.')}</Text></View></View>)}
+      {card(<View style={styles.tipRow}><View style={styles.tipIconCircle}><EyeTipGlyph /></View><View style={styles.flex}><Text style={styles.cardTitle}>{t("Today's Eye Tip")}</Text><Text style={styles.bodyText}>{t(serverContent?.daily_tip || DEFAULT_DAILY_TIP)}</Text></View></View>)}
       {card(<><Text style={styles.cardTitle}>{t('Recent Activity')}</Text>{latest ? <View style={styles.activityRow}>
         <View style={styles.activityIconCircle}><Text style={styles.activityIcon}>✓</Text></View>
         <View style={styles.activityCopy}><Text style={styles.activityTitle}>{t('Self-Assessment Completed')}</Text><Text style={styles.smallText}>{timeAgo(latest.created_at)}</Text></View>
@@ -1251,14 +1331,9 @@ function Home({ user, assessments, remindersOn, remindersToday, appMinutes, mono
   ) : selectedTab === 'progress' ? (
     <Progress view={progressView} onView={setProgressView} dailyStats={dailyStats} assessments={rows} milestoneDates={milestoneDates} monochrome={monochrome} onHistory={onHistory} t={t} />
   ) : selectedTab === 'eyeCare' ? (
-    <EyeCare stack={eyeCareStack} onPush={(page) => setEyeCareStack((current) => [...current, page])} onPop={popEyeCare} backRef={eyeCareBack} onAssessment={onAssessment} exerciseLog={exerciseLog} onCompleteExercise={onCompleteExercise} remindersOn={remindersOn} onReminder={onReminder} onSettings={() => chooseTab('settings')} t={t} />
-  ) : selectedTab === 'tips' && (true || user?.role === 'professional') ? (
-    <ProfessionalTips t={t} />
+    <EyeCare topics={serverContent?.topics?.length ? serverContent.topics : EYE_TOPICS} exercises={serverContent?.exercises?.length ? serverContent.exercises : EXERCISES} stack={eyeCareStack} onPush={(page) => setEyeCareStack((current) => [...current, page])} onPop={popEyeCare} backRef={eyeCareBack} onAssessment={onAssessment} exerciseLog={exerciseLog} onCompleteExercise={onCompleteExercise} remindersOn={remindersOn} onReminder={onReminder} onSettings={() => chooseTab('settings')} t={t} />
   ) : selectedTab === 'tips' ? (
-    <ScrollView contentContainerStyle={styles.page}>
-      <Text style={styles.title}>{t('Eye care tips')}</Text>
-      {['Follow the 20-20-20 rule', 'Adjust screen brightness to match your surroundings', 'Blink often to keep your eyes comfortable', 'Keep a comfortable distance from your screen', 'Take regular breaks and stretch'].map((tip, index) => <View key={tip}>{card(<><Text style={styles.cardTitle}>{index + 1}. {t(tip)}</Text><Text style={styles.bodyText}>{t('Small, regular habits can help reduce digital eye strain.')}</Text></>)}</View>)}
-    </ScrollView>
+    <TipsPage categories={serverContent?.categories?.length ? serverContent.categories : user?.role === 'professional' ? PROFESSIONAL_TIPS : STUDENT_TIPS} dailyTip={serverContent?.daily_tip || DEFAULT_DAILY_TIP} facts={serverContent?.facts || DEFAULT_FACTS} t={t} />
   ) : selectedTab === 'settings' ? (
     <DisplaySettings display={display} onDisplay={onDisplay} monochrome={monochrome} onMonochrome={onMonochrome} t={t} />
   ) : (
@@ -1346,7 +1421,7 @@ function Home({ user, assessments, remindersOn, remindersToday, appMinutes, mono
       </View>
     </View>}
     {content}
-    {progressDetail ? null : <View style={styles.bottomNav}>{[['home', '⌂', 'Home'], ['progress', '▤', 'Progress'], ['eyeCare', '◉', 'Eye Care'], ['tips', '♡', 'Tips'], ['settings', '⚙', 'Settings']].map(([key, icon, label]) => <Pressable key={key} style={styles.navItem} onPress={() => chooseTab(key)}><Text style={[styles.navIcon, selectedTab === key && styles.navSelected]}>{icon}</Text><Text style={[styles.navLabel, selectedTab === key && styles.navSelected]}>{t(label)}</Text></Pressable>)}</View>}
+    {progressDetail ? null : <View style={styles.bottomNav}>{[['home', 'home', 'Home'], ['progress', 'trending-up', 'Progress'], ['eyeCare', 'eye', 'Eye Care'], ['tips', 'heart', 'Tips'], ['settings', 'settings-sharp', 'Settings']].map(([key, icon, label]) => <Pressable key={key} accessibilityRole="tab" accessibilityState={{ selected: selectedTab === key }} style={styles.navItem} onPress={() => chooseTab(key)}><Icon name={icon} size={22} color={selectedTab === key ? ORANGE : '#9A9A9A'} /><Text numberOfLines={1} adjustsFontSizeToFit style={[styles.navLabel, selectedTab === key && styles.navSelected]}>{t(`${label} (tab)`) === `${label} (tab)` ? t(label) : t(`${label} (tab)`)}</Text></Pressable>)}</View>}
     <Modal visible={featurePrompt !== null} transparent animationType="fade" statusBarTranslucent onRequestClose={() => setFeaturePrompt(null)}>
       <View style={styles.assessmentPromptBackdrop}>
         <View style={styles.assessmentPrompt}>
@@ -1364,7 +1439,7 @@ function Home({ user, assessments, remindersOn, remindersToday, appMinutes, mono
 
 // Eye Care tab: health topics, the exercises list and progress tracker, and one page per exercise.
 // `stack` holds the pages opened on top of the overview, so Back returns to the previous one.
-function EyeCare({ stack, onPush, onPop, backRef, exerciseLog, onCompleteExercise, remindersOn, onReminder, onSettings, onAssessment, t }) {
+function EyeCare({ topics, exercises, stack, onPush, onPop, backRef, exerciseLog, onCompleteExercise, remindersOn, onReminder, onSettings, onAssessment, t }) {
   // { title, message, cancel, confirm, onConfirm }; `message` may be a React node.
   const [dialog, setDialog] = useState(null);
   const [moreSymptoms, setMoreSymptoms] = useState(false);
@@ -1376,6 +1451,9 @@ function EyeCare({ stack, onPush, onPop, backRef, exerciseLog, onCompleteExercis
   useEffect(() => { setMoreSymptoms(false); setSessionActive(false); }, [stack.length]);
   const [showHistory, setShowHistory] = useState(false);
   const page = stack[stack.length - 1];
+  // Leave a topic or exercise page if an admin has since removed what it shows.
+  const missing = (page?.view === 'topic' && !topics.some((item) => item.id === page.id)) || (page?.view === 'exercise' && !exercises.some((item) => item.id === page.id));
+  useEffect(() => { if (missing) onPop(); }, [missing]);
   const today = new Date();
   const doneToday = exerciseLog[dayKey(today)] || [];
   const exercisesThisWeek = weekDates(today).reduce((sum, date) => sum + (exerciseLog[dayKey(date)] || []).length, 0);
@@ -1384,11 +1462,11 @@ function EyeCare({ stack, onPush, onPop, backRef, exerciseLog, onCompleteExercis
   if (!doneToday.length) streakDay.setDate(streakDay.getDate() - 1);
   while ((exerciseLog[dayKey(streakDay)] || []).length) { streak += 1; streakDay.setDate(streakDay.getDate() - 1); }
   const longestStreak = Math.max(streak, longestRun(exerciseLog, (day) => day.length > 0));
-  const percent = Math.round((doneToday.length / EXERCISES.length) * 100);
+  const percent = Math.round((doneToday.length / exercises.length) * 100);
 
   const exercisesPrompt = () => setDialog({
     title: 'Ready to continue your eye care exercises?',
-    message: <>{t("You've completed")} <Text style={styles.bold}>{doneToday.length}</Text> {t('out of')} <Text style={styles.bold}>{EXERCISES.length}</Text> {t("today. Let's keep going to give your eyes the care they deserve.")}</>,
+    message: <>{t("You've completed")} <Text style={styles.bold}>{doneToday.length}</Text> {t('out of')} <Text style={styles.bold}>{exercises.length}</Text> {t("today. Let's keep going to give your eyes the care they deserve.")}</>,
     cancel: 'Not Now', confirm: 'Continue', onConfirm: () => onPush({ view: 'exercises' }),
   });
   const confirmDialog = <Modal visible={dialog !== null} transparent animationType="fade" statusBarTranslucent onRequestClose={() => setDialog(null)}>
@@ -1416,7 +1494,8 @@ function EyeCare({ stack, onPush, onPop, backRef, exerciseLog, onCompleteExercis
   </View>;
 
   if (page?.view === 'topic') {
-    const topic = EYE_TOPICS.find((item) => item.id === page.id);
+    const topic = topics.find((item) => item.id === page.id);
+    if (!topic) return null;
     return <>
       {pageHeader(topic.title)}
       <ScrollView style={styles.progressPage} contentContainerStyle={styles.progressDetail}>
@@ -1454,12 +1533,12 @@ function EyeCare({ stack, onPush, onPop, backRef, exerciseLog, onCompleteExercis
       </View>
       <Pressable accessibilityRole="button" onPress={() => onPush({ view: 'tracker' })} style={styles.progressPanel}>
         <View style={styles.progressCardHeader}><Text style={[styles.panelTitle, styles.panelTitleInline]}>{t('Progress Tracker')}</Text><Icon name="chevron-forward" size={18} color={NAVY} /></View>
-        <View style={styles.progressCardHeader}><Text style={styles.noteText}>{doneToday.length} {t('of')} {EXERCISES.length} {t('Exercises Completed')}</Text><Text style={styles.noteText}>{percent}%</Text></View>
+        <View style={styles.progressCardHeader}><Text style={styles.noteText}>{doneToday.length} {t('of')} {exercises.length} {t('Exercises Completed')}</Text><Text style={styles.noteText}>{percent}%</Text></View>
         <View style={styles.exerciseTrack}><View style={[styles.exerciseFill, { width: `${percent}%` }]} /></View>
       </Pressable>
       {whyCard('Why Exercise Your Eyes?', 'Regular eye exercises help reduce digital eye strain, improve focus flexibility, and maintain healthy vision. These simple movements increase blood circulation to your eyes, reduce muscle tension, and can help prevent symptoms like dry eyes, blurred vision, and headaches from prolonged screen time.', 'Tip: Practice these exercises every 20 minutes during screen work for best results.')}
       <Text style={styles.topicSection}>{t('Choose an Exercise')}</Text>
-      {[EXERCISES[2], ...EXERCISES.filter((item) => item.id !== 'focus')].map((item) => <View key={item.id} style={styles.progressPanel}>
+      {[...exercises.filter((item) => item.id === 'focus'), ...exercises.filter((item) => item.id !== 'focus')].map((item) => <View key={item.id} style={styles.progressPanel}>
         <View style={styles.exerciseCardRow}>
           <View style={styles.exerciseIcon}><Icon name={item.icon} size={20} color={ORANGE} /></View>
           <View style={styles.flex}><Text style={styles.symptomTitle}>{t(item.card)}</Text><Text style={styles.symptomText}>{t(item.description)}</Text></View>
@@ -1478,12 +1557,12 @@ function EyeCare({ stack, onPush, onPop, backRef, exerciseLog, onCompleteExercis
       <View style={styles.trackerCard}>
         <View style={styles.exerciseCardRow}>
           <View style={styles.exerciseIcon}><Icon name="eye" size={20} color={ORANGE} /></View>
-          <View style={styles.flex}><Text style={styles.symptomTitle}>{t('Daily Eye Exercises')}</Text><Text style={styles.symptomText}>{doneToday.length} {t('of')} {EXERCISES.length} {t('completed')}</Text></View>
-          <Text style={styles.trackerCount}>{doneToday.length}/{EXERCISES.length}</Text>
+          <View style={styles.flex}><Text style={styles.symptomTitle}>{t('Daily Eye Exercises')}</Text><Text style={styles.symptomText}>{doneToday.length} {t('of')} {exercises.length} {t('completed')}</Text></View>
+          <Text style={styles.trackerCount}>{doneToday.length}/{exercises.length}</Text>
         </View>
         <View style={[styles.progressCardHeader, { marginTop: 14, marginBottom: 6 }]}><Text style={styles.noteText}>{t('Progress Today')}</Text><Text style={[styles.noteText, { color: ORANGE }]}>{percent}%</Text></View>
         <View style={styles.exerciseTrack}><View style={[styles.exerciseFill, { width: `${percent}%` }]} /></View>
-        {EXERCISES.map((item) => {
+        {exercises.map((item) => {
           const done = doneToday.includes(item.id);
           return <Pressable key={item.id} accessibilityRole="button" onPress={() => onPush({ view: 'exercise', id: item.id })} style={styles.trackerRow}>
             <Icon name={done ? 'checkmark-circle' : 'ellipse-outline'} size={20} color={done ? '#1DB815' : '#98A2B3'} />
@@ -1494,8 +1573,8 @@ function EyeCare({ stack, onPush, onPop, backRef, exerciseLog, onCompleteExercis
       </View>
       <Pressable accessibilityRole="button" onPress={() => setShowHistory((value) => !value)} style={styles.historyLink}><Icon name="trending-up" size={16} color={ORANGE} /><Text style={styles.historyLinkText}>{t(showHistory ? 'Hide History' : 'View History')}</Text></Pressable>
       {showHistory ? <View style={styles.progressPanel}>{weekDates(today).filter((date) => dayKey(date) <= dayKey(today)).reverse().map((date) => <View key={dayKey(date)} style={styles.progressCardHeader}>
-        <Text style={styles.noteText}>{date.toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' })}</Text>
-        <Text style={styles.weekAverage}>{(exerciseLog[dayKey(date)] || []).length}/{EXERCISES.length}</Text>
+        <Text style={styles.noteText}>{formatDate(date, { weekday: 'long', month: 'short', day: 'numeric' })}</Text>
+        <Text style={styles.weekAverage}>{(exerciseLog[dayKey(date)] || []).length}/{exercises.length}</Text>
       </View>)}</View> : null}
       <View style={styles.streakCard}>
         <View><Text style={styles.streakCardTitle}>{t('Daily Streak')}</Text><Text style={styles.streakCardText}>{t(streak ? 'Keep it up!' : 'Complete an exercise to start a streak!')}</Text></View>
@@ -1506,7 +1585,8 @@ function EyeCare({ stack, onPush, onPop, backRef, exerciseLog, onCompleteExercis
   </>;
 
   if (page?.view === 'exercise') {
-    const exercise = EXERCISES.find((item) => item.id === page.id);
+    const exercise = exercises.find((item) => item.id === page.id);
+    if (!exercise) return null;
     return <>
       {pageHeader(exercise.page)}
       <ScrollView style={styles.progressPage} contentContainerStyle={styles.progressDetail}>
@@ -1518,7 +1598,7 @@ function EyeCare({ stack, onPush, onPop, backRef, exerciseLog, onCompleteExercis
 
   return <ScrollView style={styles.progressPage} contentContainerStyle={styles.progressDetail}>
     <Text style={styles.eyeCareHeading}>{t('Explore Eye Health Topics')}</Text>
-    {EYE_TOPICS.map((topic) => <View key={topic.id} style={styles.topicCard}>
+    {topics.map((topic) => <View key={topic.id} style={styles.topicCard}>
       <View style={styles.topicCardIcon}><Icon name={topic.icon} size={20} color={WHITE} /></View>
       <View style={styles.flex}>
         <Text style={styles.topicCardTitle}>{t(topic.title)}</Text>
@@ -1534,7 +1614,7 @@ function EyeCare({ stack, onPush, onPop, backRef, exerciseLog, onCompleteExercis
     </Pressable>
     <Pressable accessibilityRole="button" onPress={() => onPush({ view: 'exercises' })} style={styles.comfortCard}>
       <View style={styles.comfortIcon}><Icon name="fitness" size={20} color={ORANGE} /></View>
-      <View style={styles.flex}><Text style={styles.comfortTitle}>{t('Eye Care Exercises')}</Text><Text style={styles.comfortText}>{doneToday.length} {t('of')} {EXERCISES.length} {t('exercises completed today')}</Text></View>
+      <View style={styles.flex}><Text style={styles.comfortTitle}>{t('Eye Care Exercises')}</Text><Text style={styles.comfortText}>{doneToday.length} {t('of')} {exercises.length} {t('exercises completed today')}</Text></View>
       <Icon name="chevron-forward" size={20} color={WHITE} />
     </Pressable>
     <View style={styles.progressPanel}>
@@ -1657,6 +1737,16 @@ function ExerciseSession({ exercise, onComplete, onActiveChange, leaveRequest, o
     {doneNote}{stopDialog}
   </View>;
 
+  if (exercise.id !== 'rolling') return <View style={[styles.sessionCard, styles.centered]}>
+    <View style={styles.blinkIcon}><Icon name={exercise.icon || 'eye'} size={36} color={WHITE} /></View>
+    <Text style={styles.sessionTitle}>{t(exercise.card || exercise.name)}</Text>
+    <Text style={styles.sessionSubtitle}>{t(exercise.description)}</Text>
+    <Text style={styles.sessionClock}>{formatClock(timer.remaining)}</Text>
+    <Text style={[styles.sessionClockLabel, { marginBottom: 16 }]}>{t('Time Remaining')}</Text>
+    {running || timer.status === 'paused' ? controls : startButton({ alignSelf: 'stretch' })}
+    {doneNote}{stopDialog}
+  </View>;
+
   const rotate = spin.interpolate({ inputRange: [0, 1], outputRange: ['0deg', direction === 'clockwise' ? '360deg' : '-360deg'] });
   const repSeconds = timer.status === 'idle' || done ? rollSeconds : ((timer.remaining - 1) % rollSeconds) + 1;
   const currentRep = Math.min(repetitions, repetitions - Math.floor((timer.remaining - 1) / rollSeconds));
@@ -1693,8 +1783,8 @@ function ExerciseSession({ exercise, onComplete, onActiveChange, leaveRequest, o
   </View>;
 }
 
-// Tips tab for professionals: a hero, today's tip, four expandable categories (one open at a time), and facts.
-function ProfessionalTips({ t }) {
+// Tips tab: a hero, today's tip, four expandable categories (one open at a time), and facts.
+function TipsPage({ categories, dailyTip, facts, t }) {
   const [open, setOpen] = useState(null);
   return <ScrollView style={styles.progressPage} contentContainerStyle={styles.progressDetail}>
     <View style={styles.tipsHero}>
@@ -1704,10 +1794,10 @@ function ProfessionalTips({ t }) {
     </View>
     <View style={[styles.progressPanel, styles.noteRow]}>
       <View style={styles.tipsBulb}><Icon name="bulb" size={18} color={WHITE} /></View>
-      <View style={styles.flex}><Text style={styles.noteTitle}>{t("Today's Eye Tip")}</Text><Text style={styles.noteText}>{t('Remember to blink more often while using your screen. The 30-30-30 rule can help reduce eye strain.')}</Text></View>
+      <View style={styles.flex}><Text style={styles.noteTitle}>{t("Today's Eye Tip")}</Text><Text style={styles.noteText}>{t(dailyTip)}</Text></View>
     </View>
     <Text style={styles.topicSection}>{t('Eye Care Tips')}</Text>
-    {PROFESSIONAL_TIPS.map((category) => {
+    {categories.map((category) => {
       const isOpen = open === category.id;
       return <View key={category.id} style={styles.accordion}>
         <Pressable accessibilityRole="button" accessibilityState={{ expanded: isOpen }} onPress={() => setOpen(isOpen ? null : category.id)} style={styles.accordionHeader}>
@@ -1723,8 +1813,8 @@ function ProfessionalTips({ t }) {
         </View>)}</View> : null}
       </View>;
     })}
-    <View style={styles.didYouKnowRow}><View style={styles.didYouKnowIcon}><Icon name="bulb" size={16} color={ORANGE} /></View><Text style={styles.didYouKnowTitle}>{t('Did You Know?')}</Text></View>
-    {[['alert-circle', 'Staring at a screen reduces your blink rate by up to 60%!'], ['moon', 'Blue light exposure before sleep can delay melatonin release']].map(([icon, text]) => <View key={text} style={styles.factCard}>
+    {facts.length ? <View style={styles.didYouKnowRow}><View style={styles.didYouKnowIcon}><Icon name="bulb" size={16} color={ORANGE} /></View><Text style={styles.didYouKnowTitle}>{t('Did You Know?')}</Text></View> : null}
+    {facts.map(([icon, text]) => <View key={text} style={styles.factCard}>
       <Icon name={icon} size={16} color={ORANGE} /><Text style={styles.factText}>{t(text)}</Text>
     </View>)}
   </ScrollView>;
@@ -1789,8 +1879,8 @@ function Progress({ view, onView, dailyStats, assessments, milestoneDates, monoc
   const reached = milestoneStatus({ dailyStats, assessments, monochrome });
   const unlocked = MILESTONES.filter((item) => reached[item.id]).sort((a, b) => (milestoneDates[b.id] || '').localeCompare(milestoneDates[a.id] || ''));
   const locked = MILESTONES.filter((item) => !reached[item.id]);
-  const longDate = (value) => new Date(value).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
-  const shortDate = (value) => new Date(value).toLocaleDateString('en-US', { month: '2-digit', day: '2-digit', year: '2-digit' });
+  const longDate = (value) => formatDate(value, { month: 'long', day: 'numeric', year: 'numeric' });
+  const shortDate = (value) => formatDate(value, { month: '2-digit', day: '2-digit', year: '2-digit' });
   const severity = (item) => SEVERITY[item.risk_level] || SEVERITY.LOW;
 
   const pageHeader = (title) => <View style={styles.progressHeader}>
@@ -1900,7 +1990,7 @@ function Progress({ view, onView, dailyStats, assessments, milestoneDates, monoc
     const badge = (item, isUnlocked) => <View key={item.id} style={[styles.badgeCard, !isUnlocked && styles.badgeLocked]}>
       <View style={[styles.badgeIcon, { backgroundColor: isUnlocked ? item.color : '#D0D5DD' }]}><Icon name={item.icon} size={20} color={isUnlocked ? WHITE : '#667085'} /></View>
       <Text style={[styles.badgeTitle, !isUnlocked && styles.badgeTitleLocked]}>{t(item.title)}</Text>
-      <Text style={styles.badgeDate}>{isUnlocked ? `${t('Unlocked')} ${new Date(`${milestoneDates[item.id] || todayKey}T00:00:00`).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}` : t(item.hint)}</Text>
+      <Text style={styles.badgeDate}>{isUnlocked ? `${t('Unlocked')} ${formatDate(`${milestoneDates[item.id] || todayKey}T00:00:00`, { month: 'short', day: 'numeric', year: 'numeric' })}` : t(item.hint)}</Text>
       {isUnlocked ? <View style={styles.badgeUnderline} /> : null}
     </View>;
     return <>
@@ -1975,7 +2065,7 @@ function SelfAssessment({ questions, introImage, name, onBack, onSubmit, loading
   const last = step === questions.length - 1;
   const selected = answers[question.symptom];
   // The design starts at 0% and stops at 99% on the final question.
-  const progress = Math.min(99, Math.round((step / (questions.length - 1)) * 100));
+  const progress = Math.min(99, Math.round((step / Math.max(1, questions.length - 1)) * 100));
   const goBack = () => setStep(step === 0 ? 'guide' : step - 1);
   const goNext = () => (last ? onSubmit(answers) : setStep(step + 1));
 
@@ -2006,12 +2096,13 @@ function SelfAssessment({ questions, introImage, name, onBack, onSubmit, loading
 }
 
 // Result: a summary, a scoring breakdown, and care tips matched to the strain level.
-function AssessmentResult({ assessment, t, header, onRetake, onHome }) {
+function AssessmentResult({ assessment, results, t, header, onRetake, onHome }) {
   const [view, setView] = useState('summary');
   const [tipsOrigin, setTipsOrigin] = useState('summary');
-  const level = ASSESSMENT_RESULTS[assessment.risk_level] || ASSESSMENT_RESULTS.LOW;
+  const levelKey = ASSESSMENT_RESULTS[assessment.risk_level] ? assessment.risk_level : 'LOW';
+  const level = { ...ASSESSMENT_RESULTS[levelKey], ...(results?.[levelKey] || {}) };
   const score = assessment.total_score || 0;
-  const max = STUDENT_QUESTIONS.length * 2;
+  const max = maxScore(assessment);
   const openTips = (from) => { setTipsOrigin(from); setView('tips'); };
   const footer = (homeStyle) => <View style={styles.resultFooterRow}>
     <Pressable onPress={onRetake} style={styles.resultRetake}><Text style={styles.resultRetakeText}>{t('Retake Assessment')}</Text></Pressable>
@@ -2041,7 +2132,7 @@ function AssessmentResult({ assessment, t, header, onRetake, onHome }) {
           </View>)}
         </View>
         <View style={styles.breakdownCard}>
-          <Text style={styles.breakdownSmall}>{t('With 16 questions, maximum total is 32 points')}</Text>
+          <Text style={styles.breakdownSmall}>{t('With')} {max / 2} {t('questions, maximum total is')} {max} {t('points')}</Text>
           <View style={styles.breakdownRow}><Text style={styles.breakdownSmall}>{t('Your Score')}</Text><Text style={styles.breakdownSmall}>{score} {t('points')}</Text></View>
           <View style={styles.breakdownTrack}><View style={[styles.breakdownFill, { width: `${(score / max) * 100}%`, backgroundColor: level.color }]} /></View>
           <View style={styles.breakdownRow}>{[0, max / 2, max].map((tick) => <Text key={tick} style={styles.breakdownTick}>{tick}</Text>)}</View>
@@ -2139,10 +2230,9 @@ const styleDefs = {
   studentQuestionTop: { backgroundColor: WHITE, paddingHorizontal: 34, paddingTop: 16, paddingBottom: 18, alignItems: 'center' }, studentProgressLabels: { alignSelf: 'stretch', flexDirection: 'row', justifyContent: 'space-between' }, studentProgressText: { color: '#3D3D3D', fontSize: 12 }, studentProgressTrack: { alignSelf: 'stretch', height: 6, borderRadius: 3, backgroundColor: '#E5E5E5', marginTop: 8, overflow: 'hidden' }, studentProgressFill: { height: 6, borderRadius: 3, backgroundColor: ORANGE }, studentQuestionImage: { width: 140, height: 140, marginTop: 14 },
   studentQuestionBody: { flex: 1, backgroundColor: '#F4F4F4' }, studentQuestionContent: { paddingHorizontal: 28, paddingVertical: 20 }, studentQuestionCard: { backgroundColor: WHITE, borderRadius: 10, paddingHorizontal: 20, paddingVertical: 26, marginBottom: 26 }, studentQuestionText: { color: NAVY, fontSize: 17, lineHeight: 26, fontWeight: '700', textAlign: 'center' }, studentOption: { flexDirection: 'row', alignItems: 'center', minHeight: 56, backgroundColor: WHITE, borderRadius: 8, borderWidth: 1.5, borderColor: '#E1E1E1', paddingHorizontal: 16, marginBottom: 12 }, studentOptionSelected: { borderColor: ORANGE }, studentOptionText: { color: NAVY, fontSize: 15 }, studentRadio: { width: 18, height: 18, borderRadius: 9, borderWidth: 1.5, borderColor: '#B5B5B5', alignItems: 'center', justifyContent: 'center', marginRight: 12 }, studentRadioSelected: { borderColor: ORANGE }, studentRadioDot: { width: 9, height: 9, borderRadius: 5, backgroundColor: ORANGE },
   studentFooter: { flexDirection: 'row', justifyContent: 'center', backgroundColor: WHITE, borderTopWidth: 1, borderTopColor: '#EEEEEE', paddingHorizontal: 28, paddingVertical: 18 }, studentBack: { flex: 1, minHeight: 46, borderRadius: 8, borderWidth: 1, borderColor: '#D5D5D5', backgroundColor: '#F2F2F2', alignItems: 'center', justifyContent: 'center', marginRight: 12 }, studentBackText: { color: NAVY, fontSize: 15 }, studentNext: { flex: 1, minHeight: 46, borderRadius: 8, backgroundColor: ORANGE, alignItems: 'center', justifyContent: 'center', elevation: 3 },
-  profileCameraIcon: { width: 16, height: 14, alignItems: 'center', justifyContent: 'flex-end' }, profileCameraTop: { position: 'absolute', top: 0, left: 3, width: 6, height: 3, borderTopLeftRadius: 2, borderTopRightRadius: 2, backgroundColor: WHITE }, profileCameraBody: { width: 15, height: 10, borderRadius: 2, backgroundColor: WHITE, alignItems: 'center', justifyContent: 'center' }, profileCameraLens: { width: 5, height: 5, borderRadius: 3, backgroundColor: NAVY },
-  heartShape: { width: 22, height: 20, position: 'relative' }, heartBody: { width: 13, height: 13, position: 'absolute', top: 5, left: 4.5, backgroundColor: ORANGE, transform: [{ rotate: '45deg' }] }, heartLobeLeft: { width: 12, height: 12, position: 'absolute', top: 1, left: 2, borderRadius: 6, backgroundColor: ORANGE }, heartLobeRight: { width: 12, height: 12, position: 'absolute', top: 1, right: 2, borderRadius: 6, backgroundColor: ORANGE }, gearShape: { width: 22, height: 22, alignItems: 'center', justifyContent: 'center' }, gearBar: { position: 'absolute', width: 22, height: 6, borderRadius: 2, backgroundColor: ORANGE }, gearCore: { width: 14, height: 14, borderRadius: 7, alignItems: 'center', justifyContent: 'center', backgroundColor: ORANGE }, gearHole: { width: 6, height: 6, borderRadius: 3, backgroundColor: WHITE },
+  profileCameraIcon: { width: 16, height: 14, alignItems: 'center', justifyContent: 'flex-end' }, profileCameraTop: { position: 'absolute', top: 0, left: 3, width: 6, height: 3, borderTopLeftRadius: 2, borderTopRightRadius: 2, backgroundColor: WHITE }, profileCameraBody: { width: 15, height: 10, borderRadius: 2, backgroundColor: WHITE, alignItems: 'center', justifyContent: 'center' }, profileCameraLens: { width: 5, height: 5, borderRadius: 3, backgroundColor: NAVY }, gearShape: { width: 22, height: 22, alignItems: 'center', justifyContent: 'center' }, gearBar: { position: 'absolute', width: 22, height: 6, borderRadius: 2, backgroundColor: ORANGE }, gearCore: { width: 14, height: 14, borderRadius: 7, alignItems: 'center', justifyContent: 'center', backgroundColor: ORANGE }, gearHole: { width: 6, height: 6, borderRadius: 3, backgroundColor: WHITE },
   assessmentPromptBackdrop: { flex: 1, backgroundColor: '#0006', alignItems: 'center', justifyContent: 'center', padding: 24 }, assessmentPrompt: { width: '74%', maxWidth: 300, backgroundColor: WHITE, borderRadius: 8, padding: 12, elevation: 12 }, assessmentPromptTitle: { color: NAVY, fontSize: 13, fontWeight: '700', marginBottom: 8 }, assessmentPromptMessage: { color: '#555555', fontSize: 11, lineHeight: 15 }, assessmentPromptActions: { flexDirection: 'row', gap: 6, marginTop: 14 }, assessmentPromptCancel: { flex: 1, minHeight: 30, backgroundColor: '#F4F4F4', borderRadius: 9, borderWidth: 1, borderColor: '#D8D8D8', alignItems: 'center', justifyContent: 'center' }, assessmentPromptCancelText: { color: NAVY, fontSize: 10 }, assessmentPromptNext: { flex: 1, minHeight: 30, backgroundColor: ORANGE, borderRadius: 9, alignItems: 'center', justifyContent: 'center' }, assessmentPromptNextText: { color: WHITE, fontSize: 10, fontWeight: '700' },
-  profilePage: { paddingHorizontal: 14, paddingTop: 12, paddingBottom: 28 }, profileHeader: { height: 52, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', backgroundColor: WHITE, paddingHorizontal: 12 }, profileHeaderAction: { width: 42, height: 48, alignItems: 'center', justifyContent: 'center' }, profileHeaderBack: { color: '#344054', fontSize: 34, lineHeight: 40 }, profileHeaderTitle: { color: NAVY, fontSize: 15, fontWeight: '700' }, profileMenu: { color: NAVY, fontSize: 24 }, profileSummaryCard: { padding: 12 }, profileSummary: { alignItems: 'center' }, profileAvatarWrap: { width: 82, height: 82, marginBottom: 5 }, profileAvatar: { width: 76, height: 76, borderRadius: 38, borderWidth: 3, borderColor: NAVY, backgroundColor: '#DDE7EA', alignItems: 'center', justifyContent: 'center' }, profileAvatarText: { color: NAVY, fontSize: 24, fontWeight: '700' }, profileCamera: { position: 'absolute', right: 0, bottom: 0, width: 27, height: 27, borderRadius: 14, backgroundColor: NAVY, borderWidth: 2, borderColor: WHITE, alignItems: 'center', justifyContent: 'center' }, profileCameraText: { color: WHITE, fontSize: 14 }, profileName: { color: NAVY, fontSize: 16, fontWeight: '700', marginTop: 2 }, profileEmail: { color: '#87909C', fontSize: 11, marginTop: 2, maxWidth: '95%' }, profileStats: { flexDirection: 'row', justifyContent: 'space-around', width: '100%', marginTop: 14, marginBottom: 14 }, profileStat: { flex: 1, alignItems: 'center' }, profileStatIconBox: { width: 69, height: 40, borderRadius: 10, backgroundColor: ORANGE, alignItems: 'center', justifyContent: 'center', marginBottom: 5 }, profileStatEye: { width: 18, height: 12, borderWidth: 2, borderColor: WHITE, borderRadius: 10, alignItems: 'center', justifyContent: 'center' }, profileStatEyeIris: { width: 7, height: 7, borderRadius: 4, backgroundColor: WHITE, alignItems: 'center', justifyContent: 'center' }, profileStatEyePupil: { width: 3, height: 3, borderRadius: 2, backgroundColor: ORANGE }, profileStatClock: { width: 16, height: 16, borderRadius: 8, backgroundColor: WHITE }, profileStatClockHandLong: { position: 'absolute', width: 2, height: 5, top: 3, left: 7, borderRadius: 1, backgroundColor: ORANGE }, profileStatClockHandShort: { position: 'absolute', width: 4, height: 2, top: 7, left: 7, borderRadius: 1, backgroundColor: ORANGE }, profileStatTrophy: { width: 20, height: 20, alignItems: 'center', justifyContent: 'flex-start' }, profileStatTrophyCup: { width: 12, height: 9, backgroundColor: WHITE, borderBottomLeftRadius: 5, borderBottomRightRadius: 5 }, profileStatTrophyHandle: { position: 'absolute', top: 1, width: 5, height: 6, borderWidth: 2, borderColor: WHITE }, profileStatTrophyHandleLeft: { left: 0, borderRightWidth: 0, borderTopLeftRadius: 4, borderBottomLeftRadius: 4 }, profileStatTrophyHandleRight: { right: 0, borderLeftWidth: 0, borderTopRightRadius: 4, borderBottomRightRadius: 4 }, profileStatTrophyStem: { width: 3, height: 4, backgroundColor: WHITE }, profileStatTrophyBase: { width: 12, height: 2, borderRadius: 2, backgroundColor: WHITE }, profileStatLabel: { color: NAVY, fontSize: 10, fontWeight: '600' }, profileStatValue: { color: '#7E8792', fontSize: 9, marginTop: 2 }, editProfileButton: { minHeight: 36, width: '100%', borderRadius: 7, backgroundColor: NAVY, alignItems: 'center', justifyContent: 'center' }, editProfileText: { color: WHITE, fontSize: 11, fontWeight: '600' }, profileInfoCard: { padding: 15 }, profileSectionHeader: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8 }, profileSectionTitle: { color: NAVY, fontSize: 14, fontWeight: '700' }, profileEditIcon: { color: ORANGE, fontSize: 20, fontWeight: '700' }, profileInfoRow: { minHeight: 46, flexDirection: 'row', alignItems: 'center', marginTop: 4 }, profileInfoIconBox: { width: 27, height: 30, borderRadius: 6, backgroundColor: '#F6F7F9', alignItems: 'center', justifyContent: 'center', marginRight: 9 }, profileInfoIcon: { color: '#475467', fontSize: 14 }, profileInfoText: { flex: 1 }, profileInfoLabel: { color: '#77808B', fontSize: 10 }, profileInfoValue: { color: NAVY, fontSize: 12, marginTop: 2 }, profileMoreLink: { color: ORANGE, fontSize: 9 }, latestAssessmentPanel: { backgroundColor: '#FAFAFA', borderRadius: 8, padding: 12, marginTop: 12, marginBottom: 10 }, latestAssessmentHeading: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }, latestAssessmentTitle: { color: NAVY, fontSize: 14, fontWeight: '700', flex: 1 }, latestAssessmentDot: { width: 9, height: 9, borderRadius: 5, marginLeft: 8 }, latestAssessmentDate: { color: '#667085', fontSize: 11, marginTop: 7 }, latestAssessmentSummary: { color: '#555555', fontSize: 11, lineHeight: 16, marginTop: 9 }, latestAssessmentButton: { minHeight: 42, borderRadius: 7, backgroundColor: NAVY, alignItems: 'center', justifyContent: 'center', marginTop: 2 }, latestAssessmentButtonText: { color: WHITE, fontSize: 12, fontWeight: '700' }, profileReminderRow: { flexDirection: 'row', alignItems: 'center', paddingTop: 5 }, profileReminderIcon: { width: 24, height: 28, borderRadius: 5, backgroundColor: ORANGE, alignItems: 'center', justifyContent: 'center', marginRight: 9 }, profileReminderIconText: { color: WHITE, fontSize: 16 }, profileModalBackdrop: { flex: 1, backgroundColor: '#0008', justifyContent: 'flex-end' }, profileModal: { backgroundColor: WHITE, padding: 20, borderTopLeftRadius: 20, borderTopRightRadius: 20, maxHeight: '90%' }, profileEditField: { marginBottom: 10 }, profileEditInput: { minHeight: 42, borderRadius: 8, borderWidth: 1, borderColor: '#D0D5DD', paddingHorizontal: 10, marginTop: 4, color: NAVY },
+  profilePage: { paddingHorizontal: 14, paddingTop: 12, paddingBottom: 28 }, profileHeader: { height: 52, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', backgroundColor: WHITE, paddingHorizontal: 12 }, profileHeaderAction: { width: 42, height: 48, alignItems: 'center', justifyContent: 'center' }, profileHeaderBack: { color: '#344054', fontSize: 34, lineHeight: 40 }, profileHeaderTitle: { color: NAVY, fontSize: 15, fontWeight: '700' }, profileMenu: { color: NAVY, fontSize: 24 }, profileSummaryCard: { padding: 12 }, profileSummary: { alignItems: 'center' }, profileAvatarWrap: { width: 82, height: 82, marginBottom: 5 }, profileAvatar: { width: 76, height: 76, borderRadius: 38, borderWidth: 3, borderColor: NAVY, backgroundColor: '#DDE7EA', alignItems: 'center', justifyContent: 'center' }, profileAvatarText: { color: NAVY, fontSize: 24, fontWeight: '700' }, profileCamera: { position: 'absolute', right: 0, bottom: 0, width: 27, height: 27, borderRadius: 14, backgroundColor: NAVY, borderWidth: 2, borderColor: WHITE, alignItems: 'center', justifyContent: 'center' }, profileCameraText: { color: WHITE, fontSize: 14 }, profileName: { color: NAVY, fontSize: 16, fontWeight: '700', marginTop: 2 }, profileEmail: { color: '#87909C', fontSize: 11, marginTop: 2, maxWidth: '95%' }, profileStats: { flexDirection: 'row', justifyContent: 'space-around', width: '100%', marginTop: 14, marginBottom: 14 }, profileStat: { flex: 1, alignItems: 'center' }, profileStatIconBox: { width: 69, height: 40, borderRadius: 10, backgroundColor: ORANGE, alignItems: 'center', justifyContent: 'center', marginBottom: 5 }, profileStatEye: { width: 18, height: 12, borderWidth: 2, borderColor: WHITE, borderRadius: 10, alignItems: 'center', justifyContent: 'center' }, profileStatEyeIris: { width: 7, height: 7, borderRadius: 4, backgroundColor: WHITE, alignItems: 'center', justifyContent: 'center' }, profileStatEyePupil: { width: 3, height: 3, borderRadius: 2, backgroundColor: ORANGE }, profileStatClock: { width: 16, height: 16, borderRadius: 8, backgroundColor: WHITE }, profileStatClockHandLong: { position: 'absolute', width: 2, height: 5, top: 3, left: 7, borderRadius: 1, backgroundColor: ORANGE }, profileStatClockHandShort: { position: 'absolute', width: 4, height: 2, top: 7, left: 7, borderRadius: 1, backgroundColor: ORANGE }, profileStatTrophy: { width: 20, height: 20, alignItems: 'center', justifyContent: 'flex-start' }, profileStatTrophyCup: { width: 12, height: 9, backgroundColor: WHITE, borderBottomLeftRadius: 5, borderBottomRightRadius: 5 }, profileStatTrophyHandle: { position: 'absolute', top: 1, width: 5, height: 6, borderWidth: 2, borderColor: WHITE }, profileStatTrophyHandleLeft: { left: 0, borderRightWidth: 0, borderTopLeftRadius: 4, borderBottomLeftRadius: 4 }, profileStatTrophyHandleRight: { right: 0, borderLeftWidth: 0, borderTopRightRadius: 4, borderBottomRightRadius: 4 }, profileStatTrophyStem: { width: 3, height: 4, backgroundColor: WHITE }, profileStatTrophyBase: { width: 12, height: 2, borderRadius: 2, backgroundColor: WHITE }, profileStatLabel: { color: NAVY, fontSize: 10, fontWeight: '600' }, profileStatValue: { color: '#7E8792', fontSize: 9, marginTop: 2 }, editProfileButton: { minHeight: 36, width: '100%', borderRadius: 7, backgroundColor: NAVY, alignItems: 'center', justifyContent: 'center' }, editProfileText: { color: WHITE, fontSize: 11, fontWeight: '600' }, profileInfoCard: { padding: 15 }, profileSectionHeader: { flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', columnGap: 8, rowGap: 4, marginBottom: 8 }, profileSectionTitle: { color: NAVY, fontSize: 14, fontWeight: '700' }, profileEditIcon: { color: ORANGE, fontSize: 20, fontWeight: '700' }, profileInfoRow: { minHeight: 46, flexDirection: 'row', alignItems: 'center', marginTop: 4 }, profileInfoIconBox: { width: 27, height: 30, borderRadius: 6, backgroundColor: '#F6F7F9', alignItems: 'center', justifyContent: 'center', marginRight: 9 }, profileInfoIcon: { color: '#475467', fontSize: 14 }, profileInfoText: { flex: 1 }, profileInfoLabel: { color: '#77808B', fontSize: 10 }, profileInfoValue: { color: NAVY, fontSize: 12, marginTop: 2 }, profileMoreLink: { color: ORANGE, fontSize: 11 }, latestAssessmentPanel: { backgroundColor: '#FAFAFA', borderRadius: 8, padding: 12, marginTop: 12, marginBottom: 10 }, latestAssessmentHeading: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }, latestAssessmentTitle: { color: NAVY, fontSize: 14, fontWeight: '700', flex: 1 }, latestAssessmentDot: { width: 9, height: 9, borderRadius: 5, marginLeft: 8 }, latestAssessmentDate: { color: '#667085', fontSize: 11, marginTop: 7 }, latestAssessmentSummary: { color: '#555555', fontSize: 11, lineHeight: 16, marginTop: 9 }, latestAssessmentButton: { minHeight: 42, borderRadius: 7, backgroundColor: NAVY, alignItems: 'center', justifyContent: 'center', marginTop: 2 }, latestAssessmentButtonText: { color: WHITE, fontSize: 12, fontWeight: '700' }, profileReminderRow: { flexDirection: 'row', alignItems: 'center', paddingTop: 5 }, profileReminderIcon: { width: 24, height: 28, borderRadius: 5, backgroundColor: ORANGE, alignItems: 'center', justifyContent: 'center', marginRight: 9 }, profileReminderIconText: { color: WHITE, fontSize: 16 }, profileModalBackdrop: { flex: 1, backgroundColor: '#0008', justifyContent: 'flex-end' }, profileModal: { backgroundColor: WHITE, padding: 20, borderTopLeftRadius: 20, borderTopRightRadius: 20, maxHeight: '90%' }, profileEditField: { marginBottom: 10 }, profileEditInput: { minHeight: 42, borderRadius: 8, borderWidth: 1, borderColor: '#D0D5DD', paddingHorizontal: 10, marginTop: 4, color: NAVY },
   safe: { flex: 1, backgroundColor: WARM }, fill: { flex: 1 }, center: { flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: WARM },
   legalPage: { flex: 1, backgroundColor: WARM }, legalHeader: { height: 52, flexDirection: 'row', alignItems: 'center', backgroundColor: WHITE, paddingHorizontal: 12 }, legalBack: { width: 40, height: 48, justifyContent: 'center' }, legalBackIcon: { color: '#475467', fontSize: 34, lineHeight: 40 }, legalBackLabel: { color: '#1D2939', fontSize: 14, fontWeight: '500' }, legalTabs: { height: 48, flexDirection: 'row', backgroundColor: '#F1EEEE', borderBottomWidth: 1, borderBottomColor: '#D8D4D2' }, legalTab: { flex: 1, alignItems: 'center', justifyContent: 'center', borderBottomWidth: 2, borderBottomColor: 'transparent' }, legalTabSelected: { borderBottomColor: ORANGE }, legalTabText: { color: '#777777', fontSize: 13 }, legalTabTextSelected: { color: NAVY }, legalScroll: { flex: 1 }, legalDocument: { paddingHorizontal: 16, paddingTop: 20, paddingBottom: 24 }, legalTitle: { color: NAVY, fontSize: 16, fontWeight: '700', marginBottom: 12 }, legalSectionTitle: { color: NAVY, fontSize: 14, fontWeight: '500', marginTop: 18, marginBottom: 8 }, legalParagraph: { color: '#666666', fontSize: 11, lineHeight: 18 }, legalFooter: { backgroundColor: WHITE, paddingHorizontal: 28, paddingTop: 12, paddingBottom: 14 },
   notificationHeader: { height: 52, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', backgroundColor: WHITE, paddingHorizontal: 12 }, notificationBack: { width: 42, height: 48, justifyContent: 'center' }, notificationBackIcon: { color: '#475467', fontSize: 34, lineHeight: 40 }, notificationHeaderTitle: { color: NAVY, fontSize: 15, fontWeight: '700' }, notificationFilter: { width: 42, height: 48, alignItems: 'center', justifyContent: 'center' }, notificationFilterIcon: { color: '#777777', fontSize: 23 }, notificationList: { paddingHorizontal: 16, paddingTop: 8, paddingBottom: 24 }, notificationDate: { color: '#777777', fontSize: 11, textAlign: 'center', paddingVertical: 10 }, notificationCard: { flexDirection: 'row', alignItems: 'flex-start', backgroundColor: WHITE, borderRadius: 14, borderWidth: 1, borderColor: '#E5E7EA', padding: 12, marginVertical: 5, elevation: 1 }, notificationIconCircle: { width: 30, height: 30, borderRadius: 15, backgroundColor: ORANGE, alignItems: 'center', justifyContent: 'center', marginRight: 9 }, notificationIcon: { color: WHITE, fontSize: 17, fontWeight: '700' }, notificationContent: { flex: 1 }, notificationTitle: { color: NAVY, fontSize: 12, fontWeight: '700', marginTop: 2 }, notificationMessage: { color: '#555555', fontSize: 11, lineHeight: 17, marginTop: 9 }, notificationAction: { alignSelf: 'flex-end', paddingTop: 8, paddingHorizontal: 4 }, notificationActionText: { color: ORANGE, fontSize: 10, fontWeight: '500' }, notificationEmpty: { color: '#777777', fontSize: 11, textAlign: 'center', paddingVertical: 10 },
@@ -2152,7 +2242,7 @@ const styleDefs = {
   page: { padding: 20, paddingBottom: 28 }, title: { color: NAVY, fontSize: 22, fontWeight: '700', textAlign: 'center', marginBottom: 8 }, muted: { color: '#666666', fontSize: 12, lineHeight: 18, marginBottom: 12 }, bodyText: { color: NAVY, fontSize: 14, lineHeight: 21 }, card: { backgroundColor: WHITE, borderRadius: 15, padding: 16, marginVertical: 7, elevation: 1 }, cardTitle: { color: NAVY, fontSize: 15, fontWeight: '700', marginBottom: 6 }, button: { minHeight: 48, backgroundColor: ORANGE, borderRadius: 12, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 16, marginVertical: 7, elevation: 2 }, buttonText: { color: WHITE, fontWeight: '700', fontSize: 15, textAlign: 'center' }, buttonSecondary: { backgroundColor: NAVY }, buttonSecondaryText: { color: WHITE }, disabled: { opacity: 0.55 }, link: { color: ORANGE, fontWeight: '600', fontSize: 12 }, linkCenter: { color: '#777777', fontSize: 13, textAlign: 'center', padding: 12, textDecorationLine: 'underline' },
   roleCard: { backgroundColor: WHITE, borderRadius: 12, borderWidth: 1, borderColor: '#E2E2E2', marginVertical: 9, padding: 12, alignItems: 'center' }, roleSelected: { borderColor: ORANGE, backgroundColor: '#FFF8F1' }, roleImage: { width: 142, height: 144 }, roleText: { color: WHITE, backgroundColor: NAVY, overflow: 'hidden', borderRadius: 7, textAlign: 'center', width: '100%', padding: 12, fontSize: 16 }, languageImage: { width: 200, height: 170, alignSelf: 'center', marginVertical: 6 }, languageChoice: { backgroundColor: WHITE, borderRadius: 9, padding: 14, marginVertical: 5, flexDirection: 'row', justifyContent: 'space-between', borderWidth: 1, borderColor: '#DDDDDD' }, languageSelected: { borderColor: ORANGE, backgroundColor: '#FFF8F1' }, languagePill: { borderWidth: 1, borderColor: '#D9DEE4', borderRadius: 18, paddingHorizontal: 12, paddingVertical: 8, margin: 4 },
   homePage: { paddingHorizontal: 18, paddingTop: 14, paddingBottom: 24 }, greeting: { flexDirection: 'row', alignItems: 'center', minHeight: 96 }, greetingCard: { padding: 16, minHeight: 108, marginBottom: 10 }, greetingTitle: { color: NAVY, fontSize: 18, fontWeight: '700', marginBottom: 8 }, flex: { flex: 1 }, greetingImage: { width: 112, height: 104 }, featureCard: { minHeight: 110, flexDirection: 'row', alignItems: 'center', backgroundColor: NAVY, borderRadius: 13, paddingHorizontal: 18, paddingVertical: 16, marginVertical: 6, elevation: 3 }, featureIconCircle: { width: 38, height: 38, borderRadius: 19, backgroundColor: WHITE, alignItems: 'center', justifyContent: 'center', marginRight: 12 }, featureCopy: { flex: 1 }, featureTitle: { color: WHITE, fontSize: 15, lineHeight: 19, fontWeight: '700', marginBottom: 5 }, featureSubtitle: { color: '#D7E0E6', fontSize: 11, lineHeight: 16 }, featureArrow: { color: WHITE, fontSize: 30, paddingLeft: 8 }, clipboardIcon: { width: 15, height: 18, backgroundColor: ORANGE, borderRadius: 2, alignItems: 'center', paddingTop: 3 }, clipboardClip: { position: 'absolute', top: -2, width: 8, height: 4, borderRadius: 2, borderWidth: 1, borderColor: ORANGE, backgroundColor: WHITE }, clipboardCheck: { color: WHITE, fontSize: 8, lineHeight: 8, fontWeight: '700' }, clipboardLine: { width: 8, height: 1, backgroundColor: WHITE, marginTop: 2 }, heartIcon: { color: ORANGE, fontSize: 23, lineHeight: 27 }, clockIcon: { width: 19, height: 19, borderRadius: 10, backgroundColor: ORANGE, position: 'relative' }, clockHandLong: { position: 'absolute', width: 2, height: 6, top: 4, left: 8, backgroundColor: WHITE, borderRadius: 1 }, clockHandShort: { position: 'absolute', width: 5, height: 2, top: 9, left: 9, backgroundColor: WHITE, borderRadius: 1 }, settingsIcon: { color: ORANGE, fontSize: 22, lineHeight: 26 }, statRow: { flexDirection: 'row', justifyContent: 'space-around', paddingTop: 10 }, stat: { color: NAVY, fontSize: 22, textAlign: 'center', lineHeight: 27 }, smallText: { color: '#666666', fontSize: 11 }, tipRow: { flexDirection: 'row', alignItems: 'flex-start' }, tipIconCircle: { width: 32, height: 32, borderRadius: 16, backgroundColor: ORANGE, alignItems: 'center', justifyContent: 'center', marginRight: 10 }, eyeTipGlyph: { width: 16, height: 20, alignItems: 'center', justifyContent: 'center' }, eyeTipBulb: { width: 13, height: 13, borderRadius: 7, backgroundColor: WHITE, alignItems: 'center', justifyContent: 'center' }, eyeTipHighlight: { width: 3, height: 3, borderRadius: 2, backgroundColor: ORANGE, position: 'absolute', top: 2, left: 3 }, eyeTipBulbNeck: { width: 7, height: 2, backgroundColor: WHITE, marginTop: -1 }, eyeTipBulbBase: { width: 6, height: 2, borderRadius: 1, backgroundColor: WHITE, marginTop: 1 }, activityRow: { flexDirection: 'row', alignItems: 'center', paddingTop: 10 }, activityIconCircle: { width: 26, height: 26, borderRadius: 13, backgroundColor: ORANGE, alignItems: 'center', justifyContent: 'center', marginRight: 8 }, activityIcon: { color: WHITE, fontSize: 15, fontWeight: '700' }, activityCopy: { flex: 1 }, activityTitle: { color: NAVY, fontSize: 12, marginBottom: 2 }, retakeButton: { backgroundColor: NAVY, borderRadius: 6, paddingVertical: 5, paddingHorizontal: 10 }, retakeText: { color: WHITE, fontSize: 10, fontWeight: '600' }, recommendation: { color: NAVY, paddingVertical: 6, fontSize: 14 }, resultEye: { color: ORANGE, fontSize: 56, textAlign: 'center' }, resultRisk: { fontSize: 35, fontWeight: '800', textAlign: 'center' },
-  bottomNav: { height: 62, backgroundColor: WHITE, flexDirection: 'row', borderTopWidth: 1, borderTopColor: '#E8E6E4', justifyContent: 'space-around', alignItems: 'center' }, navItem: { flex: 1, alignItems: 'center' }, navIcon: { fontSize: 18, color: '#9A9A9A' }, navLabel: { fontSize: 9, color: '#9A9A9A', marginTop: 2 }, navSelected: { color: ORANGE, fontWeight: '700' }, switchRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginTop: 10 }, inlineRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }, checkbox: { color: NAVY, fontSize: 18, marginRight: 7 }, separator: { color: '#7A8492', fontSize: 11, textAlign: 'center', marginVertical: 16 }, socialButton: { minHeight: 42, borderRadius: 10, borderWidth: 1, borderColor: '#E0E3E8', alignItems: 'center', justifyContent: 'center', marginTop: 9 }, bottomLink: { alignItems: 'center', marginTop: 18 }, tourImage: { width: '100%', height: 260, marginVertical: 10 }, wrapRow: { flexDirection: 'row', flexWrap: 'wrap', marginTop: 10 },
+  bottomNav: { height: 62, backgroundColor: WHITE, flexDirection: 'row', borderTopWidth: 1, borderTopColor: '#E8E6E4', justifyContent: 'space-around', alignItems: 'center' }, navItem: { flex: 1, alignItems: 'center' }, navIcon: { fontSize: 18, color: '#9A9A9A' }, navLabel: { fontSize: 10, color: '#9A9A9A', marginTop: 3 }, navSelected: { color: ORANGE, fontWeight: '700' }, switchRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginTop: 10 }, inlineRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }, checkbox: { color: NAVY, fontSize: 18, marginRight: 7 }, separator: { color: '#7A8492', fontSize: 11, textAlign: 'center', marginVertical: 16 }, socialButton: { minHeight: 42, borderRadius: 10, borderWidth: 1, borderColor: '#E0E3E8', alignItems: 'center', justifyContent: 'center', marginTop: 9 }, bottomLink: { alignItems: 'center', marginTop: 18 }, tourImage: { width: '100%', height: 260, marginVertical: 10 }, wrapRow: { flexDirection: 'row', flexWrap: 'wrap', marginTop: 10 },
 };
 
 // Display theme. The style definitions above are the light design; Dark Mode, High Contrast and the

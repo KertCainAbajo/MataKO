@@ -3,57 +3,65 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\Question;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class AssessmentController extends Controller
 {
-    // Questionnaires in the order shown in the app; they differ only in the last question.
-    // Answers are 0 (Never), 1 (Occasionally), 2 (Often or Always).
-    private const STUDENT_SYMPTOMS = [
-        'Burning sensation', 'Itchy eyes', 'Foreign body sensation', 'Watery eyes',
-        'Excessive blinking', 'Eye redness', 'Eye pain', 'Heavy eyelids',
-        'Dry eyes', 'Blurred vision', 'Double vision', 'Difficulty focusing',
-        'Light sensitivity', 'Colored halos', 'Worsening vision', 'Worsening vision (Q16)',
-    ];
+    /**
+     * Active questions for the signed-in user's role, in the order the app shows them.
+     */
+    public function questions(Request $request): JsonResponse
+    {
+        $questions = Question::forAudience($this->audience($request))->get();
+        $translations = $questions->reduce(fn (array $carry, Question $question): array => array_replace_recursive($carry, $question->dictionary()), ['Filipino' => [], 'Cebuano' => []]);
 
-    private const PROFESSIONAL_SYMPTOMS = [
-        'Burning sensation', 'Itchy eyes', 'Foreign body sensation', 'Watery eyes',
-        'Excessive blinking', 'Eye redness', 'Eye pain', 'Heavy eyelids',
-        'Dry eyes', 'Blurred vision', 'Double vision', 'Difficulty focusing',
-        'Light sensitivity', 'Colored halos', 'Worsening vision', 'Headache',
-    ];
+        $questions = $questions->map(fn (Question $question): array => [
+            'id' => $question->id,
+            'symptom' => $question->symptom,
+            'question' => $question->question,
+            'image_key' => $question->bundledImage(),
+            // Relative, so the app can join it to whichever host it uses to reach the API.
+            'image_path' => $question->imageUrl() ? '/storage/'.$question->image : null,
+        ]);
+
+        return response()->json(['questions' => $questions, 'max_answer' => Question::MAX_ANSWER, 'translations' => $translations]);
+    }
 
     public function store(Request $request): JsonResponse
     {
-        $symptoms = $request->user()->role === 'professional' ? self::PROFESSIONAL_SYMPTOMS : self::STUDENT_SYMPTOMS;
-        $maxAnswer = 2;
+        $symptoms = Question::forAudience($this->audience($request))->pluck('symptom')->all();
+        if ($symptoms === []) {
+            return response()->json(['message' => __('The self-assessment is not available right now.')], 422);
+        }
 
         $data = $request->validate([
             'answers' => ['required', 'array', 'size:'.count($symptoms)],
-            'answers.*' => ['required', 'integer', 'between:0,'.$maxAnswer],
+            'answers.*' => ['required', 'integer', 'between:0,'.Question::MAX_ANSWER],
         ]);
 
-        // Require one answer for each known symptom, so incomplete forms cannot be scored.
+        // Require one answer for each active question, so incomplete or outdated forms cannot be scored.
         $answers = $data['answers'];
         $missing = array_diff($symptoms, array_keys($answers));
         $unknown = array_diff(array_keys($answers), $symptoms);
         if ($missing || $unknown) {
             return response()->json([
-                'message' => 'Answer each of the listed questions.',
-                'errors' => ['answers' => ['Answer each of the listed questions.']],
+                'message' => __('The questions have changed. Please start the self-assessment again.'),
+                'errors' => ['answers' => [__('Answer each of the listed questions.')]],
             ], 422);
         }
 
         // Low up to a third of the maximum score, medium up to two thirds, high above that.
         $score = array_sum($answers);
-        $maxScore = count($symptoms) * $maxAnswer;
+        $maxScore = count($symptoms) * Question::MAX_ANSWER;
         $risk = $score * 3 <= $maxScore ? 'LOW' : ($score * 3 <= $maxScore * 2 ? 'MEDIUM' : 'HIGH');
 
-        $assessment = DB::transaction(function () use ($request, $answers, $symptoms, $score, $risk) {
+        $assessment = DB::transaction(function () use ($request, $answers, $symptoms, $score, $maxScore, $risk) {
             $assessment = $request->user()->assessments()->create([
                 'total_score' => $score,
+                'max_score' => $maxScore,
                 'risk_level' => $risk,
             ]);
 
@@ -91,6 +99,11 @@ class AssessmentController extends Controller
             'assessment' => $assessment,
             'recommendations' => $this->recommendations($assessment->risk_level),
         ]);
+    }
+
+    private function audience(Request $request): string
+    {
+        return $request->user()->role === 'professional' ? 'professional' : 'student';
     }
 
     private function recommendations(string $risk): array

@@ -14,7 +14,7 @@ class Assessment extends Model
     // We only store creation time for this MVP; Laravel's default updated_at is disabled.
     public const UPDATED_AT = null;
 
-    protected $fillable = ['user_id', 'total_score', 'risk_level'];
+    protected $fillable = ['user_id', 'total_score', 'risk_level', 'max_score'];
 
     public function user(): BelongsTo
     {

@@ -19,7 +19,15 @@ class User extends Authenticatable
     protected $casts = [
         'age' => 'integer',
         'email_verified_at' => 'datetime',
+        'is_admin' => 'boolean',
+        'disabled_at' => 'datetime',
+        'last_login_at' => 'datetime',
     ];
+
+    public function isDisabled(): bool
+    {
+        return $this->disabled_at !== null;
+    }
 
     public function assessments(): HasMany
     {

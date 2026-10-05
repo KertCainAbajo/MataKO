@@ -1,0 +1,2614 @@
+{
+ "Get Started": [
+  "Magsimula",
+  "Sugdi"
+ ],
+ "Select Your Profile Type": [
+  "Piliin ang Uri ng Profile",
+  "Pilia ang klase sa profile"
+ ],
+ "This will help us tailor your experience.": [
+  "Makakatulong ito para iakma ang iyong karanasan.",
+  "Makatabang kini sa pagpahaom sa imong kasinatian."
+ ],
+ "Select Student": [
+  "Piliin: Estudyante",
+  "Pilia: Estudyante"
+ ],
+ "Select Professional": [
+  "Piliin: Propesyonal",
+  "Pilia: Propesyonal"
+ ],
+ "Choose your language:": [
+  "Piliin ang wika:",
+  "Pilia ang pinulongan:"
+ ],
+ "Proceed": [
+  "Magpatuloy",
+  "Padayon"
+ ],
+ "Skip for now": [
+  "Laktawan muna",
+  "Laktawi una"
+ ],
+ "Sign In": [
+  "Mag-sign in",
+  "Sulod"
+ ],
+ "Sign Up": [
+  "Mag-sign up",
+  "Paghimo og account"
+ ],
+ "Email Address": [
+  "Email Address",
+  "Email address"
+ ],
+ "Password": [
+  "Password",
+  "Password"
+ ],
+ "Remember me": [
+  "Tandaan ako",
+  "Hinumdumi ako"
+ ],
+ "Forgot Password?": [
+  "Nakalimutan ang password?",
+  "Nakalimot sa password?"
+ ],
+ "Create Account": [
+  "Gumawa ng account",
+  "Paghimo og account"
+ ],
+ "Full Name": [
+  "Buong pangalan",
+  "Bug-os nga ngalan"
+ ],
+ "Phone Number": [
+  "Numero ng telepono",
+  "Numero sa telepono"
+ ],
+ "Age": [
+  "Edad",
+  "Edad"
+ ],
+ "Confirm Password": [
+  "Kumpirmahin ang password",
+  "Kumpirmaha ang password"
+ ],
+ "Home": [
+  "Tahanan",
+  "Balay"
+ ],
+ "Progress": [
+  "Progreso",
+  "Kauswagan"
+ ],
+ "Eye Care": [
+  "Pangangalaga sa mata",
+  "Pag-atiman sa mata"
+ ],
+ "Tips": [
+  "Mga payo",
+  "Mga tambag"
+ ],
+ "Settings": [
+  "Mga Setting",
+  "Mga setting"
+ ],
+ "Start Self-Assessment": [
+  "Simulan ang pagsusuri sa mata",
+  "Sugdi ang pagsusi sa mata"
+ ],
+ "Assessment History": [
+  "Kasaysayan ng pagsusuri",
+  "Kasaysayan sa pagsusi"
+ ],
+ "See my result": [
+  "Tingnan ang resulta",
+  "Tan-awa ang resulta"
+ ],
+ "Your result": [
+  "Iyong resulta",
+  "Imong resulta"
+ ],
+ "Back to dashboard": [
+  "Bumalik sa dashboard",
+  "Balik sa dashboard"
+ ],
+ "None": [
+  "Wala",
+  "Wala"
+ ],
+ "Sometimes": [
+  "Minsan",
+  "Usahay"
+ ],
+ "Often": [
+  "Madalas",
+  "Kasagaran"
+ ],
+ "Always": [
+  "Palagi",
+  "Kanunay"
+ ],
+ "Log out": [
+  "Mag-log out",
+  "Gawas"
+ ],
+ "Set Screen Break Reminders": [
+  "Magtakda ng paalala sa pahinga",
+  "I-set ang pahinumdom sa pahulay"
+ ],
+ "YOUR VISION, YOUR POWER.": [
+  "ANG IYONG PANINGIN, IYONG LAKAS.",
+  "IMONG PANAN-AW, IMONG KUSOG."
+ ],
+ "Select a language you're most comfortable with.": [
+  "Piliin ang wikang pinakakomportable ka.",
+  "Pilia ang pinulongan nga labing komportable ka gamiton."
+ ],
+ "Already have an account? ": [
+  "May account ka na ba? ",
+  "Aduna na kay account? "
+ ],
+ "Don't have an account? ": [
+  "Wala ka pang account? ",
+  "Wala pa kay account? "
+ ],
+ "Welcome to MataKo!": [
+  "Maligayang pagdating sa MataKo!",
+  "Maayong pag-abot sa MataKo!"
+ ],
+ "Your personal companion in protecting your eyes from Digital Eye Strain.": [
+  "Ang iyong katuwang sa pagprotekta sa mga mata laban sa digital eye strain.",
+  "Imong kauban sa pagpanalipod sa imong mga mata batok sa digital eye strain."
+ ],
+ "Take a quick tour of your eye care dashboard, assessment, progress, and healthy screen habits.": [
+  "Tingnan ang dashboard, pagsusuri, progreso, at mabubuting gawi sa paggamit ng screen.",
+  "Tan-awa ang dashboard sa pag-atiman sa mata, pagtimbang-timbang, progreso, ug maayong batasan sa paggamit sa screen."
+ ],
+ "Take a Tour": [
+  "Tingnan ang gabay",
+  "Tan-awa ang giya"
+ ],
+ "Go to Home": [
+  "Pumunta sa Home",
+  "Adto sa Home"
+ ],
+ "Quick Tour": [
+  "Maikling gabay",
+  "Mubo nga giya"
+ ],
+ "1. Check in with your eyes": [
+  "1. Suriin ang kalusugan ng iyong mga mata",
+  "1. Susiha ang kahimsog sa imong mga mata"
+ ],
+ "Answer five questions and get a screening result with practical suggestions.": [
+  "Sagutin ang limang tanong upang makita ang resulta at makatanggap ng mga mungkahi.",
+  "Tubaga ang lima ka pangutana aron makita ang resulta ug makadawat og praktikal nga mga sugyot."
+ ],
+ "2. Track your progress": [
+  "2. Subaybayan ang iyong progreso",
+  "2. Bantayi ang imong progreso"
+ ],
+ "Review your saved assessment history from the Progress tab.": [
+  "Tingnan ang mga na-save na pagsusuri sa tab na Progreso.",
+  "Tan-awa ang natipig nga kasaysayan sa pagsusi sa tab nga Kauswagan."
+ ],
+ "3. Build healthy habits": [
+  "3. Bumuo ng mabubuting gawi",
+  "3. Himoa ang maayong mga batasan"
+ ],
+ "Read eye care tips and turn on 20-minute break reminders.": [
+  "Basahin ang mga payo sa pangangalaga ng mata at i-on ang paalala sa pahinga kada 20 minuto.",
+  "Basaha ang mga tambag sa pag-atiman sa mata ug i-on ang pahinumdom sa pagpahulay matag 20 minutos."
+ ],
+ "Digital eye strain risk · ": [
+  "Panganib ng digital eye strain · ",
+  "Peligro sa digital eye strain · "
+ ],
+ " of 15 points": [
+  " sa 15 puntos",
+  " sa 15 ka puntos"
+ ],
+ "Suggestions for you": [
+  "Mga mungkahi para sa iyo",
+  "Mga sugyot para kanimo"
+ ],
+ "This screening result is not a diagnosis. If symptoms persist or concern you, consider speaking with an eye care professional.": [
+  "Hindi ito medikal na diagnosis. Kung magpatuloy o ikabahala mo ang mga sintomas, kumonsulta sa propesyonal sa pangangalaga ng mata.",
+  "Dili kini medikal nga diagnosis. Kon magpadayon o makapabalaka ang mga sintomas, pakigkonsulta sa propesyonal sa pag-atiman sa mata."
+ ],
+ "Loading…": [
+  "Naglo-load…",
+  "Nagkarga…"
+ ],
+ "Saving…": [
+  "Sine-save…",
+  "Gitipigan…"
+ ],
+ "Over the past week, how often have you experienced each symptom?": [
+  "Sa nakaraang linggo, gaano kadalas mong naranasan ang bawat sintomas?",
+  "Sa miaging semana, unsa ka kanunay nimong nasinati ang matag sintomas?"
+ ],
+ "Eye pain": [
+  "Pananakit ng mata",
+  "Sakit sa mata"
+ ],
+ "Dry eyes": [
+  "Tuyong mga mata",
+  "Uga nga mga mata"
+ ],
+ "Blurred vision": [
+  "Malabong paningin",
+  "Hanap nga panan-aw"
+ ],
+ "Headache": [
+  "Sakit ng ulo",
+  "Sakit sa ulo"
+ ],
+ "Eye fatigue": [
+  "Pagkapagod ng mata",
+  "Kakapoy sa mata"
+ ],
+ "Hi, ": [
+  "Kumusta, ",
+  "Kumusta, "
+ ],
+ "Ready to take care of your eyes today?": [
+  "Handa ka na bang alagaan ang iyong mga mata ngayon?",
+  "Andam ka ba nga moatiman sa imong mga mata karon?"
+ ],
+ "Quick check-up for your eye health": [
+  "Mabilis na pagsusuri para sa kalusugan ng mata",
+  "Mubo nga pagsusi sa kahimsog sa mata"
+ ],
+ "View Care Tips": [
+  "Tingnan ang mga payo sa pangangalaga",
+  "Tan-awa ang mga tambag sa pag-atiman"
+ ],
+ "Learn how to protect your vision": [
+  "Alamin kung paano protektahan ang iyong paningin",
+  "Hibal-i unsaon pagpanalipod sa imong panan-aw"
+ ],
+ "Schedule healthy breaks from screens": [
+  "Mag-iskedyul ng mabubuting pahinga mula sa screen",
+  "I-iskedyul ang maayong pagpahulay gikan sa screen"
+ ],
+ "Eye Care Settings": [
+  "Mga setting ng pangangalaga sa mata",
+  "Mga setting sa pag-atiman sa mata"
+ ],
+ "Manage your device preferences for your eye care": [
+  "Pamahalaan ang mga setting ng pangangalaga sa mata",
+  "I-adjust ang mga setting sa device para sa pag-atiman sa imong mata"
+ ],
+ "Today's Progress": [
+  "Progreso Ngayong Araw",
+  "Kauswagan Karon"
+ ],
+ "Screen breaks": [
+  "Mga pahinga sa screen",
+  "Mga pahulay sa screen"
+ ],
+ "Time in MataKo": [
+  "Oras sa MataKo",
+  "Oras sa MataKo"
+ ],
+ "Today's Eye Tip": [
+  "Payo sa Mata Ngayong Araw",
+  "Tambag sa Mata Karon"
+ ],
+ "Remember to blink more often while using your screen. The 30-30-30 rule can help reduce eye strain.": [
+  "Madalas na kumurap habang gumagamit ng screen. Makakatulong ang 30-30-30 na tuntunin upang mabawasan ang pagkapagod ng mata.",
+  "Hinumdomi nga mokurap kanunay samtang naggamit sa screen. Makatabang ang lagda nga 30-30-30 sa pagpakunhod sa kakapoy sa mata."
+ ],
+ "Recent Activity": [
+  "Kamakailang aktibidad",
+  "Bag-ong kalihokan"
+ ],
+ "Self-Assessment Completed": [
+  "Natapos ang pagsusuri sa sarili",
+  "Nahuman ang pagsusi sa kaugalingon"
+ ],
+ "Retake": [
+  "Ulitin",
+  "Usba"
+ ],
+ "No recent activity yet. Start a self-assessment to see your progress here.": [
+  "Wala pang aktibidad. Magsagawa ng pagsusuri upang makita rito ang iyong progreso.",
+  "Wala pay bag-ong kalihokan. Pagsusi sa kaugalingon aron makita dinhi ang imong progreso."
+ ],
+ "Break Reminder": [
+  "Paalala sa pahinga",
+  "Pahinumdom sa pahulay"
+ ],
+ "Complete a self-assessment to see your progress here.": [
+  "Kumpletuhin ang pagsusuri sa sarili upang makita rito ang iyong progreso.",
+  "Kompletoha ang pagsusi sa kaugalingon aron makita dinhi ang imong progreso."
+ ],
+ "Screen break reminders": [
+  "Mga paalala sa pahinga mula sa screen",
+  "Mga pahinumdom sa pahulay gikan sa screen"
+ ],
+ "20-20-20 break reminder": [
+  "Paalala sa pahingang 20-20-20",
+  "Pahinumdom sa pahulay nga 20-20-20"
+ ],
+ "Get an in-app reminder to look 20 feet away for 20 seconds every 20 minutes.": [
+  "Tumanggap ng paalala kada 20 minuto upang tumingin sa layong 20 talampakan sa loob ng 20 segundo.",
+  "Makadawat og pahinumdom matag 20 minutos nga motan-aw sa gilay-on nga 20 ka tiil sulod sa 20 segundos."
+ ],
+ "Reminder on": [
+  "Naka-on ang paalala",
+  "Naka-on ang pahinumdom"
+ ],
+ "Reminder off": [
+  "Naka-off ang paalala",
+  "Naka-off ang pahinumdom"
+ ],
+ "Everyday eye care": [
+  "Pang-araw-araw na pangangalaga sa mata",
+  "Adlaw-adlaw nga pag-atiman sa mata"
+ ],
+ "Take regular breaks, blink often, and keep your screen at a comfortable distance.": [
+  "Magpahinga nang regular, kumurap nang madalas, at panatilihin ang komportableng layo ng screen.",
+  "Pahuway kanunay, kurap kanunay, ug ipahilayo ang screen sa komportableng gilay-on."
+ ],
+ "Eye care tips": [
+  "Mga payo sa pangangalaga ng mata",
+  "Mga tambag sa pag-atiman sa mata"
+ ],
+ "Follow the 20-20-20 rule": [
+  "Sundin ang tuntuning 20-20-20",
+  "Sunda ang lagda nga 20-20-20"
+ ],
+ "Adjust screen brightness to match your surroundings": [
+  "Itugma ang liwanag ng screen sa liwanag ng paligid",
+  "Ipares ang kahayag sa screen sa kahayag sa palibot"
+ ],
+ "Blink often to keep your eyes comfortable": [
+  "Madalas na kumurap upang maging komportable ang mga mata",
+  "Kurap kanunay aron komportable ang imong mga mata"
+ ],
+ "Keep a comfortable distance from your screen": [
+  "Panatilihin ang komportableng layo mula sa screen",
+  "Pagpabiling komportable ang gilay-on sa screen"
+ ],
+ "Take regular breaks and stretch": [
+  "Magpahinga at mag-unat nang regular",
+  "Pahuway ug pag-unat kanunay"
+ ],
+ "Small, regular habits can help reduce digital eye strain.": [
+  "Makakatulong ang maliliit at regular na gawi upang mabawasan ang pagkapagod ng mata mula sa screen.",
+  "Makatabang ang gagmay ug kanunay nga maayong batasan sa pagpakunhod sa kakapoy sa mata tungod sa screen."
+ ],
+ "Profile": [
+  "Profile",
+  "Profile"
+ ],
+ "Personal Information": [
+  "Personal na Impormasyon",
+  "Personal nga Impormasyon"
+ ],
+ "Email": [
+  "Email",
+  "Email"
+ ],
+ "Phone": [
+  "Telepono",
+  "Telepono"
+ ],
+ "User Type": [
+  "Uri ng user",
+  "Klase sa user"
+ ],
+ "Student": [
+  "Estudyante",
+  "Estudyante"
+ ],
+ "Professional": [
+  "Propesyonal",
+  "Propesyonal"
+ ],
+ "Not provided": [
+  "Hindi ibinigay",
+  "Wala gihatag"
+ ],
+ "Break Reminders": [
+  "Mga paalala sa pahinga",
+  "Mga pahinumdom sa pahulay"
+ ],
+ "Monochrome": [
+  "Monochrome",
+  "Monochrome"
+ ],
+ "Grayscale mode": [
+  "Grayscale mode",
+  "Grayscale mode"
+ ],
+ "Grayscale mode on": [
+  "Naka-on ang grayscale mode",
+  "Naka-on ang grayscale mode"
+ ],
+ "Latest Assessment": [
+  "Pinakabagong Pagsusuri",
+  "Pinakabag-ong Pagsusi"
+ ],
+ " Eye Strain": [
+  "Pagkapagod ng Mata",
+  "Kakapoy sa Mata"
+ ],
+ "Assessed on ": [
+  "Sinuri noong ",
+  "Gisusi niadtong "
+ ],
+ "Your assessment shows significant symptoms. Consider taking regular breaks and adjusting your screen habits.": [
+  "May mahahalagang sintomas sa resulta. Magpahinga nang regular at ayusin ang mga gawi sa paggamit ng screen.",
+  "Nagpakita ang resulta og dakong mga sintomas. Pahuway kanunay ug usba ang imong batasan sa paggamit sa screen."
+ ],
+ "Your assessment shows moderate symptoms. Consider taking more frequent breaks and adjusting screen brightness.": [
+  "May katamtamang sintomas sa resulta. Magpahinga nang mas madalas at ayusin ang liwanag ng screen.",
+  "Nagpakita ang resulta og kasarangang mga sintomas. Pahuway kanunay ug usba ang kahayag sa screen."
+ ],
+ "Your assessment shows mild symptoms. Keep practicing healthy screen habits and taking regular breaks.": [
+  "May bahagyang sintomas sa resulta. Ipagpatuloy ang mabubuting gawi sa screen at regular na pagpapahinga.",
+  "Nagpakita ang resulta og gaan nga mga sintomas. Padayon sa maayong batasan sa screen ug kanunay nga pagpahulay."
+ ],
+ "Complete a self-assessment to see your latest result here.": [
+  "Kumpletuhin ang pagsusuri sa sarili upang makita rito ang pinakabagong resulta.",
+  "Kompletoha ang pagsusi sa kaugalingon aron makita dinhi ang pinakabag-ong resulta."
+ ],
+ "View All Results": [
+  "Tingnan ang Lahat ng Resulta",
+  "Tan-awa ang Tanang Resulta"
+ ],
+ "Language": [
+  "Wika",
+  "Pinulongan"
+ ],
+ "Edit Profile": [
+  "I-edit ang Profile",
+  "Usba ang Profile"
+ ],
+ "Save Changes": [
+  "I-save ang mga pagbabago",
+  "Tipigi ang mga kausaban"
+ ],
+ "Back": [
+  "Bumalik",
+  "Balik"
+ ],
+ "Back to Sign Up": [
+  "Bumalik sa Pagpaparehistro",
+  "Balik sa Pagparehistro"
+ ],
+ "Notifications": [
+  "Mga notification",
+  "Mga pahibalo"
+ ],
+ "Today": [
+  "Ngayon",
+  "Karon"
+ ],
+ "Yesterday": [
+  "Kahapon",
+  "Kagahapon"
+ ],
+ "Earlier": [
+  "Mas maaga",
+  "Una pa"
+ ],
+ "Assessment completed": [
+  "Natapos ang pagsusuri",
+  "Nahuman ang pagsusi"
+ ],
+ "View result": [
+  "Tingnan ang resulta",
+  "Tan-awa ang resulta"
+ ],
+ "Reminders are enabled. Keep MataKo open to receive your scheduled break prompts.": [
+  "Naka-on ang mga paalala. Panatilihing bukas ang MataKo upang matanggap ang mga nakaiskedyul na paalala.",
+  "Naka-on ang mga pahinumdom. Bilina nga bukas ang MataKo aron madawat ang naka-iskedyul nga pahinumdom."
+ ],
+ "Break reminders are currently turned off. You can enable them in Eye Care.": [
+  "Naka-off ang mga paalala. Maaari mo itong i-on sa Pangangalaga sa Mata.",
+  "Naka-off ang mga pahinumdom. Mahimo nimo kining i-on sa Pag-atiman sa Mata."
+ ],
+ "Manage reminders": [
+  "Pamahalaan ang mga paalala",
+  "Pamahalaa ang mga pahinumdom"
+ ],
+ "Set up reminders": [
+  "I-set up ang mga paalala",
+  "I-set up ang mga pahinumdom"
+ ],
+ "No self-assessments completed today.": [
+  "Wala pang natatapos na pagsusuri ngayong araw.",
+  "Walay nahuman nga pagsusi karong adlawa."
+ ],
+ "There are no earlier assessment updates.": [
+  "Walang mas naunang update ng pagsusuri.",
+  "Walay naunang update sa pagsusi."
+ ],
+ "I Agree and Continue": [
+  "Sumasang-ayon ako at Magpatuloy",
+  "Mouyon ko ug Padayon"
+ ],
+ "Done": [
+  "Tapos na",
+  "Nahuman"
+ ],
+ "Terms of Service": [
+  "Mga Tuntunin ng Serbisyo",
+  "Mga Termino sa Serbisyo"
+ ],
+ "Privacy Policy": [
+  "Patakaran sa Privacy",
+  "Patakaran sa Privacy"
+ ],
+ "Welcome to MataKo, your personal guide to managing Digital Eye Strain (DES). By using MataKo, you agree to abide by the following terms. Please read carefully.": [
+  "Maligayang pagdating sa MataKo, ang iyong gabay sa pamamahala ng digital eye strain (DES). Sa paggamit ng MataKo, sumasang-ayon kang sundin ang mga tuntuning ito. Basahin nang mabuti.",
+  "Maayong pag-abot sa MataKo, imong giya sa pagdumala sa digital eye strain (DES). Pinaagi sa paggamit sa MataKo, mouyon ka sa mosunod nga mga termino. Palihog basaha pag-ayo."
+ ],
+ "1. Acceptance of Terms": [
+  "1. Pagtanggap sa mga Tuntunin",
+  "1. Pagdawat sa mga Termino"
+ ],
+ "By accessing and using MataKo, you confirm that you are at least 18 years old and agree to be bound by these Terms of Service.": [
+  "Sa paggamit ng MataKo, pinatutunayan mong ikaw ay hindi bababa sa 18 taong gulang at sumasang-ayon ka sa mga Tuntunin ng Serbisyong ito.",
+  "Pinaagi sa paggamit sa MataKo, imong gipamatud-an nga nag-edad ka og labing menos 18 ka tuig ug mouyon ka nga sundon kining mga Termino sa Serbisyo."
+ ],
+ "2. Purpose of the Service": [
+  "2. Layunin ng Serbisyo",
+  "2. Katuyoan sa Serbisyo"
+ ],
+ "MataKo is designed to help young adults and working professionals self-assess and manage symptoms of Digital Eye Strain through self-evaluation tools, behavior-based strategies, reminders, and educational content.": [
+  "Dinisenyo ang MataKo upang tulungan ang mga young adult at propesyonal na suriin at pamahalaan ang mga sintomas ng digital eye strain gamit ang mga tool sa pagsusuri, estratehiya sa gawi, paalala, at kaalamang pang-edukasyon.",
+  "Gidesinyo ang MataKo aron tabangan ang mga batan-on ug propesyonal sa pagsusi ug pagdumala sa mga sintomas sa digital eye strain pinaagi sa mga himan sa pagsusi, estratehiya sa batasan, pahinumdom, ug impormasyon."
+ ],
+ "3. User Responsibilities": [
+  "3. Mga Responsibilidad ng User",
+  "3. Mga Responsibilidad sa User"
+ ],
+ "You are responsible for maintaining the confidentiality of your MataKo account and agree to use the app in a lawful and respectful manner. All assessments and feedback are for informational purposes only and do not substitute for medical advice.": [
+  "Responsibilidad mong panatilihing kumpidensyal ang iyong account at gamitin ang app nang naaayon sa batas at may paggalang. Para lamang sa impormasyon ang mga pagsusuri at puna at hindi kapalit ng payong medikal.",
+  "Responsibilidad nimo ang pagpanalipod sa pribasiya sa imong account ug mouyon ka sa paggamit sa app subay sa balaod ug may pagtahod. Impormasyon lamang ang mga pagsusi ug tubag; dili kini kapuli sa tambag medikal."
+ ],
+ "4. Health Disclaimer": [
+  "4. Paalala sa Kalusugan",
+  "4. Pahimangno sa Panglawas"
+ ],
+ "MataKo is not intended to diagnose, treat, or replace professional medical advice. Users with ongoing or severe eye symptoms are strongly encouraged to consult a licensed eye care professional.": [
+  "Hindi nilayon ang MataKo na mag-diagnose, gumamot, o pumalit sa propesyonal na payong medikal. Hinihikayat ang mga may nagpapatuloy o malulubhang sintomas sa mata na kumonsulta sa lisensyadong propesyonal.",
+  "Dili gituyo ang MataKo sa pagdayagnos, pagtambal, o pagpuli sa tambag sa propesyonal sa panglawas. Giawhag ang adunay nagpadayon o grabe nga sintomas sa mata nga mokonsulta sa lisensyadong propesyonal."
+ ],
+ "5. Content Usage": [
+  "5. Paggamit ng Nilalaman",
+  "5. Paggamit sa Sulod"
+ ],
+ "All content such as ergonomic advice, educational materials, and care suggestions provided in MataKo is protected and may not be reproduced or redistributed without permission.": [
+  "Protektado ang lahat ng nilalaman gaya ng payo sa ergonomiya, materyales pang-edukasyon, at mungkahi sa pangangalaga; huwag itong kopyahin o ipamahagi nang walang pahintulot.",
+  "Protektado ang tanang sulod sama sa tambag sa ergonomiya, materyales sa edukasyon, ug sugyot sa pag-atiman sa MataKo; dili kini kopyahon o ipanghatag pag-usab nga walay pagtugot."
+ ],
+ "At MataKo, we value your privacy and are committed to protecting your personal and health-related information.": [
+  "Pinahahalagahan ng MataKo ang iyong privacy at nakatuon ito sa pagprotekta sa iyong personal at impormasyong pangkalusugan.",
+  "Gihatagan og bili sa MataKo ang imong pribasiya ug gipanalipdan ang imong personal ug impormasyon bahin sa panglawas."
+ ],
+ "1. Information We Collect": [
+  "1. Impormasyong Kinokolekta Namin",
+  "1. Impormasyong Among Kolektahon"
+ ],
+ "Personal Information: Name, email (if account is created), and age group.\nHealth Data: Your self-assessment responses (e.g., DES symptoms, screen time habits).\nApp Usage Data: Frequency of feature usage, interactions with reminders and educational tips.": [
+  "Personal na Impormasyon: Pangalan, email (kung gumawa ng account), at pangkat ng edad.\nDatos Pangkalusugan: Mga sagot sa pagsusuri sa sarili, gaya ng sintomas ng DES at gawi sa paggamit ng screen.\nDatos sa Paggamit ng App: Dalas ng paggamit ng mga feature at pakikipag-ugnayan sa mga paalala at payong pang-edukasyon.",
+  "Personal nga Impormasyon: Ngalan, email (kon naghimo og account), ug grupo sa edad.\nDatos sa Panglawas: Mga tubag sa pagsusi sa kaugalingon, sama sa sintomas sa DES ug batasan sa screen.\nDatos sa Paggamit sa App: Kasubsob sa paggamit sa mga feature, pahinumdom, ug tambag."
+ ],
+ "2. How We Use Your Data": [
+  "2. Paano Namin Ginagamit ang Iyong Datos",
+  "2. Giunsa Paggamit ang Imong Datos"
+ ],
+ "To generate personalized care suggestions and ergonomic guidance.\nTo provide culturally relevant health education.\nTo improve app performance and user experience.\nFor anonymous research purposes to enhance DES prevention tools.": [
+  "Upang gumawa ng mga mungkahing angkop sa iyo at gabay sa ergonomiya.\nUpang magbigay ng kaalamang pangkalusugan na angkop sa kultura.\nUpang pagandahin ang performance ng app at karanasan ng user.\nPara sa hindi nagpapakilalang pananaliksik upang mapahusay ang mga tool sa pag-iwas sa DES.",
+  "Aron makahimo og mga sugyot ug giya nga angay kanimo.\nAron mohatag og edukasyon sa panglawas nga angay sa kultura.\nAron mapaayo ang performance sa app ug kasinatian sa user.\nAlang sa dili mailhing panukiduki aron mapaayo ang mga himan sa pagpugong sa DES."
+ ],
+ "3. Data Sharing": [
+  "3. Pagbabahagi ng Datos",
+  "3. Pagpaambit sa Datos"
+ ],
+ "We do not sell your data. Data may be shared in aggregated, anonymized form for academic or product development purposes. No individual information is ever shared without consent.": [
+  "Hindi namin ipinagbibili ang iyong datos. Maaaring ibahagi ang pinagsama-sama at hindi nagpapakilalang datos para sa akademiko o pagbuo ng produkto. Hindi ibabahagi ang personal na impormasyon nang walang pahintulot.",
+  "Dili namo ibaligya ang imong datos. Mahimong ipaambit ang kinatibuk-an ug dili mailhing datos alang sa akademiko o pagpalambo sa produkto. Dili ipaambit ang personal nga impormasyon kon walay pagtugot."
+ ],
+ "4. Storage and Security": [
+  "4. Pag-iimbak at Seguridad",
+  "4. Pagtipig ug Seguridad"
+ ],
+ "Your data is securely stored and encrypted. We implement industry-standard security measures to protect against unauthorized access.": [
+  "Ligtas na iniimbak at ine-encrypt ang iyong datos. Gumagamit kami ng mga pamantayang hakbang sa seguridad upang maprotektahan ito laban sa hindi awtorisadong pag-access.",
+  "Luwas nga gitipigan ug gi-encrypt ang imong datos. Gigamit namo ang mga sukdanan sa seguridad sa industriya aron mapanalipdan kini batok sa walay pagtugot nga pag-access."
+ ],
+ "5. User Rights": [
+  "5. Mga Karapatan ng User",
+  "5. Mga Katungod sa User"
+ ],
+ "You have the right to:\n• Access your data.\n• Request correction or deletion.\n• Withdraw consent at any time by deleting your account or contacting us.": [
+  "May karapatan kang:\n• I-access ang iyong datos.\n• Humiling ng pagwawasto o pagbura nito.\n• Bawiin ang pahintulot anumang oras sa pagbura ng account o pakikipag-ugnayan sa amin.",
+  "Aduna kay katungod sa:\n• Pag-access sa imong datos.\n• Paghangyo nga usbon o tangtangon kini.\n• Pagbawi sa pagtugot bisan kanus-a pinaagi sa pagtangtang sa account o pagkontak kanamo."
+ ],
+ "Name": [
+  "Pangalan",
+  "Ngalan"
+ ],
+ "Hide": [
+  "Itago",
+  "Tagoa"
+ ],
+ "Show": [
+  "Ipakita",
+  "Ipakita"
+ ],
+ "Sign in to your account to continue": [
+  "Mag-sign in sa iyong account para magpatuloy",
+  "Sulod sa imong account aron mopadayon"
+ ],
+ "Join us and start your journey today": [
+  "Sumali at simulan ang iyong paglalakbay ngayon",
+  "Apil kanamo ug sugdi karon ang imong panaw"
+ ],
+ "I agree to the ": [
+  "Sumasang-ayon ako sa ",
+  "Mouyon ko sa "
+ ],
+ " and ": [
+  " at ",
+  " ug "
+ ],
+ "or continue with": [
+  "o magpatuloy gamit ang",
+  "o padayon gamit ang"
+ ],
+ "Continue with Google": [
+  "Magpatuloy gamit ang Google",
+  "Padayon gamit ang Google"
+ ],
+ "Continue with Apple": [
+  "Magpatuloy gamit ang Apple",
+  "Padayon gamit ang Apple"
+ ],
+ "Creating account…": [
+  "Gumagawa ng account…",
+  "Naghimo og account…"
+ ],
+ "Signing in…": [
+  "Nag-sign in…",
+  "Nagasulod…"
+ ],
+ "Enter a valid email and password.": [
+  "Maglagay ng wastong email at password.",
+  "Pagsulod og balidong email ug password."
+ ],
+ "Complete each field. You must be at least 18 to sign up.": [
+  "Kumpletuhin ang bawat patlang. Dapat ay 18 taong gulang pataas upang magparehistro.",
+  "Kompletoha ang matag kahon. Kinahanglan 18 anyos pataas aron magparehistro."
+ ],
+ "Use at least 8 characters and make sure the passwords match.": [
+  "Gumamit ng hindi bababa sa 8 character at tiyaking magkapareho ang mga password.",
+  "Gamit og labing menos 8 ka karakter ug siguroha nga magkapareho ang mga password."
+ ],
+ "Please agree to the Terms and Privacy Policy.": [
+  "Sumang-ayon sa Mga Tuntunin at Patakaran sa Privacy.",
+  "Palihog mouyon sa mga Termino ug Patakaran sa Privacy."
+ ],
+ "Password reset is not configured yet.": [
+  "Hindi pa naka-set up ang pag-reset ng password.",
+  "Wala pa ma-set up ang pag-reset sa password."
+ ],
+ "Unavailable": [
+  "Hindi magagamit",
+  "Dili magamit"
+ ],
+ "Google sign-in is not configured yet.": [
+  "Hindi pa naka-set up ang pag-sign in gamit ang Google.",
+  "Wala pa ma-set up ang pagsulod gamit ang Google."
+ ],
+ "Apple sign-in is not configured yet.": [
+  "Hindi pa naka-set up ang pag-sign in gamit ang Apple.",
+  "Wala pa ma-set up ang pagsulod gamit ang Apple."
+ ],
+ "Profile options": [
+  "Mga opsyon sa profile",
+  "Mga opsyon sa profile"
+ ],
+ "Choose an account action.": [
+  "Pumili ng gagawin sa account.",
+  "Pilia ang buhaton sa account."
+ ],
+ "Cancel": [
+  "Kanselahin",
+  "Ikansela"
+ ],
+ "Back to Home": [
+  "Bumalik sa Home",
+  "Balik sa Home"
+ ],
+ "More eye care settings": [
+  "Iba pang setting sa pangangalaga ng mata",
+  "Dugang nga setting sa pag-atiman sa mata"
+ ],
+ "Every 20 minutes": [
+  "Bawat 20 minuto",
+  "Matag 20 minutos"
+ ],
+ "Screen Time": [
+  "Oras sa Screen",
+  "Oras sa Screen"
+ ],
+ "Breaks": [
+  "Mga Pahinga",
+  "Mga Pahulay"
+ ],
+ "Streak": [
+  "Sunod-sunod na araw",
+  "Sunod-sunod nga adlaw"
+ ],
+ " years": [
+  " taon",
+  " ka tuig"
+ ],
+ "User": [
+  "Kaibigan",
+  "Gumagamit"
+ ],
+ "Mild Eye Strain": [
+  "Bahagyang Pagkapagod ng Mata",
+  "Gaan nga Kakapoy sa Mata"
+ ],
+ "Moderate Eye Strain": [
+  "Katamtamang Pagkapagod ng Mata",
+  "Kasarangang Kakapoy sa Mata"
+ ],
+ "High Eye Strain": [
+  "Matinding Pagkapagod ng Mata",
+  "Grabe nga Kakapoy sa Mata"
+ ],
+ "Please try again.": [
+  "Pakisubukang muli.",
+  "Palihog sulayi pag-usab."
+ ],
+ "Eye break": [
+  "Pahinga ng mata",
+  "Pahulay sa mata"
+ ],
+ "Look 20 feet away for 20 seconds.": [
+  "Tumingin sa layong 20 talampakan sa loob ng 20 segundo.",
+  "Tan-aw sa gilay-on nga 20 ka tiil sulod sa 20 segundos."
+ ],
+ "today": [
+  "ngayong araw",
+  "karon"
+ ],
+ "risk": [
+  "panganib",
+  "peligro"
+ ],
+ "of 15": [
+  "sa 15",
+  "sa 15"
+ ],
+ "LOW": [
+  "Mababa",
+  "Ubos"
+ ],
+ "MEDIUM": [
+  "Katamtaman",
+  "Kasagaran"
+ ],
+ "HIGH": [
+  "Mataas",
+  "Taas"
+ ],
+ "years": [
+  "taon",
+  "ka tuig"
+ ],
+ "day": [
+  "araw",
+  "adlaw"
+ ],
+ "days": [
+  "araw",
+  "adlaw"
+ ],
+ "minute": [
+  "minuto",
+  "minuto"
+ ],
+ "minutes": [
+  "minuto",
+  "minuto"
+ ],
+ "hour": [
+  "oras",
+  "oras"
+ ],
+ "hours": [
+  "oras",
+  "oras"
+ ],
+ "ago": [
+  "ang nakalipas",
+  "ang milabay"
+ ],
+ "Your result is ready:": [
+  "Handa na ang iyong resulta:",
+  "Andam na ang imong resulta:"
+ ],
+ "No recent activity yet. Start a self-assessment to see your results here.": [
+  "Wala pang aktibidad. Magsagawa ng pagsusuri upang makita rito ang mga resulta.",
+  "Wala pay kalihokan. Pagsusi sa kaugalingon aron makita dinhi ang mga resulta."
+ ],
+ "Show recent notifications": [
+  "Ipakita ang mga kamakailang notification",
+  "Ipakita ang bag-ong mga pahibalo"
+ ],
+ "Show earlier notifications": [
+  "Ipakita ang mas naunang notification",
+  "Ipakita ang naunang mga pahibalo"
+ ],
+ "break reminder has appeared while MataKo was open today.": [
+  "paalala sa pahinga ang lumabas habang bukas ang MataKo ngayong araw.",
+  "ka pahinumdom sa pahulay ang migawas samtang bukas ang MataKo karon."
+ ],
+ "break reminders have appeared while MataKo was open today.": [
+  "mga paalala sa pahinga ang lumabas habang bukas ang MataKo ngayong araw.",
+  "ka mga pahinumdom sa pahulay ang migawas samtang bukas ang MataKo karon."
+ ],
+ "Maintain good screen habits": [
+  "Panatilihin ang mabubuting gawi sa paggamit ng screen",
+  "Hupti ang maayong batasan sa paggamit sa screen"
+ ],
+ "Take occasional breaks": [
+  "Magpahinga paminsan-minsan",
+  "Pahuway usahay"
+ ],
+ "Adjust screen brightness": [
+  "Ayusin ang liwanag ng screen",
+  "I-adjust ang kahayag sa screen"
+ ],
+ "Blink more often": [
+  "Kumurap nang mas madalas",
+  "Kurap kanunay"
+ ],
+ "Keep a strict break schedule": [
+  "Sundin ang iskedyul ng pahinga",
+  "Sunda ang iskedyul sa pagpahulay"
+ ],
+ "Reduce screen time": [
+  "Bawasan ang oras sa screen",
+  "Pakunhori ang oras sa screen"
+ ],
+ "Improve your ergonomics": [
+  "Pagbutihin ang ergonomiya ng paggamit",
+  "Pauswaga ang hustong pamaagi sa paggamit"
+ ],
+ "Consider consulting an eye specialist": [
+  "Isaalang-alang ang pagkonsulta sa espesyalista sa mata",
+  "Hunahunaa ang pagkonsulta sa espesyalista sa mata"
+ ],
+ "Ready to check your eye health?": [
+  "Handa ka na bang suriin ang kalusugan ng iyong mga mata?",
+  "Andam na ba ka nga susihon ang kahimsog sa imong mga mata?"
+ ],
+ "This quick self-assessment will only take a few minutes.": [
+  "Aabutin lamang ng ilang minuto ang mabilis na pagsusuring ito.",
+  "Pipila lang ka minuto kining mubo nga pagsusi sa kaugalingon."
+ ],
+ "Ready to learn how to take care of your eyes?": [
+  "Handa ka na bang matutunan kung paano alagaan ang iyong mga mata?",
+  "Andam na ba ka nga makat-on unsaon pag-atiman sa imong mga mata?"
+ ],
+ "We've prepared some simple tips to help reduce eye strain.": [
+  "Naghanda kami ng ilang simpleng payo upang mabawasan ang pagkapagod ng mata.",
+  "Nangandam kami og pipila ka yano nga tambag aron mamenosan ang kakapoy sa mata."
+ ],
+ "Want to take healthy screen breaks?": [
+  "Gusto mo bang magkaroon ng mabuting pahinga mula sa screen?",
+  "Gusto ba ka nga magpahulay kanunay gikan sa screen?"
+ ],
+ "Set gentle reminders to protect your eyes during long screen use.": [
+  "Magtakda ng banayad na mga paalala upang maprotektahan ang iyong mga mata sa matagal na paggamit ng screen.",
+  "Pagbutang og pahinumdom aron mapanalipdan ang imong mga mata kon dugay kang mogamit og screen."
+ ],
+ "Customize your eye care experience.": [
+  "Iangkop ang iyong karanasan sa pangangalaga ng mata.",
+  "Ipasibo ang imong kasinatian sa pag-atiman sa mata."
+ ],
+ "You can enable features like dark mode, dimmers, and pop-up breaks.": [
+  "Maaari mong i-on ang mga feature gaya ng dark mode, dimmer, at mga paalala sa pahinga.",
+  "Mahimo nimong i-on ang dark mode, dimmer, ug mga pahinumdom sa pagpahulay."
+ ],
+ "Open": [
+  "Buksan",
+  "Ablihi"
+ ],
+ "Next": [
+  "Susunod",
+  "Sunod"
+ ],
+ "Self-assessment": [
+  "Pagsusuri sa sarili",
+  "Pagsusi sa kaugalingon"
+ ],
+ "MataKo": [
+  "MataKo",
+  "MataKo"
+ ],
+ "You've completed": [
+  "Natapos mo na ang",
+  "Nahuman na nimo ang"
+ ],
+ "out of": [
+  "sa",
+  "sa"
+ ],
+ "today. Let's keep going to give your eyes the care they deserve.": [
+  "ngayong araw. Ituloy natin para maibigay sa iyong mga mata ang alagang nararapat sa kanila.",
+  "karon. Padayon ta aron mahatagan ang imong mga mata sa pag-atiman nga angay kanila."
+ ],
+ "View Less": [
+  "Ipakita ang Mas Kaunti",
+  "Ipakita ang Mas Gamay"
+ ],
+ "View More": [
+  "Ipakita ang Higit Pa",
+  "Ipakita ang Dugang Pa"
+ ],
+ "Relief Tips": [
+  "Mga Payo para Gumaan",
+  "Mga Tambag aron Mogaan"
+ ],
+ "Try Eye Exercises": [
+  "Subukan ang Ehersisyo sa Mata",
+  "Sulayi ang Ehersisyo sa Mata"
+ ],
+ "Check My Eye Health": [
+  "Suriin ang Kalusugan ng Aking Mata",
+  "Susiha ang Kahimsog sa Akong Mata"
+ ],
+ "Exercises This Week": [
+  "Ehersisyo Ngayong Linggo",
+  "Ehersisyo Karong Semanaha"
+ ],
+ "Day Streak": [
+  "Sunod-sunod na Araw",
+  "Sunod-sunod nga Adlaw"
+ ],
+ "Progress Tracker": [
+  "Tagasubaybay ng Progreso",
+  "Tigsubay sa Pag-uswag"
+ ],
+ "Exercises Completed": [
+  "Ehersisyong Natapos",
+  "Ehersisyo nga Nahuman"
+ ],
+ "Choose an Exercise": [
+  "Pumili ng Ehersisyo",
+  "Pagpili og Ehersisyo"
+ ],
+ "Do It Again": [
+  "Gawin Muli",
+  "Buhata Pag-usab"
+ ],
+ "Start Exercise": [
+  "Simulan ang Ehersisyo",
+  "Sugdi ang Ehersisyo"
+ ],
+ "Track Your Progress": [
+  "Subaybayan ang Iyong Progreso",
+  "Subaya ang Imong Pag-uswag"
+ ],
+ "Keep your eyes healthy with daily exercises": [
+  "Panatilihing malusog ang iyong mga mata sa araw-araw na ehersisyo",
+  "Hupti nga himsog ang imong mga mata pinaagi sa adlaw-adlaw nga ehersisyo"
+ ],
+ "Daily Eye Exercises": [
+  "Araw-araw na Ehersisyo sa Mata",
+  "Adlaw-adlaw nga Ehersisyo sa Mata"
+ ],
+ "Progress Today": [
+  "Progreso Ngayong Araw",
+  "Pag-uswag Karon"
+ ],
+ "Completed": [
+  "Tapos na",
+  "Nahuman na"
+ ],
+ "Pending": [
+  "Hindi pa tapos",
+  "Wala pa nahuman"
+ ],
+ "Hide History": [
+  "Itago ang Kasaysayan",
+  "Itago ang Kasaysayan"
+ ],
+ "View History": [
+  "Tingnan ang Kasaysayan",
+  "Tan-awa ang Kasaysayan"
+ ],
+ "Daily Streak": [
+  "Sunod-sunod na Araw",
+  "Sunod-sunod nga Adlaw"
+ ],
+ "Keep it up!": [
+  "Ituloy mo lang!",
+  "Padayon lang!"
+ ],
+ "Complete an exercise to start a streak!": [
+  "Tapusin ang isang ehersisyo para magsimula ng sunod-sunod na araw!",
+  "Humana ang usa ka ehersisyo aron magsugod og sunod-sunod nga adlaw!"
+ ],
+ "Your longest streak:": [
+  "Pinakamahaba mong sunod-sunod:",
+  "Pinakataas nimo nga sunod-sunod:"
+ ],
+ "Explore Eye Health Topics": [
+  "Tuklasin ang mga Paksa sa Kalusugan ng Mata",
+  "Susiha ang mga Hilisgutan sa Kahimsog sa Mata"
+ ],
+ "Learn More": [
+  "Alamin Pa",
+  "Sayra Pa"
+ ],
+ "Personalize Your Eye Comfort": [
+  "Iakma ang Ginhawa ng Iyong Mata",
+  "Ipahiangay ang Kahayahay sa Imong Mata"
+ ],
+ "Eye Care Exercises": [
+  "Mga Ehersisyo sa Pangangalaga ng Mata",
+  "Mga Ehersisyo sa Pag-atiman sa Mata"
+ ],
+ "exercises completed today": [
+  "ehersisyong natapos ngayong araw",
+  "ehersisyo nga nahuman karon"
+ ],
+ "Are you sure you want to stop?": [
+  "Sigurado ka bang gusto mong huminto?",
+  "Sigurado ka ba nga gusto nimong mohunong?"
+ ],
+ "Progress:": [
+  "Progreso:",
+  "Pag-uswag:"
+ ],
+ "No": [
+  "Hindi",
+  "Dili"
+ ],
+ "Yes": [
+  "Oo",
+  "Oo"
+ ],
+ "In Progress": [
+  "Isinasagawa",
+  "Gihimo pa"
+ ],
+ "Paused": [
+  "Naka-pause",
+  "Gi-pause"
+ ],
+ "Ready": [
+  "Handa na",
+  "Andam na"
+ ],
+ "Start Again": [
+  "Magsimula Muli",
+  "Sugdi Pag-usab"
+ ],
+ "Start": [
+  "Simulan",
+  "Sugdi"
+ ],
+ "Pause": [
+  "I-pause",
+  "I-pause"
+ ],
+ "Resume": [
+  "Ituloy",
+  "Ipadayon"
+ ],
+ "Stop": [
+  "Ihinto",
+  "Hunong"
+ ],
+ "Exercise completed. Great job!": [
+  "Tapos na ang ehersisyo. Magaling!",
+  "Nahuman na ang ehersisyo. Maayo kaayo!"
+ ],
+ "Focus Shift": [
+  "Paglipat ng Pokus",
+  "Pagbalhin sa Pokus"
+ ],
+ "Near to Far Vision": [
+  "Malapit hanggang Malayong Paningin",
+  "Duol ngadto sa Layo nga Panan-aw"
+ ],
+ "Time Remaining": [
+  "Natitirang Oras",
+  "Nahabilin nga Oras"
+ ],
+ "Hold your thumb 6 inches away, focus for 3 seconds, then shift to an object 10-20 feet away for 3 seconds. Repeat.": [
+  "Hawakan ang hinlalaki nang 6 na pulgada ang layo, tumitig nang 3 segundo, saka lumipat sa bagay na 10-20 talampakan ang layo nang 3 segundo. Ulitin.",
+  "Kuptana ang kumagko 6 ka pulgada ang gilay-on, tutoki sulod sa 3 segundos, dayon balhin sa butang nga 10-20 ka tiil ang gilay-on sulod sa 3 segundos. Usba."
+ ],
+ "Palming": [
+  "Palming",
+  "Palming"
+ ],
+ "Active Session": [
+  "Aktibong Sesyon",
+  "Aktibo nga Sesyon"
+ ],
+ "Session Complete": [
+  "Tapos na ang Sesyon",
+  "Nahuman na ang Sesyon"
+ ],
+ "Ready to Start": [
+  "Handa nang Magsimula",
+  "Andam na Magsugod"
+ ],
+ "Guidance": [
+  "Gabay",
+  "Giya"
+ ],
+ "Breathe deeply. Relax your eyes and mind.": [
+  "Huminga nang malalim. Ipahinga ang iyong mga mata at isip.",
+  "Pagginhawa og lawom. Papahuwaya ang imong mga mata ug hunahuna."
+ ],
+ "Stops the session": [
+  "Ihihinto ang sesyon",
+  "Hunongon ang sesyon"
+ ],
+ "In Progress...": [
+  "Isinasagawa...",
+  "Gihimo pa..."
+ ],
+ "Eye Blinking Exercise": [
+  "Ehersisyo sa Pagkurap",
+  "Ehersisyo sa Pagkurap"
+ ],
+ "Blink slowly and gently to moisturize your eyes": [
+  "Kumurap nang dahan-dahan at marahan para mabasa ang iyong mga mata",
+  "Kumurap og hinay ug hinayhinay aron mabasa ang imong mga mata"
+ ],
+ "Tap Start to Begin": [
+  "I-tap ang Simulan para Magsimula",
+  "I-tap ang Sugdi aron Magsugod"
+ ],
+ "Well done!": [
+  "Magaling!",
+  "Maayo kaayo!"
+ ],
+ "Close your eyes gently, hold for 2 seconds, then open slowly": [
+  "Ipikit nang marahan ang mga mata, hawakan nang 2 segundo, saka dahan-dahang imulat",
+  "Ipiyong og hinay ang mga mata, hupti sulod sa 2 segundos, dayon hinay-hinay nga iabri"
+ ],
+ "Prevent eye strain by looking 30 feet away every 30 minutes.": [
+  "Iwasan ang pagkapagod ng mata sa pagtingin sa 30 talampakan ang layo tuwing 30 minuto.",
+  "Likayi ang kakapoy sa mata pinaagi sa pagtan-aw sa 30 ka tiil ang gilay-on matag 30 minutos."
+ ],
+ "Next Break In:": [
+  "Susunod na Pahinga Sa:",
+  "Sunod nga Pahulay Sulod sa:"
+ ],
+ "Look Away For:": [
+  "Tumingin sa Malayo Nang:",
+  "Tan-aw sa Layo Sulod sa:"
+ ],
+ "Gently roll your eyes in circular motions to relieve tension.": [
+  "Marahang paikutin ang iyong mga mata nang pabilog para maibsan ang tensyon.",
+  "Hinay nga lingina ang imong mga mata nga pabilog aron makunhoran ang tensyon."
+ ],
+ "Rep": [
+  "Ulit",
+  "Balik"
+ ],
+ "Direction:": [
+  "Direksyon:",
+  "Direksyon:"
+ ],
+ "Duration:": [
+  "Tagal:",
+  "Gidugayon:"
+ ],
+ "Change duration": [
+  "Baguhin ang tagal",
+  "Usba ang gidugayon"
+ ],
+ "Edit": [
+  "I-edit",
+  "I-edit"
+ ],
+ "Repetitions:": [
+  "Ulit:",
+  "Balik:"
+ ],
+ "Fewer repetitions": [
+  "Mas kaunting ulit",
+  "Mas gamay nga balik"
+ ],
+ "More repetitions": [
+  "Mas maraming ulit",
+  "Mas daghan nga balik"
+ ],
+ "Playing demo…": [
+  "Ipinapakita ang demo…",
+  "Gipakita ang demo…"
+ ],
+ "Demo Animation": [
+  "Demo na Animasyon",
+  "Demo nga Animasyon"
+ ],
+ "Protect Your Vision": [
+  "Protektahan ang Iyong Paningin",
+  "Panalipdi ang Imong Panan-aw"
+ ],
+ "Discover practical tips to keep your eyes healthy and comfortable throughout your day.": [
+  "Tuklasin ang mga praktikal na payo para manatiling malusog at komportable ang iyong mga mata buong araw.",
+  "Diskubreha ang praktikal nga mga tambag aron magpabiling himsog ug komportable ang imong mga mata tibuok adlaw."
+ ],
+ "Eye Care Tips": [
+  "Mga Payo sa Pangangalaga ng Mata",
+  "Mga Tambag sa Pag-atiman sa Mata"
+ ],
+ "Did You Know?": [
+  "Alam Mo Ba?",
+  "Nahibal-an Ba Nimo?"
+ ],
+ "Contrast Sensitivity Issue": [
+  "Problema sa Pagkilala ng Kontrast",
+  "Problema sa Pag-ila sa Kontrast"
+ ],
+ "Eye fatigue from DES can make it harder to distinguish between shades on digital displays": [
+  "Ang pagkapagod ng mata dahil sa DES ay maaaring magpahirap sa pagkilala ng mga kulay sa digital na screen",
+  "Ang kakapoy sa mata tungod sa DES makapalisod sa pag-ila sa mga kolor sa digital nga screen"
+ ],
+ "Display Theme": [
+  "Tema ng Display",
+  "Tema sa Display"
+ ],
+ "Choose a theme that reduces eye strain": [
+  "Pumili ng temang nakababawas ng pagkapagod ng mata",
+  "Pagpili og tema nga makapakunhod sa kakapoy sa mata"
+ ],
+ "Contrast Adjustments": [
+  "Pag-aayos ng Kontrast",
+  "Pag-adjust sa Kontrast"
+ ],
+ "Text Contrast": [
+  "Kontrast ng Teksto",
+  "Kontrast sa Teksto"
+ ],
+ "Higher values make text stand out more from the background.": [
+  "Mas mataas na halaga, mas namumukod ang teksto sa background.",
+  "Mas taas nga bili, mas mamatikdan ang teksto gikan sa background."
+ ],
+ "Days of the Week": [
+  "Mga Araw ng Linggo",
+  "Mga Adlaw sa Semana"
+ ],
+ "You've taken": [
+  "Nakakuha ka ng",
+  "Nakakuha ka og"
+ ],
+ "break this week.": [
+  "pahinga ngayong linggo.",
+  "pahulay karong semanaha."
+ ],
+ "breaks this week.": [
+  "pahinga ngayong linggo.",
+  "pahulay karong semanaha."
+ ],
+ "day break streak!": [
+  "araw na sunod-sunod na pahinga!",
+  "ka adlaw nga sunod-sunod nga pahulay!"
+ ],
+ "Take a break today to start a streak!": [
+  "Magpahinga ngayong araw para magsimula ng sunod-sunod!",
+  "Pagpahulay karon aron magsugod og sunod-sunod!"
+ ],
+ "Daily Average": [
+  "Araw-araw na Karaniwan",
+  "Adlaw-adlaw nga Kasagaran"
+ ],
+ "Best Day": [
+  "Pinakamagandang Araw",
+  "Labing Maayong Adlaw"
+ ],
+ "Taking regular breaks helps reduce eye strain and improves focus. Try to maintain your streak!": [
+  "Ang regular na pahinga ay nakatutulong bawasan ang pagkapagod ng mata at pinapabuti ang pokus. Subukang panatilihin ang iyong sunod-sunod!",
+  "Ang regular nga pahulay makatabang sa pagkunhod sa kakapoy sa mata ug makapaayo sa pokus. Sulayi nga mapadayon ang imong sunod-sunod!"
+ ],
+ "Today's Usage": [
+  "Paggamit Ngayong Araw",
+  "Paggamit Karon"
+ ],
+ "of 3h goal": [
+  "sa 3h na layunin",
+  "sa 3h nga tumong"
+ ],
+ "3h goal": [
+  "3h na layunin",
+  "3h nga tumong"
+ ],
+ "Past 7 Days": [
+  "Nakaraang 7 Araw",
+  "Miaging 7 ka Adlaw"
+ ],
+ "Weekly Average": [
+  "Lingguhang Karaniwan",
+  "Semanal nga Kasagaran"
+ ],
+ "Change": [
+  "Pagbabago",
+  "Kausaban"
+ ],
+ "Progress Summary": [
+  "Buod ng Progreso",
+  "Sumaryo sa Pag-uswag"
+ ],
+ "You used your screen less than average on": [
+  "Mas kaunti sa karaniwan ang paggamit mo ng screen sa",
+  "Mas gamay sa kasagaran ang paggamit nimo sa screen sa"
+ ],
+ "of the past": [
+  "sa nakaraang",
+  "sa miaging"
+ ],
+ "day.": [
+  "araw.",
+  "ka adlaw."
+ ],
+ "days.": [
+  "araw.",
+  "ka adlaw."
+ ],
+ "Severity Levels": [
+  "Mga Antas ng Kalubhaan",
+  "Mga Lebel sa Kagrabe"
+ ],
+ "Unlocked": [
+  "Nabuksan",
+  "Naablihan"
+ ],
+ "Achievement Progress": [
+  "Progreso ng mga Tagumpay",
+  "Pag-uswag sa mga Kalampusan"
+ ],
+ "more achievement to unlock": [
+  "tagumpay pa ang mabubuksan",
+  "kalampusan pa ang maablihan"
+ ],
+ "more achievements to unlock": [
+  "tagumpay pa ang mabubuksan",
+  "kalampusan pa ang maablihan"
+ ],
+ "All achievements unlocked!": [
+  "Nabuksan na ang lahat ng tagumpay!",
+  "Naablihan na ang tanang kalampusan!"
+ ],
+ "Unlocked Achievements": [
+  "Mga Nabuksang Tagumpay",
+  "Mga Naablihan nga Kalampusan"
+ ],
+ "Coming Up Next": [
+  "Susunod",
+  "Sunod"
+ ],
+ "break today": [
+  "pahinga ngayong araw",
+  "pahulay karon"
+ ],
+ "breaks today": [
+  "pahinga ngayong araw",
+  "pahulay karon"
+ ],
+ "7-day break activity": [
+  "Pahinga sa nakaraang 7 araw",
+  "Pahulay sa miaging 7 ka adlaw"
+ ],
+ "This week avg": [
+  "Karaniwan ngayong linggo",
+  "Kasagaran karong semanaha"
+ ],
+ "achievements unlocked": [
+  "tagumpay ang nabuksan",
+  "kalampusan ang naablihan"
+ ],
+ "Self-Assessment": [
+  "Pagsusuri sa Sarili",
+  "Pagsusi sa Kaugalingon"
+ ],
+ "Quick Eye Check-Up": [
+  "Mabilisang Pagsusuri ng Mata",
+  "Dali nga Pagsusi sa Mata"
+ ],
+ "! I'll ask you questions to check on your eye health. Before we begin, I'll give you a quick guide on how to answer. Ready? Let's go!": [
+  "! Magtatanong ako para suriin ang kalusugan ng iyong mga mata. Bago tayo magsimula, bibigyan kita ng mabilis na gabay kung paano sumagot. Handa ka na? Tara na!",
+  "! Mangutana ko aron susihon ang kahimsog sa imong mga mata. Sa dili pa ta magsugod, hatagan tika og dali nga giya kon unsaon pagtubag. Andam na ka? Tara na!"
+ ],
+ "How to Answer": [
+  "Paano Sumagot",
+  "Unsaon Pagtubag"
+ ],
+ "Before we begin, please review this rating scale. It will guide your answers.": [
+  "Bago tayo magsimula, pakisuri ang sukatang ito. Gagabayan ka nito sa iyong mga sagot.",
+  "Sa dili pa ta magsugod, palihug tan-awa kining sukdanan. Kini ang mogiya sa imong mga tubag."
+ ],
+ "Choose the option that best matches how often you experience each symptom:": [
+  "Piliin ang sagot na pinakatugma sa kung gaano kadalas mo nararanasan ang bawat sintomas:",
+  "Pilia ang tubag nga labing haom kon unsa ka kanunay nimo masinati ang matag sintomas:"
+ ],
+ "Continue": [
+  "Magpatuloy",
+  "Padayon"
+ ],
+ "Question": [
+  "Tanong",
+  "Pangutana"
+ ],
+ "Retake Assessment": [
+  "Ulitin ang Pagsusuri",
+  "Usba ang Pagsusi"
+ ],
+ "Scoring Breakdown": [
+  "Detalye ng Iskor",
+  "Detalye sa Iskor"
+ ],
+ "Your Eye Strain Assessment": [
+  "Ang Iyong Pagsusuri sa Pagkapagod ng Mata",
+  "Ang Imong Pagsusi sa Kakapoy sa Mata"
+ ],
+ "Score:": [
+  "Iskor:",
+  "Iskor:"
+ ],
+ "How We Calculated Your Result": [
+  "Paano Namin Kinuwenta ang Iyong Resulta",
+  "Giunsa Namo Pagkuwenta ang Imong Resulta"
+ ],
+ "Scoring System": [
+  "Sistema ng Pag-iskor",
+  "Sistema sa Pag-iskor"
+ ],
+ "Each answer is scored based on frequency:": [
+  "Ang bawat sagot ay may iskor batay sa dalas:",
+  "Ang matag tubag adunay iskor base sa kanunay:"
+ ],
+ "With": [
+  "Sa",
+  "Sa"
+ ],
+ "questions, maximum total is": [
+  "tanong, ang pinakamataas na kabuuan ay",
+  "ka pangutana, ang labing taas nga total kay"
+ ],
+ "Your Score": [
+  "Iyong Iskor",
+  "Imong Iskor"
+ ],
+ "Care Tips": [
+  "Mga Payo sa Pangangalaga",
+  "Mga Tambag sa Pag-atiman"
+ ],
+ "Back to Results": [
+  "Bumalik sa Resulta",
+  "Balik sa Resulta"
+ ],
+ "Assessment Complete": [
+  "Tapos na ang Pagsusuri",
+  "Nahuman na ang Pagsusi"
+ ],
+ "You have ": [
+  "Ikaw ay may ",
+  "Aduna kay "
+ ],
+ "View Scoring Breakdown": [
+  "Tingnan ang Detalye ng Iskor",
+  "Tan-awa ang Detalye sa Iskor"
+ ],
+ "Do your eyes feel a burning sensation during or after using your gadgets for school?": [
+  "Nakakaramdam ba ng hapdi ang iyong mga mata habang o pagkatapos gamitin ang iyong gadget para sa paaralan?",
+  "Mobati ba og hapdos ang imong mga mata samtang o human gamita ang imong gadget para sa eskwelahan?"
+ ],
+ "Do you experience itchy eyes after hours of reading or watching lectures on screen?": [
+  "Nangangati ba ang iyong mga mata pagkatapos ng ilang oras na pagbabasa o panonood ng lektyur sa screen?",
+  "Mokatol ba ang imong mga mata human sa pila ka oras nga pagbasa o pagtan-aw og leksyon sa screen?"
+ ],
+ "Do you feel like there's something in your eye while studying or scrolling on your phone?": [
+  "Pakiramdam mo ba ay may nakapuwing sa iyong mata habang nag-aaral o nag-i-scroll sa iyong telepono?",
+  "Mobati ba ka nga daw adunay puling sa imong mata samtang nagtuon o nag-scroll sa imong telepono?"
+ ],
+ "Do your eyes water while attending online classes or reading e-books?": [
+  "Nagluluha ba ang iyong mga mata habang nasa online class o nagbabasa ng e-book?",
+  "Moluha ba ang imong mga mata samtang naa sa online class o nagbasa og e-book?"
+ ],
+ "Do you blink excessively when focusing on a digital screen?": [
+  "Sobra ka bang kumukurap kapag nakatutok sa digital na screen?",
+  "Sobra ba ka mokurap kon nagtutok sa digital nga screen?"
+ ],
+ "Do your eyes turn red after long hours of studying online?": [
+  "Namumula ba ang iyong mga mata pagkatapos ng mahabang oras ng pag-aaral online?",
+  "Mopula ba ang imong mga mata human sa taas nga oras sa pagtuon online?"
+ ],
+ "Do you feel pain or discomfort in your eyes after using digital devices for school?": [
+  "Nakakaramdam ka ba ng sakit o hindi ginhawa sa iyong mga mata pagkatapos gumamit ng digital device para sa paaralan?",
+  "Mobati ba ka og sakit o kadili-komportable sa imong mga mata human mogamit og digital device para sa eskwelahan?"
+ ],
+ "Do your eyelids feel heavy during or after screen time for academic work?": [
+  "Bumibigat ba ang iyong talukap habang o pagkatapos gumamit ng screen para sa gawaing pampaaralan?",
+  "Mobug-at ba ang imong tabon-tabon samtang o human mogamit og screen para sa buluhaton sa eskwelahan?"
+ ],
+ "Do your eyes feel dry during long periods of online activities?": [
+  "Natutuyo ba ang iyong mga mata sa mahabang online na gawain?",
+  "Mamala ba ang imong mga mata sa taas nga online nga kalihokan?"
+ ],
+ "Do you experience blurry vision after staring at your screen for too long?": [
+  "Lumalabo ba ang iyong paningin pagkatapos tumitig nang matagal sa screen?",
+  "Mangalabo ba ang imong panan-aw human sa dugay nga pagtutok sa screen?"
+ ],
+ "Do you sometimes see double images when reading or watching videos online?": [
+  "Minsan ka bang nakakakita ng doble habang nagbabasa o nanonood ng video online?",
+  "Usahay ba makakita ka og doble samtang nagbasa o nagtan-aw og video online?"
+ ],
+ "Do you find it hard to focus on nearby text after using your device for schoolwork?": [
+  "Nahihirapan ka bang tumutok sa malapit na teksto pagkatapos gamitin ang iyong device para sa takdang-aralin?",
+  "Maglisod ba ka sa pagtutok sa duol nga teksto human gamita ang imong device para sa buluhaton sa eskwelahan?"
+ ],
+ "Do your eyes feel more sensitive to light when using your devices?": [
+  "Mas sensitibo ba sa liwanag ang iyong mga mata kapag gumagamit ng device?",
+  "Mas sensitibo ba sa kahayag ang imong mga mata kon mogamit og device?"
+ ],
+ "Do you see colored halos or glares around images on your screen?": [
+  "Nakakakita ka ba ng makukulay na halo o silaw sa paligid ng mga larawan sa screen?",
+  "Makakita ba ka og kolor nga halo o silaw palibot sa mga hulagway sa screen?"
+ ],
+ "Do you feel like your vision is slowly getting worse due to screen use?": [
+  "Pakiramdam mo ba ay unti-unting lumalala ang iyong paningin dahil sa paggamit ng screen?",
+  "Mobati ba ka nga hinay-hinay nga mograbe ang imong panan-aw tungod sa paggamit og screen?"
+ ],
+ "Burning sensation": [
+  "Hapdi",
+  "Hapdos"
+ ],
+ "Do your eyes feel a burning sensation during or after working long hours in front of screen?": [
+  "Nakakaramdam ba ng hapdi ang iyong mga mata habang o pagkatapos ng mahabang oras ng pagtatrabaho sa harap ng screen?",
+  "Mobati ba og hapdos ang imong mga mata samtang o human sa taas nga oras sa pagtrabaho atubangan sa screen?"
+ ],
+ "Itchy eyes": [
+  "Makating mata",
+  "Katol sa mata"
+ ],
+ "Do you experience itchy eyes after using a computer for extended periods at work?": [
+  "Nangangati ba ang iyong mga mata pagkatapos ng matagal na paggamit ng computer sa trabaho?",
+  "Mokatol ba ang imong mga mata human sa dugay nga paggamit og computer sa trabaho?"
+ ],
+ "Foreign body sensation": [
+  "Pakiramdam na may puwing",
+  "Pagbati nga adunay puling"
+ ],
+ "Do you feel like there's something in your eye while you're working on digital tasks?": [
+  "Pakiramdam mo ba ay may nakapuwing sa iyong mata habang gumagawa ng digital na gawain?",
+  "Mobati ba ka nga daw adunay puling sa imong mata samtang nagbuhat og digital nga buluhaton?"
+ ],
+ "Watery eyes": [
+  "Nagluluhang mata",
+  "Naluha nga mata"
+ ],
+ "Do your eyes water while working on documents, emails, or spreadsheets?": [
+  "Nagluluha ba ang iyong mga mata habang gumagawa ng dokumento, email, o spreadsheet?",
+  "Moluha ba ang imong mga mata samtang nagbuhat og dokumento, email, o spreadsheet?"
+ ],
+ "Excessive blinking": [
+  "Sobrang pagkurap",
+  "Sobra nga pagkurap"
+ ],
+ "Do you notice yourself blinking more than usual during intense screen time?": [
+  "Napapansin mo bang mas madalas kang kumurap kaysa karaniwan sa matinding paggamit ng screen?",
+  "Mamatikdan ba nimo nga mas kanunay ka mokurap kaysa sa kasagaran sa grabe nga paggamit og screen?"
+ ],
+ "Eye redness": [
+  "Pamumula ng mata",
+  "Pagpula sa mata"
+ ],
+ "Do your eyes turn red by the end of your workday?": [
+  "Namumula ba ang iyong mga mata sa pagtatapos ng araw ng trabaho?",
+  "Mopula ba ang imong mga mata sa katapusan sa imong adlaw sa trabaho?"
+ ],
+ "Do you feel eye pain or discomfort after a full shift using your computer?": [
+  "Nakakaramdam ka ba ng sakit o hindi ginhawa sa mata pagkatapos ng buong shift sa computer?",
+  "Mobati ba ka og sakit o kadili-komportable sa mata human sa tibuok shift sa computer?"
+ ],
+ "Heavy eyelids": [
+  "Mabigat na talukap",
+  "Bug-at nga tabon-tabon"
+ ],
+ "Do your eyelids feel heavy while finishing tasks or joining online meetings?": [
+  "Bumibigat ba ang iyong talukap habang tinatapos ang gawain o sumasali sa online meeting?",
+  "Mobug-at ba ang imong tabon-tabon samtang naghuman og buluhaton o miapil sa online meeting?"
+ ],
+ "Do your eyes feel dry after hours of working in front of a digital screen?": [
+  "Natutuyo ba ang iyong mga mata pagkatapos ng ilang oras na pagtatrabaho sa harap ng digital na screen?",
+  "Mamala ba ang imong mga mata human sa pila ka oras nga pagtrabaho atubangan sa digital nga screen?"
+ ],
+ "Do you experience blurry vision after prolonged work-related screen use?": [
+  "Lumalabo ba ang iyong paningin pagkatapos ng matagal na paggamit ng screen para sa trabaho?",
+  "Mangalabo ba ang imong panan-aw human sa dugay nga paggamit og screen para sa trabaho?"
+ ],
+ "Double vision": [
+  "Dobleng paningin",
+  "Doble nga panan-aw"
+ ],
+ "Do you sometimes see double images when switching between tabs or windows on your computer?": [
+  "Minsan ka bang nakakakita ng doble kapag lumilipat ng tab o window sa computer?",
+  "Usahay ba makakita ka og doble kon mobalhin og tab o window sa computer?"
+ ],
+ "Difficulty focusing": [
+  "Hirap tumutok",
+  "Lisod motutok"
+ ],
+ "Do you struggle to focus on nearby objects or papers after working on your screen?": [
+  "Nahihirapan ka bang tumutok sa malapit na bagay o papel pagkatapos magtrabaho sa screen?",
+  "Maglisod ba ka sa pagtutok sa duol nga butang o papel human magtrabaho sa screen?"
+ ],
+ "Light sensitivity": [
+  "Pagkasensitibo sa liwanag",
+  "Pagkasensitibo sa kahayag"
+ ],
+ "Do you feel more sensitive to overhead lights or screen brightness during work?": [
+  "Mas sensitibo ka ba sa ilaw sa kisame o liwanag ng screen habang nagtatrabaho?",
+  "Mas sensitibo ba ka sa suga sa kisame o kahayag sa screen samtang nagtrabaho?"
+ ],
+ "Colored halos": [
+  "Makukulay na halo",
+  "Kolor nga halo"
+ ],
+ "Do you see colored halos or reflections around screen text or objects after working too long?": [
+  "Nakakakita ka ba ng makukulay na halo o repleksyon sa paligid ng teksto o bagay sa screen pagkatapos ng matagal na pagtatrabaho?",
+  "Makakita ba ka og kolor nga halo o repleksyon palibot sa teksto o butang sa screen human sa dugay nga pagtrabaho?"
+ ],
+ "Worsening vision": [
+  "Lumalalang paningin",
+  "Nagkagrabe nga panan-aw"
+ ],
+ "Do you feel like your vision has been getting worse from regular work screen use?": [
+  "Pakiramdam mo ba ay lumalala ang iyong paningin dahil sa regular na paggamit ng screen sa trabaho?",
+  "Mobati ba ka nga nagkagrabe ang imong panan-aw tungod sa regular nga paggamit og screen sa trabaho?"
+ ],
+ "Do you experience headaches at work after being on your computer for hours?": [
+  "Sumasakit ba ang iyong ulo sa trabaho pagkatapos ng ilang oras sa computer?",
+  "Mosakit ba ang imong ulo sa trabaho human sa pila ka oras sa computer?"
+ ],
+ "Often or Always": [
+  "Madalas o Palagi",
+  "Kanunay o Permi"
+ ],
+ "Occasionally": [
+  "Paminsan-minsan",
+  "Usahay"
+ ],
+ "Never": [
+  "Hindi kailanman",
+  "Wala gyud"
+ ],
+ "You don't experience the symptom at all": [
+  "Hindi mo nararanasan ang sintomas",
+  "Wala gyud nimo masinati ang sintomas"
+ ],
+ "You feel it sometimes, maybe once a week": [
+  "Nararamdaman mo minsan, marahil isang beses sa isang linggo",
+  "Mabati nimo usahay, tingali kausa sa usa ka semana"
+ ],
+ "You feel it 2–3 times a week or almost every day": [
+  "Nararamdaman mo 2–3 beses sa isang linggo o halos araw-araw",
+  "Mabati nimo 2–3 ka beses sa usa ka semana o hapit adlaw-adlaw"
+ ],
+ "Good job! Your eyes are doing okay. Keep following healthy screen habits.": [
+  "Magaling! Maayos ang iyong mga mata. Ipagpatuloy ang malusog na gawi sa paggamit ng screen.",
+  "Maayo kaayo! Okay ra ang imong mga mata. Padayona ang himsog nga batasan sa paggamit og screen."
+ ],
+ "Take Care of Your Eyes": [
+  "Alagaan ang Iyong mga Mata",
+  "Atimana ang Imong mga Mata"
+ ],
+ "You're doing well. Keep these healthy habits going!": [
+  "Maayos ang iyong ginagawa. Ipagpatuloy ang malulusog na gawing ito!",
+  "Maayo ang imong gibuhat. Padayona kining himsog nga mga batasan!"
+ ],
+ "Blink more often during screen time": [
+  "Kumurap nang mas madalas habang gumagamit ng screen",
+  "Kumurap og mas kanunay samtang naggamit og screen"
+ ],
+ "Remember to blink frequently to keep your eyes moist and reduce dryness while using digital devices.": [
+  "Tandaang kumurap nang madalas para manatiling basa ang mga mata at mabawasan ang pagkatuyo habang gumagamit ng digital device.",
+  "Hinumdomi nga mokurap kanunay aron magpabiling basa ang mga mata ug makunhoran ang pagkauga samtang naggamit og digital device."
+ ],
+ "Follow the 30-30-30 rule": [
+  "Sundin ang 30-30-30 na tuntunin",
+  "Sunda ang lagda nga 30-30-30"
+ ],
+ "Every 30 minutes, look at something 30 feet away for at least 30 seconds to give your eyes a break.": [
+  "Tuwing 30 minuto, tumingin sa bagay na 30 talampakan ang layo nang hindi bababa sa 30 segundo para makapagpahinga ang iyong mga mata.",
+  "Matag 30 minutos, tan-awa ang butang nga 30 ka tiil ang gilay-on sulod sa labing menos 30 segundos aron makapahulay ang imong mga mata."
+ ],
+ "Keep your screen an arm's length away": [
+  "Ilayo ang screen nang isang dipa",
+  "Ipalayo ang screen og usa ka dupa"
+ ],
+ "Position your screen about 20-26 inches from your eyes to reduce strain and maintain proper posture.": [
+  "Ilagay ang screen nang mga 20-26 pulgada mula sa iyong mga mata para mabawasan ang pagkapagod at mapanatili ang tamang tindig.",
+  "Ibutang ang screen mga 20-26 ka pulgada gikan sa imong mga mata aron makunhoran ang kakapoy ug mapadayon ang hustong postura."
+ ],
+ "Use dark mode during low- light study": [
+  "Gumamit ng dark mode kapag nag-aaral sa madilim",
+  "Gamita ang dark mode kon nagtuon sa ngitngit"
+ ],
+ "Switch to dark mode when studying in dimly lit environments to reduce screen brightness and eye strain.": [
+  "Lumipat sa dark mode kapag nag-aaral sa madilim na lugar para mabawasan ang liwanag ng screen at pagkapagod ng mata.",
+  "Balhin sa dark mode kon nagtuon sa ngitngit nga lugar aron makunhoran ang kahayag sa screen ug kakapoy sa mata."
+ ],
+ "Be careful! You're starting to feel the effects of DES. Try more frequent breaks and follow our tips.": [
+  "Mag-ingat! Nagsisimula mo nang maramdaman ang epekto ng DES. Magpahinga nang mas madalas at sundin ang aming mga payo.",
+  "Pag-amping! Nagsugod na nimo mabati ang epekto sa DES. Pagpahulay og mas kanunay ug sunda ang among mga tambag."
+ ],
+ "Support Your Eye Health": [
+  "Suportahan ang Kalusugan ng Iyong Mata",
+  "Suportahi ang Kahimsog sa Imong Mata"
+ ],
+ "You may be starting to feel screen strain. Try these to reduce discomfort.": [
+  "Maaaring nagsisimula ka nang mapagod dahil sa screen. Subukan ang mga ito para mabawasan ang hindi ginhawa.",
+  "Basin nagsugod na ka mapoy tungod sa screen. Sulayi kini aron makunhoran ang kadili-komportable."
+ ],
+ "Take a 20-second break every 30 minutes to rest your eyes and reduce strain.": [
+  "Magpahinga nang 20 segundo tuwing 30 minuto para maipahinga ang mata at mabawasan ang pagkapagod.",
+  "Pagpahulay og 20 segundos matag 30 minutos aron mapahulay ang mata ug makunhoran ang kakapoy."
+ ],
+ "Try Eye Rolling Exercises": [
+  "Subukan ang Pag-ikot ng Mata",
+  "Sulayi ang Paglingi sa Mata"
+ ],
+ "Perform gentle eye movements daily to strengthen eye muscles and improve circulation.": [
+  "Gumawa ng marahang galaw ng mata araw-araw para lumakas ang kalamnan ng mata at gumanda ang sirkulasyon.",
+  "Buhata ang hinay nga lihok sa mata adlaw-adlaw aron mokusog ang kaunoran sa mata ug moayo ang sirkulasyon."
+ ],
+ "Match your screen brightness to your room lighting to reduce eye strain.": [
+  "Itugma ang liwanag ng screen sa ilaw ng kuwarto para mabawasan ang pagkapagod ng mata.",
+  "Ipahiangay ang kahayag sa screen sa suga sa kwarto aron makunhoran ang kakapoy sa mata."
+ ],
+ "Severe Eye Strain": [
+  "Matinding Pagkapagod ng Mata",
+  "Grabe nga Kakapoy sa Mata"
+ ],
+ "Your eyes are under a lot of strain. Follow care tips immediately and consider reducing your screen time.": [
+  "Labis na napapagod ang iyong mga mata. Sundin agad ang mga payo at isaalang-alang ang pagbawas ng oras sa screen.",
+  "Grabe na ang kakapoy sa imong mga mata. Sunda dayon ang mga tambag ug hunahunaa ang pagkunhod sa oras sa screen."
+ ],
+ "Take Action Now!": [
+  "Kumilos Ngayon!",
+  "Lihok Karon!"
+ ],
+ "Your eyes are showing signs of high strain. Follow these steps right away.": [
+  "Nagpapakita ng matinding pagkapagod ang iyong mga mata. Sundin agad ang mga hakbang na ito.",
+  "Nagpakita og grabe nga kakapoy ang imong mga mata. Sunda dayon kini nga mga lakang."
+ ],
+ "Reduce Screen Time": [
+  "Bawasan ang Oras sa Screen",
+  "Kunhori ang Oras sa Screen"
+ ],
+ "Take frequent breaks and limit unnecessary screen exposure whenever possible.": [
+  "Magpahinga nang madalas at limitahan ang hindi kailangang paggamit ng screen hangga't maaari.",
+  "Pagpahulay kanunay ug limitahi ang dili kinahanglan nga paggamit og screen kutob sa mahimo."
+ ],
+ "Practice blinking and focus shift exercises daily to strengthen your eye muscles.": [
+  "Magsanay ng pagkurap at paglipat ng pokus araw-araw para lumakas ang kalamnan ng mata.",
+  "Pagbansay sa pagkurap ug pagbalhin sa pokus adlaw-adlaw aron mokusog ang kaunoran sa mata."
+ ],
+ "Enable Dark Mode": [
+  "I-on ang Dark Mode",
+  "I-on ang Dark Mode"
+ ],
+ "Switch to dark mode and reduce screen contrast to minimize eye strain.": [
+  "Lumipat sa dark mode at bawasan ang kontrast ng screen para mabawasan ang pagkapagod ng mata.",
+  "Balhin sa dark mode ug kunhori ang kontrast sa screen aron makunhoran ang kakapoy sa mata."
+ ],
+ "30-30-30 Rule": [
+  "Tuntuning 30-30-30",
+  "Lagda nga 30-30-30"
+ ],
+ "Every 30 minutes, look at something 30 feet away for at least 30 seconds.": [
+  "Tuwing 30 minuto, tumingin sa bagay na 30 talampakan ang layo nang hindi bababa sa 30 segundo.",
+  "Matag 30 minutos, tan-awa ang butang nga 30 ka tiil ang gilay-on sulod sa labing menos 30 segundos."
+ ],
+ "Low-Light Rest": [
+  "Pahinga sa Madilim",
+  "Pahulay sa Ngitngit"
+ ],
+ "Rest in dim lighting to reduce light sensitivity and give your eyes time to recover.": [
+  "Magpahinga sa madilim na lugar para mabawasan ang pagkasensitibo sa liwanag at makabawi ang iyong mga mata.",
+  "Pagpahulay sa ngitngit nga lugar aron makunhoran ang pagkasensitibo sa kahayag ug makabawi ang imong mga mata."
+ ],
+ "If symptoms persist or worsen, consider consulting an eye care professional.": [
+  "Kung magpatuloy o lumala ang mga sintomas, kumonsulta sa propesyonal sa pangangalaga ng mata.",
+  "Kon magpadayon o mograbe ang mga sintomas, pagkonsulta sa propesyonal sa pag-atiman sa mata."
+ ],
+ "Mon": [
+  "Lun",
+  "Lun"
+ ],
+ "Tue": [
+  "Mar",
+  "Mar"
+ ],
+ "Wed": [
+  "Miy",
+  "Miy"
+ ],
+ "Thu": [
+  "Huw",
+  "Huw"
+ ],
+ "Fri": [
+  "Biy",
+  "Biy"
+ ],
+ "Sat": [
+  "Sab",
+  "Sab"
+ ],
+ "Sun": [
+  "Lin",
+  "Dom"
+ ],
+ "Good": [
+  "Mabuti",
+  "Maayo"
+ ],
+ "Moderate": [
+  "Katamtaman",
+  "Kasarangan"
+ ],
+ "Severe": [
+  "Matindi",
+  "Grabe"
+ ],
+ "First Steps": [
+  "Unang Hakbang",
+  "Unang Lakang"
+ ],
+ "Sign in to MataKo": [
+  "Mag-sign in sa MataKo",
+  "Mag-sign in sa MataKo"
+ ],
+ "First Self-Assessment": [
+  "Unang Pagsusuri sa Sarili",
+  "Unang Pagsusi sa Kaugalingon"
+ ],
+ "Complete a self-assessment": [
+  "Tapusin ang isang pagsusuri sa sarili",
+  "Humana ang usa ka pagsusi sa kaugalingon"
+ ],
+ "3-Day Break Streak": [
+  "3 Araw na Sunod-sunod na Pahinga",
+  "3 ka Adlaw nga Sunod-sunod nga Pahulay"
+ ],
+ "Take breaks 3 days in a row": [
+  "Magpahinga nang 3 magkakasunod na araw",
+  "Pagpahulay sulod sa 3 ka sunod-sunod nga adlaw"
+ ],
+ "Monochrome Mode": [
+  "Monochrome Mode",
+  "Monochrome Mode"
+ ],
+ "Turn on Monochrome mode": [
+  "I-on ang Monochrome mode",
+  "I-on ang Monochrome mode"
+ ],
+ "Week Warrior": [
+  "Mandirigma ng Linggo",
+  "Manggugubat sa Semana"
+ ],
+ "Use MataKo 7 days in a row": [
+  "Gamitin ang MataKo nang 7 magkakasunod na araw",
+  "Gamita ang MataKo sulod sa 7 ka sunod-sunod nga adlaw"
+ ],
+ "Time Keeper": [
+  "Tagabantay ng Oras",
+  "Tigbantay sa Oras"
+ ],
+ "Stay under your 3h goal on 5 days": [
+  "Manatili sa ilalim ng 3h na layunin sa loob ng 5 araw",
+  "Magpabilin ubos sa 3h nga tumong sulod sa 5 ka adlaw"
+ ],
+ "Break Master": [
+  "Dalubhasa sa Pahinga",
+  "Eksperto sa Pahulay"
+ ],
+ "Take 50 breaks": [
+  "Magpahinga nang 50 beses",
+  "Pagpahulay og 50 ka beses"
+ ],
+ "30-Day Champion": [
+  "Kampeon ng 30 Araw",
+  "Kampeon sa 30 ka Adlaw"
+ ],
+ "Use MataKo on 30 days": [
+  "Gamitin ang MataKo sa loob ng 30 araw",
+  "Gamita ang MataKo sulod sa 30 ka adlaw"
+ ],
+ "Eye Movement & Tracking": [
+  "Galaw at Pagsubaybay ng Mata",
+  "Lihok ug Pagsubay sa Mata"
+ ],
+ "Understand how your eyes follow movement and how to improve tracking.": [
+  "Unawain kung paano sinusundan ng iyong mga mata ang galaw at kung paano ito mapapabuti.",
+  "Sabta kon giunsa pagsunod sa imong mga mata ang lihok ug unsaon kini pagpaayo."
+ ],
+ "Understanding Digital Eye Strain (DES) and its impact on visual tracking.": [
+  "Pag-unawa sa Digital Eye Strain (DES) at sa epekto nito sa pagsubaybay ng paningin.",
+  "Pagsabot sa Digital Eye Strain (DES) ug sa epekto niini sa pagsubay sa panan-aw."
+ ],
+ "Digital Eye Strain (DES) can impair smooth tracking and cause eye discomfort when reading long documents, scrolling, or switching windows.": [
+  "Ang Digital Eye Strain (DES) ay maaaring makaapekto sa maayos na pagsubaybay at magdulot ng hindi ginhawa sa mata kapag nagbabasa ng mahahabang dokumento, nag-i-scroll, o lumilipat ng window.",
+  "Ang Digital Eye Strain (DES) makadaot sa hapsay nga pagsubay ug makahatag og kadili-komportable sa mata kon magbasa og taas nga dokumento, mag-scroll, o mobalhin og window."
+ ],
+ "Tracking Difficulties": [
+  "Hirap sa Pagsubaybay",
+  "Kalisod sa Pagsubay"
+ ],
+ "Trouble following text across the screen": [
+  "Hirap sundan ang teksto sa screen",
+  "Lisod sundan ang teksto sa screen"
+ ],
+ "Scrolling Discomfort": [
+  "Hindi Ginhawa sa Pag-scroll",
+  "Kadili-komportable sa Pag-scroll"
+ ],
+ "Eye strain during vertical movement": [
+  "Pagkapagod ng mata sa pataas-pababang galaw",
+  "Kakapoy sa mata sa pataas-paubos nga lihok"
+ ],
+ "Window Switching": [
+  "Paglipat ng Window",
+  "Pagbalhin og Window"
+ ],
+ "Fatigue when changing focus between screens": [
+  "Pagod kapag nagpapalit ng tingin sa mga screen",
+  "Kakapoy kon mag-ilis og tutok sa mga screen"
+ ],
+ "Every 30 minutes, look at something 30 feet away for 30 seconds.": [
+  "Tuwing 30 minuto, tumingin sa bagay na 30 talampakan ang layo nang 30 segundo.",
+  "Matag 30 minutos, tan-awa ang butang nga 30 ka tiil ang gilay-on sulod sa 30 segundos."
+ ],
+ "Eye Rolling": [
+  "Pag-ikot ng Mata",
+  "Paglingi sa Mata"
+ ],
+ "Roll your eyes slowly in circles to loosen the muscles that move them.": [
+  "Dahan-dahang paikutin ang mga mata para lumuwag ang mga kalamnang nagpapagalaw dito.",
+  "Hinay-hinay nga lingina ang mga mata aron moluag ang kaunoran nga nagpalihok niini."
+ ],
+ "Increase Text Size": [
+  "Palakihin ang Teksto",
+  "Padakoa ang Teksto"
+ ],
+ "Larger text is easier to follow and reduces how far your eyes jump across a line.": [
+  "Mas madaling sundan ang malaking teksto at nababawasan ang paglundag ng mata sa bawat linya.",
+  "Mas sayon sundan ang dako nga teksto ug makunhoran ang paglukso sa mata sa matag linya."
+ ],
+ "Want to improve how your eyes follow movement?": [
+  "Gusto mo bang mapabuti kung paano sinusundan ng iyong mga mata ang galaw?",
+  "Gusto ba nimo nga mapaayo kon giunsa pagsunod sa imong mga mata ang lihok?"
+ ],
+ "Let's explore daily habits and exercises to strengthen your eye tracking.": [
+  "Tuklasin natin ang mga gawi at ehersisyo para mapalakas ang pagsubaybay ng iyong mata.",
+  "Susihon nato ang mga batasan ug ehersisyo aron mapalig-on ang pagsubay sa imong mata."
+ ],
+ "Not Now": [
+  "Hindi Ngayon",
+  "Dili Karon"
+ ],
+ "Learn Now": [
+  "Alamin Ngayon",
+  "Sayra Karon"
+ ],
+ "Accommodation & Focus Fatigue": [
+  "Akomodasyon at Pagod sa Pagtutok",
+  "Akomodasyon ug Kakapoy sa Pagtutok"
+ ],
+ "Why your eyes get tired when switching focus—and how to fix it.": [
+  "Bakit napapagod ang mata kapag nagpapalit ng tingin—at paano ito maaayos.",
+  "Ngano nga mapoy ang mata kon mag-ilis og tutok—ug unsaon kini pag-ayo."
+ ],
+ "Difficulty shifting focus between near and far objects, often caused by prolonged screen use.": [
+  "Hirap sa paglipat ng tingin mula malapit hanggang malayong bagay, kadalasang dulot ng matagal na paggamit ng screen.",
+  "Kalisod sa pagbalhin sa tutok gikan sa duol ngadto sa layo nga butang, kasagaran tungod sa dugay nga paggamit og screen."
+ ],
+ "Focus Difficulty": [
+  "Hirap sa Pagtutok",
+  "Kalisod sa Pagtutok"
+ ],
+ "Digital Eye Strain (DES) often leads to difficulty shifting focus between distances, a symptom of tired eye muscles.": [
+  "Ang Digital Eye Strain (DES) ay kadalasang nagdudulot ng hirap sa paglipat ng tingin sa iba't ibang layo, sintomas ng pagod na kalamnan ng mata.",
+  "Ang Digital Eye Strain (DES) kasagaran makahatag og kalisod sa pagbalhin sa tutok sa lain-laing gilay-on, sintomas sa kapoy nga kaunoran sa mata."
+ ],
+ "Related Symptoms": [
+  "Kaugnay na Sintomas",
+  "Kalambigit nga Sintomas"
+ ],
+ "Blurred Vision": [
+  "Malabong Paningin",
+  "Lubog nga Panan-aw"
+ ],
+ "Difficulty seeing clearly at different distances": [
+  "Hirap makakita nang malinaw sa iba't ibang layo",
+  "Lisod makakita og klaro sa lain-laing gilay-on"
+ ],
+ "Eye Fatigue": [
+  "Pagod na Mata",
+  "Kapoy nga Mata"
+ ],
+ "Tired, heavy feelings in the eyes": [
+  "Pagod at mabigat na pakiramdam sa mata",
+  "Kapoy ug bug-at nga pagbati sa mata"
+ ],
+ "Headaches": [
+  "Sakit ng Ulo",
+  "Sakit sa Ulo"
+ ],
+ "Tension headaches from eye strain": [
+  "Sakit ng ulo dahil sa pagkapagod ng mata",
+  "Sakit sa ulo tungod sa kakapoy sa mata"
+ ],
+ "Focus Shifting": [
+  "Paglipat ng Pokus",
+  "Pagbalhin sa Pokus"
+ ],
+ "Alternate between a near object and something 10–20 feet away.": [
+  "Salitan ang pagtingin sa malapit na bagay at sa bagay na 10–20 talampakan ang layo.",
+  "Pulihan ang pagtan-aw sa duol nga butang ug sa butang nga 10–20 ka tiil ang gilay-on."
+ ],
+ "Screen Distance": [
+  "Layo ng Screen",
+  "Gilay-on sa Screen"
+ ],
+ "Keep your screen about an arm's length away from your eyes.": [
+  "Ilayo ang screen nang mga isang dipa mula sa iyong mga mata.",
+  "Ipalayo ang screen mga usa ka dupa gikan sa imong mga mata."
+ ],
+ "Having trouble refocusing your eyes during screen use?": [
+  "Nahihirapan ka bang tumutok muli habang gumagamit ng screen?",
+  "Naglisod ba ka sa pagtutok pag-usab samtang naggamit og screen?"
+ ],
+ "Learn why it happens and how to reduce focus fatigue.": [
+  "Alamin kung bakit ito nangyayari at kung paano mababawasan ang pagod sa pagtutok.",
+  "Sayra kon nganong mahitabo kini ug unsaon pagkunhod sa kakapoy sa pagtutok."
+ ],
+ "Later": [
+  "Mamaya",
+  "Unya"
+ ],
+ "Light Sensitivity": [
+  "Pagkasensitibo sa Liwanag",
+  "Pagkasensitibo sa Kahayag"
+ ],
+ "Light Sensitivity (Photophobia)": [
+  "Pagkasensitibo sa Liwanag (Photophobia)",
+  "Pagkasensitibo sa Kahayag (Photophobia)"
+ ],
+ "Understand what causes discomfort in bright light and how to manage it.": [
+  "Unawain kung ano ang sanhi ng hindi ginhawa sa maliwanag na ilaw at kung paano ito haharapin.",
+  "Sabta kon unsay hinungdan sa kadili-komportable sa hayag nga suga ug unsaon kini pagdumala."
+ ],
+ "A common symptom of Dry Eye Syndrome affecting daily activities.": [
+  "Karaniwang sintomas ng Dry Eye Syndrome na nakaaapekto sa pang-araw-araw na gawain.",
+  "Kasagaran nga sintomas sa Dry Eye Syndrome nga makaapekto sa adlaw-adlaw nga kalihokan."
+ ],
+ "What is Photophobia?": [
+  "Ano ang Photophobia?",
+  "Unsa ang Photophobia?"
+ ],
+ "Light sensitivity or photophobia is when your eyes become uncomfortable or painful when exposed to normal levels of light. This is particularly common in people with Dry Eye Syndrome.": [
+  "Ang pagkasensitibo sa liwanag o photophobia ay kapag hindi komportable o masakit ang mata sa karaniwang liwanag. Karaniwan ito lalo na sa mga may Dry Eye Syndrome.",
+  "Ang pagkasensitibo sa kahayag o photophobia mao ang dili komportable o sakit sa mata sa kasagaran nga kahayag. Kasagaran kini ilabi na sa mga adunay Dry Eye Syndrome."
+ ],
+ "Eye Discomfort": [
+  "Hindi Ginhawa sa Mata",
+  "Kadili-komportable sa Mata"
+ ],
+ "Pain or burning sensation": [
+  "Sakit o hapdi",
+  "Sakit o hapdos"
+ ],
+ "Bright Light Sensitivity": [
+  "Pagkasensitibo sa Matinding Liwanag",
+  "Pagkasensitibo sa Hayag nga Kahayag"
+ ],
+ "Difficulty with sunlight or bright indoor light": [
+  "Hirap sa sikat ng araw o maliwanag na ilaw sa loob",
+  "Kalisod sa adlaw o hayag nga suga sa sulod"
+ ],
+ "Screen Glare Issues": [
+  "Problema sa Silaw ng Screen",
+  "Problema sa Silaw sa Screen"
+ ],
+ "Difficulty using computers or phones": [
+  "Hirap gumamit ng computer o telepono",
+  "Lisod mogamit og computer o telepono"
+ ],
+ "Trouble focusing on digital screens": [
+  "Hirap tumutok sa digital na screen",
+  "Lisod motutok sa digital nga screen"
+ ],
+ "Adjust Brightness": [
+  "Ayusin ang Liwanag",
+  "I-adjust ang Kahayag"
+ ],
+ "Match your screen brightness to the lighting in your room.": [
+  "Itugma ang liwanag ng screen sa ilaw ng iyong kuwarto.",
+  "Ipahiangay ang kahayag sa screen sa suga sa imong kwarto."
+ ],
+ "Use Dark Mode": [
+  "Gumamit ng Dark Mode",
+  "Gamita ang Dark Mode"
+ ],
+ "Switch to dark mode when you are in a dim environment.": [
+  "Lumipat sa dark mode kapag nasa madilim na lugar.",
+  "Balhin sa dark mode kon naa ka sa ngitngit nga lugar."
+ ],
+ "Reduce Glare": [
+  "Bawasan ang Silaw",
+  "Kunhori ang Silaw"
+ ],
+ "Position your screen away from windows and direct overhead lights.": [
+  "Ilagay ang screen palayo sa bintana at direktang ilaw sa itaas.",
+  "Ibutang ang screen layo sa bintana ug direkta nga suga sa ibabaw."
+ ],
+ "Sensitive to bright light or screens?": [
+  "Sensitibo ka ba sa maliwanag na ilaw o screen?",
+  "Sensitibo ba ka sa hayag nga suga o screen?"
+ ],
+ "Discover common triggers and how to manage light sensitivity effectively.": [
+  "Alamin ang mga karaniwang sanhi at kung paano epektibong haharapin ang pagkasensitibo sa liwanag.",
+  "Sayra ang kasagarang hinungdan ug unsaon epektibo nga pagdumala sa pagkasensitibo sa kahayag."
+ ],
+ "View Info": [
+  "Tingnan ang Impormasyon",
+  "Tan-awa ang Impormasyon"
+ ],
+ "Eye Palming": [
+  "Pagtakip ng Palad sa Mata",
+  "Pagtabon sa Palad sa Mata"
+ ],
+ "Cover your eyes with your palms to relax them": [
+  "Takpan ang mga mata ng iyong palad para makapagpahinga",
+  "Tabuni ang mga mata sa imong palad aron makapahulay"
+ ],
+ "Eye Palming Exercise": [
+  "Ehersisyo sa Pagtakip ng Palad",
+  "Ehersisyo sa Pagtabon sa Palad"
+ ],
+ "Why Do Eye Palming Exercises?": [
+  "Bakit Gawin ang Pagtakip ng Palad?",
+  "Nganong Buhaton ang Pagtabon sa Palad?"
+ ],
+ "Gently covering your eyes with your palms helps relax eye muscles and reduce tension from extended screen time.": [
+  "Ang marahang pagtakip ng palad sa mata ay nakatutulong magpahinga ang kalamnan ng mata at mabawasan ang tensyon mula sa matagal na paggamit ng screen.",
+  "Ang hinay nga pagtabon sa palad sa mata makatabang nga mapahulay ang kaunoran sa mata ug makunhoran ang tensyon gikan sa dugay nga paggamit og screen."
+ ],
+ "Rub your hands together to warm them up before palming — the warmth enhances relaxation.": [
+  "Pagkuskusin ang mga kamay para uminit bago magtakip — nakadaragdag ng ginhawa ang init.",
+  "Kuskusa ang mga kamot aron moinit sa dili pa motabon — ang kainit makadugang sa kahayahay."
+ ],
+ "Eye Blinking": [
+  "Pagkurap ng Mata",
+  "Pagkurap sa Mata"
+ ],
+ "Blink slowly to keep your eyes moist": [
+  "Kumurap nang dahan-dahan para manatiling basa ang mga mata",
+  "Kumurap og hinay aron magpabiling basa ang mga mata"
+ ],
+ "Why Blink Eye Exercises Matter?": [
+  "Bakit Mahalaga ang Ehersisyo sa Pagkurap?",
+  "Nganong Importante ang Ehersisyo sa Pagkurap?"
+ ],
+ "Blinking helps spread moisture across your eyes and prevents dryness caused by long screen time.": [
+  "Ang pagkurap ay nakatutulong ikalat ang basa sa mata at maiwasan ang pagkatuyo dahil sa matagal na paggamit ng screen.",
+  "Ang pagkurap makatabang sa pagkaylap sa basa sa mata ug makalikay sa pagkauga tungod sa dugay nga paggamit og screen."
+ ],
+ "Try to blink every 4–6 seconds while using your device to keep your eyes refreshed.": [
+  "Subukang kumurap tuwing 4–6 segundo habang gumagamit ng device para manatiling presko ang mga mata.",
+  "Sulayi nga mokurap matag 4–6 segundos samtang naggamit og device aron magpabiling presko ang mga mata."
+ ],
+ "Switch focus between near and far objects": [
+  "Ilipat ang tingin mula malapit hanggang malayong bagay",
+  "Ibalhin ang tutok gikan sa duol ngadto sa layo nga butang"
+ ],
+ "Focus Shift Exercise": [
+  "Ehersisyo sa Paglipat ng Pokus",
+  "Ehersisyo sa Pagbalhin sa Pokus"
+ ],
+ "Why Do Focus Shift Exercises?": [
+  "Bakit Gawin ang Paglipat ng Pokus?",
+  "Nganong Buhaton ang Pagbalhin sa Pokus?"
+ ],
+ "Shifting focus between near and far objects helps your eyes relax and maintain flexibility, especially after long periods of screen use.": [
+  "Ang paglipat ng tingin mula malapit hanggang malayong bagay ay nakatutulong magpahinga ang mata at mapanatili ang kakayahang umangkop, lalo na pagkatapos ng matagal na paggamit ng screen.",
+  "Ang pagbalhin sa tutok gikan sa duol ngadto sa layo nga butang makatabang nga makapahulay ang mata ug mapadayon ang pagkaflexible niini, ilabi na human sa dugay nga paggamit og screen."
+ ],
+ "Every 30 minutes, try looking at something 30 feet away for 30 seconds — it gives your eyes a well-deserved reset.": [
+  "Tuwing 30 minuto, subukang tumingin sa bagay na 30 talampakan ang layo nang 30 segundo — nararapat itong pahinga ng iyong mata.",
+  "Matag 30 minutos, sulayi ang pagtan-aw sa butang nga 30 ka tiil ang gilay-on sulod sa 30 segundos — angay kini nga pahulay sa imong mata."
+ ],
+ "Look 30 feet away for 30 seconds": [
+  "Tumingin sa 30 talampakan ang layo nang 30 segundo",
+  "Tan-aw sa 30 ka tiil ang gilay-on sulod sa 30 segundos"
+ ],
+ "30-30-30 Rule Exercise": [
+  "Ehersisyo sa 30-30-30 na Tuntunin",
+  "Ehersisyo sa Lagda nga 30-30-30"
+ ],
+ "Why the 30-30-30 Rule Matters?": [
+  "Bakit Mahalaga ang 30-30-30 na Tuntunin?",
+  "Nganong Importante ang Lagda nga 30-30-30?"
+ ],
+ "Looking 30 feet away for 30 seconds every 30 minutes helps reduce eye strain and gives your focusing muscles a chance to relax.": [
+  "Ang pagtingin sa 30 talampakan ang layo nang 30 segundo tuwing 30 minuto ay nakababawas ng pagkapagod ng mata at nagbibigay ng pahinga sa kalamnang pantutok.",
+  "Ang pagtan-aw sa 30 ka tiil ang gilay-on sulod sa 30 segundos matag 30 minutos makakunhod sa kakapoy sa mata ug makahatag og pahulay sa kaunoran sa pagtutok."
+ ],
+ "Set a reminder so you remember to look away while you work.": [
+  "Magtakda ng paalala para matandaan mong tumingin sa malayo habang nagtatrabaho.",
+  "Pagbutang og pahinumdom aron mahinumdoman nimo nga motan-aw sa layo samtang nagtrabaho."
+ ],
+ "Roll your eyes in slow circles to ease tension": [
+  "Dahan-dahang paikutin ang mata para maibsan ang tensyon",
+  "Hinay-hinay nga lingina ang mata aron makunhoran ang tensyon"
+ ],
+ "Eye Rolling Relaxation": [
+  "Pagpapahinga sa Pag-ikot ng Mata",
+  "Pagpahulay pinaagi sa Paglingi sa Mata"
+ ],
+ "Why Eye Rolling Exercises Matter?": [
+  "Bakit Mahalaga ang Pag-ikot ng Mata?",
+  "Nganong Importante ang Paglingi sa Mata?"
+ ],
+ "Rolling your eyes gently helps relax strained eye muscles, improve flexibility, and reduce tension built up from focusing on a screen.": [
+  "Ang marahang pag-ikot ng mata ay nakatutulong magpahinga ang pagod na kalamnan, mapabuti ang kakayahang umangkop, at mabawasan ang tensyon mula sa pagtutok sa screen.",
+  "Ang hinay nga paglingi sa mata makatabang nga mapahulay ang kapoy nga kaunoran, mapaayo ang pagkaflexible, ug makunhoran ang tensyon gikan sa pagtutok sa screen."
+ ],
+ "Move slowly and keep your head still — only your eyes should move.": [
+  "Gumalaw nang dahan-dahan at huwag igalaw ang ulo — ang mata lang ang dapat gumalaw.",
+  "Lihok og hinay ug ayaw ilihok ang ulo — ang mata ra ang angay molihok."
+ ],
+ "Daily Eye Care": [
+  "Araw-araw na Pangangalaga ng Mata",
+  "Adlaw-adlaw nga Pag-atiman sa Mata"
+ ],
+ "Simple habits to keep your eyes healthy during class, study, and screen time.": [
+  "Simpleng gawi para manatiling malusog ang mata sa klase, pag-aaral, at paggamit ng screen.",
+  "Yano nga mga batasan aron magpabiling himsog ang mata sa klase, pagtuon, ug paggamit og screen."
+ ],
+ "Stay Hydrated": [
+  "Uminom ng Sapat na Tubig",
+  "Pag-inom og Igo nga Tubig"
+ ],
+ "Drink 8 glasses of water daily to keep your eyes naturally lubricated.": [
+  "Uminom ng 8 basong tubig araw-araw para natural na mabasa ang iyong mga mata.",
+  "Pag-inom og 8 ka baso nga tubig adlaw-adlaw aron natural nga mabasa ang imong mga mata."
+ ],
+ "Wear Sunglasses": [
+  "Magsuot ng Sunglasses",
+  "Pagsul-ob og Sunglasses"
+ ],
+ "Protect your eyes from UV rays when outdoors, even on cloudy days.": [
+  "Protektahan ang mata sa UV rays kapag nasa labas, kahit maulap.",
+  "Panalipdi ang mata sa UV rays kon naa sa gawas, bisan madag-om."
+ ],
+ "Get Quality Sleep": [
+  "Matulog nang Sapat",
+  "Pagkatulog og Igo"
+ ],
+ "Aim for 7–8 hours of sleep to allow your eyes to rest and recover.": [
+  "Matulog nang 7–8 oras para makapagpahinga at makabawi ang iyong mga mata.",
+  "Pagkatulog og 7–8 ka oras aron makapahulay ug makabawi ang imong mga mata."
+ ],
+ "Screen Use": [
+  "Paggamit ng Screen",
+  "Paggamit og Screen"
+ ],
+ "Manage screen brightness, reduce glare, and use blue light filters while studying.": [
+  "Ayusin ang liwanag ng screen, bawasan ang silaw, at gumamit ng blue light filter habang nag-aaral.",
+  "I-adjust ang kahayag sa screen, kunhori ang silaw, ug gamita ang blue light filter samtang nagtuon."
+ ],
+ "Match your screen brightness to your study area so it is not brighter than the room.": [
+  "Itugma ang liwanag ng screen sa lugar ng pag-aaral para hindi ito mas maliwanag kaysa sa kuwarto.",
+  "Ipahiangay ang kahayag sa screen sa lugar sa pagtuon aron dili kini mas hayag kaysa sa kwarto."
+ ],
+ "Use a Blue Light Filter": [
+  "Gumamit ng Blue Light Filter",
+  "Gamita ang Blue Light Filter"
+ ],
+ "Turn on night mode or a blue light filter during evening study sessions.": [
+  "I-on ang night mode o blue light filter kapag nag-aaral sa gabi.",
+  "I-on ang night mode o blue light filter kon nagtuon sa gabii."
+ ],
+ "Study Habits": [
+  "Mga Gawi sa Pag-aaral",
+  "Mga Batasan sa Pagtuon"
+ ],
+ "Prevent eye strain with proper posture, printed notes, and timed visual breaks.": [
+  "Iwasan ang pagkapagod ng mata gamit ang tamang tindig, nakalimbag na notes, at nakaiskedyul na pahinga.",
+  "Likayi ang kakapoy sa mata pinaagi sa hustong postura, giimprinta nga notes, ug giiskedyul nga pahulay."
+ ],
+ "Keep Good Posture": [
+  "Panatilihin ang Tamang Tindig",
+  "Hupti ang Hustong Postura"
+ ],
+ "Sit upright with your screen slightly below eye level and about an arm’s length away.": [
+  "Umupo nang tuwid, nakababa nang bahagya ang screen sa antas ng mata at mga isang dipa ang layo.",
+  "Lingkod og tul-id, gamay nga ubos sa lebel sa mata ang screen ug mga usa ka dupa ang gilay-on."
+ ],
+ "Use Printed Notes": [
+  "Gumamit ng Nakalimbag na Notes",
+  "Gamita ang Giimprinta nga Notes"
+ ],
+ "Review printed notes or books when you can to give your eyes a break from screens.": [
+  "Magbasa ng nakalimbag na notes o libro kung maaari para makapagpahinga ang mata sa screen.",
+  "Pagbasa og giimprinta nga notes o libro kon mahimo aron makapahulay ang mata gikan sa screen."
+ ],
+ "Take Timed Breaks": [
+  "Magpahinga sa Takdang Oras",
+  "Pagpahulay sa Gitakdang Oras"
+ ],
+ "Rest your eyes for a few minutes after every study session or online class.": [
+  "Ipahinga ang mata nang ilang minuto pagkatapos ng bawat pag-aaral o online class.",
+  "Papahuwaya ang mata pila ka minuto human sa matag pagtuon o online class."
+ ],
+ "Lifestyle & Wellness": [
+  "Pamumuhay at Kalusugan",
+  "Estilo sa Kinabuhi ug Kahimsog"
+ ],
+ "Balance screen-heavy routines with good sleep, eye-friendly foods, and physical activity.": [
+  "Balansehin ang madalas na paggamit ng screen sa sapat na tulog, pagkaing mabuti sa mata, at ehersisyo.",
+  "Balansiha ang kanunay nga paggamit og screen sa igo nga katulog, pagkaon nga maayo sa mata, ug ehersisyo."
+ ],
+ "Eat Eye-Healthy Foods": [
+  "Kumain ng Pagkaing Mabuti sa Mata",
+  "Pagkaon og Pagkaon nga Maayo sa Mata"
+ ],
+ "Include carrots, leafy greens, and fish rich in omega-3 in your diet.": [
+  "Isama sa pagkain ang karot, madahong gulay, at isdang mayaman sa omega-3.",
+  "Ilakip sa pagkaon ang karot, dahon nga utanon, ug isda nga dato sa omega-3."
+ ],
+ "Eye Exercises": [
+  "Ehersisyo sa Mata",
+  "Ehersisyo sa Mata"
+ ],
+ "Practice simple eye movements and focus exercises daily.": [
+  "Magsanay ng simpleng galaw ng mata at ehersisyo sa pagtutok araw-araw.",
+  "Pagbansay sa yano nga lihok sa mata ug ehersisyo sa pagtutok adlaw-adlaw."
+ ],
+ "Regular Check-ups": [
+  "Regular na Pagpapatingin",
+  "Regular nga Pagpasusi"
+ ],
+ "Visit an eye doctor annually for comprehensive eye examinations.": [
+  "Magpatingin sa doktor sa mata taon-taon para sa kumpletong pagsusuri.",
+  "Pagpasusi sa doktor sa mata matag tuig para sa kompleto nga pagsusi."
+ ],
+ "Staring at a screen reduces your blink rate by up to 60%!": [
+  "Ang pagtitig sa screen ay nakababawas ng iyong pagkurap nang hanggang 60%!",
+  "Ang pagtutok sa screen makakunhod sa imong pagkurap hangtod 60%!"
+ ],
+ "Blue light exposure before sleep can delay melatonin release": [
+  "Ang blue light bago matulog ay maaaring makaantala sa paglabas ng melatonin",
+  "Ang blue light sa dili pa matulog makalangan sa paggawas sa melatonin"
+ ],
+ "Easy techniques to reduce eye fatigue throughout your workday.": [
+  "Madadaling paraan para mabawasan ang pagod ng mata buong araw ng trabaho.",
+  "Sayon nga paagi aron makunhoran ang kakapoy sa mata tibuok adlaw sa trabaho."
+ ],
+ "Adjust screen settings and lighting for long office or remote work sessions.": [
+  "Ayusin ang setting ng screen at ilaw para sa mahabang trabaho sa opisina o sa bahay.",
+  "I-adjust ang setting sa screen ug suga para sa taas nga trabaho sa opisina o sa balay."
+ ],
+ "Match your screen brightness to your surrounding environment.": [
+  "Itugma ang liwanag ng screen sa iyong paligid.",
+  "Ipahiangay ang kahayag sa screen sa imong palibot."
+ ],
+ "Proper Distance": [
+  "Tamang Layo",
+  "Hustong Gilay-on"
+ ],
+ "Keep screens 20-26 inches away and slightly below eye level.": [
+  "Ilayo ang screen nang 20-26 pulgada at bahagyang mababa sa antas ng mata.",
+  "Ipalayo ang screen 20-26 ka pulgada ug gamay nga ubos sa lebel sa mata."
+ ],
+ "Work Habits": [
+  "Mga Gawi sa Trabaho",
+  "Mga Batasan sa Trabaho"
+ ],
+ "Stay productive without sacrificing your eyes—use scheduled breaks and ergonomic setups.": [
+  "Manatiling produktibo nang hindi isinasakripisyo ang mata—gumamit ng nakaiskedyul na pahinga at maayos na ayos ng workspace.",
+  "Magpabiling produktibo nga dili isakripisyo ang mata—gamita ang giiskedyul nga pahulay ug ergonomic nga setup."
+ ],
+ "Good Lighting": [
+  "Maayos na Ilaw",
+  "Maayong Suga"
+ ],
+ "Use adequate lighting when reading to reduce eye strain and fatigue.": [
+  "Gumamit ng sapat na ilaw kapag nagbabasa para mabawasan ang pagkapagod ng mata.",
+  "Gamita ang igo nga suga kon nagbasa aron makunhoran ang kakapoy sa mata."
+ ],
+ "Take Regular Breaks": [
+  "Regular na Magpahinga",
+  "Regular nga Pagpahulay"
+ ],
+ "Step away from your work every hour for a few minutes of rest.": [
+  "Lumayo sa trabaho bawat oras para magpahinga nang ilang minuto.",
+  "Pahawa sa trabaho matag oras aron mopahulay pila ka minuto."
+ ],
+ "Cannot connect to the MataKo server. Check your internet connection and try again.": [
+  "Hindi makakonekta sa MataKo server. Suriin ang iyong internet at subukan muli.",
+  "Dili makakonektar sa MataKo server. Susiha ang imong internet ug sulayi pag-usab."
+ ],
+ "Request failed. Please try again.": [
+  "Hindi natuloy ang request. Pakisubukan muli.",
+  "Wala molampos ang request. Palihug sulayi pag-usab."
+ ],
+ "Too Many Attempts.": [
+  "Masyadong maraming pagsubok. Subukan muli mamaya.",
+  "Sobra ka daghan nga pagsulay. Sulayi pag-usab unya."
+ ],
+ "Eye Care (tab)": [
+  "Pag-alaga",
+  "Pag-atiman"
+ ],
+ "Edit profile": [
+  "I-edit ang profile",
+  "I-edit ang profile"
+ ],
+ "MataKo User": [
+  "User ng MataKo",
+  "User sa MataKo"
+ ],
+ "Edit personal information": [
+  "I-edit ang personal na impormasyon",
+  "I-edit ang personal nga impormasyon"
+ ],
+ "Monochrome grayscale mode": [
+  "Monochrome na grayscale mode",
+  "Monochrome nga grayscale mode"
+ ],
+ "High": [
+  "Mataas",
+  "Taas"
+ ],
+ "Mild": [
+  "Bahagya",
+  "Gaan"
+ ],
+ "Ready to continue your eye care exercises?": [
+  "Handa ka na bang ituloy ang iyong ehersisyo sa mata?",
+  "Andam na ba ka nga ipadayon ang imong ehersisyo sa mata?"
+ ],
+ "Digital Eye Strain (DES) Impact": [
+  "Epekto ng Digital Eye Strain (DES)",
+  "Epekto sa Digital Eye Strain (DES)"
+ ],
+ "Common Symptoms": [
+  "Karaniwang Sintomas",
+  "Kasagarang Sintomas"
+ ],
+ "Why Exercise Your Eyes?": [
+  "Bakit Dapat I-ehersisyo ang Mata?",
+  "Nganong Angay Ehersisyohon ang Mata?"
+ ],
+ "Regular eye exercises help reduce digital eye strain, improve focus flexibility, and maintain healthy vision. These simple movements increase blood circulation to your eyes, reduce muscle tension, and can help prevent symptoms like dry eyes, blurred vision, and headaches from prolonged screen time.": [
+  "Ang regular na ehersisyo sa mata ay nakatutulong bawasan ang digital eye strain, mapabuti ang pagtutok, at mapanatiling malusog ang paningin. Pinapataas ng mga simpleng galaw na ito ang daloy ng dugo sa mata, binabawasan ang tensyon ng kalamnan, at nakatutulong maiwasan ang tuyong mata, malabong paningin, at sakit ng ulo dahil sa matagal na paggamit ng screen.",
+  "Ang regular nga ehersisyo sa mata makatabang sa pagkunhod sa digital eye strain, makapaayo sa pagtutok, ug makapadayon sa himsog nga panan-aw. Kining yano nga mga lihok makapadako sa dagan sa dugo sa mata, makakunhod sa tensyon sa kaunoran, ug makatabang paglikay sa uga nga mata, lubog nga panan-aw, ug sakit sa ulo tungod sa dugay nga paggamit og screen."
+ ],
+ "Tip: Practice these exercises every 20 minutes during screen work for best results.": [
+  "Payo: Gawin ang mga ehersisyong ito tuwing 20 minuto habang nagtatrabaho sa screen para sa pinakamagandang resulta.",
+  "Tambag: Buhata kini nga mga ehersisyo matag 20 minutos samtang nagtrabaho sa screen para sa labing maayong resulta."
+ ],
+ "Want to customize your eye care experience?": [
+  "Gusto mo bang iakma ang iyong karanasan sa pangangalaga ng mata?",
+  "Gusto ba nimo ipahiangay ang imong kasinatian sa pag-atiman sa mata?"
+ ],
+ "Manage display themes, break reminders, and visual comfort tools.": [
+  "Pamahalaan ang tema ng display, paalala sa pahinga, at mga tool para sa ginhawa ng paningin.",
+  "Dumalaha ang tema sa display, pahinumdom sa pahulay, ug mga himan para sa kahayahay sa panan-aw."
+ ],
+ "Clockwise": [
+  "Pakanan",
+  "Pakanan"
+ ],
+ "Counter": [
+  "Pakaliwa",
+  "Pawala"
+ ],
+ "Light Mode": [
+  "Light Mode",
+  "Light Mode"
+ ],
+ "Standard brightness": [
+  "Karaniwang liwanag",
+  "Kasagarang kahayag"
+ ],
+ "Dark Mode": [
+  "Dark Mode",
+  "Dark Mode"
+ ],
+ "Reduces blue light": [
+  "Binabawasan ang blue light",
+  "Makakunhod sa blue light"
+ ],
+ "High Contrast": [
+  "Mataas na Kontrast",
+  "Taas nga Kontrast"
+ ],
+ "Maximum readability": [
+  "Pinakamadaling mabasa",
+  "Labing sayon basahon"
+ ],
+ "Turns display black and white to reduce eye fatigue.": [
+  "Ginagawang itim at puti ang display para mabawasan ang pagod ng mata.",
+  "Himoong itom ug puti ang display aron makunhoran ang kakapoy sa mata."
+ ],
+ "Your Weekly Screen Breaks": [
+  "Iyong Lingguhang Pahinga sa Screen",
+  "Imong Semanal nga Pahulay sa Screen"
+ ],
+ "Your Screen Time": [
+  "Iyong Oras sa Screen",
+  "Imong Oras sa Screen"
+ ],
+ "Your Eye Health Over Time": [
+  "Kalusugan ng Iyong Mata sa Paglipas ng Panahon",
+  "Kahimsog sa Imong Mata sa Paglabay sa Panahon"
+ ],
+ "Your Milestones": [
+  "Iyong mga Tagumpay",
+  "Imong mga Kalampusan"
+ ],
+ "Screen Breaks": [
+  "Mga Pahinga sa Screen",
+  "Mga Pahulay sa Screen"
+ ],
+ "Today's Screen Time": [
+  "Oras sa Screen Ngayong Araw",
+  "Oras sa Screen Karon"
+ ],
+ "0 point": [
+  "0 puntos",
+  "0 puntos"
+ ],
+ "1 point": [
+  "1 puntos",
+  "1 puntos"
+ ],
+ "2 points": [
+  "2 puntos",
+  "2 puntos"
+ ],
+ "of": [
+  "sa",
+  "sa"
+ ],
+ "completed": [
+  "natapos",
+  "nahuman"
+ ],
+ "points": [
+  "puntos",
+  "puntos"
+ ]
+}
