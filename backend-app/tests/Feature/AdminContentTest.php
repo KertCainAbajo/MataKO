@@ -6,6 +6,7 @@ use App\Models\Question;
 use App\Models\Tip;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Http;
 use Tests\TestCase;
 
 class AdminContentTest extends TestCase
@@ -26,7 +27,7 @@ class AdminContentTest extends TestCase
         $this->actingAs($this->admin)->get(route('admin.tips.index', ['tab' => 'student']))->assertOk()->assertSee('Study Habits')->assertDontSee('Work Habits');
         $this->actingAs($this->admin)->get(route('admin.tips.index', ['tab' => 'fact']))->assertOk()->assertSee('blink rate by up to 60%');
         $this->actingAs($this->admin)->get(route('admin.tips.index', ['tab' => 'topics']))->assertOk()->assertSee('Light Sensitivity')->assertSee('Window Switching');
-        $this->actingAs($this->admin)->get(route('admin.tips.index', ['tab' => 'exercises']))->assertOk()->assertSee('Eye Palming')->assertSee('60 seconds');
+        $this->actingAs($this->admin)->get(route('admin.tips.index', ['tab' => 'exercises']))->assertOk()->assertSee('Eye Palming')->assertSee('60s');
         $this->actingAs($this->admin)->get(route('admin.tips.index', ['tab' => 'results']))->assertOk()->assertSee('Severe Eye Strain')->assertSee('Low-Light Rest');
     }
 
@@ -117,5 +118,31 @@ class AdminContentTest extends TestCase
         $this->actingAs($this->admin)->delete(route('admin.tips.destroy', $topic));
 
         $this->assertDatabaseMissing('tips', ['parent_id' => $topic->id]);
+    }
+
+    public function test_admins_can_translate_text_with_the_free_service(): void
+    {
+        Http::fake(['api.mymemory.translated.net/*' => Http::response([
+            'responseData' => ['translatedText' => 'Magpahinga nang regular &amp; madalas.'], 'responseStatus' => 200,
+        ])]);
+
+        $this->actingAs($this->admin)->postJson(route('admin.translate'), ['text' => 'Rest often & regularly.', 'target' => 'fil'])
+            ->assertOk()->assertJsonPath('translation', 'Magpahinga nang regular & madalas.');
+
+        Http::assertSent(fn ($request) => str_contains($request->url(), 'langpair=en%7Cfil'));
+    }
+
+    public function test_translation_errors_and_bad_input_are_reported(): void
+    {
+        Http::fake(['api.mymemory.translated.net/*' => Http::response(['quotaFinished' => true, 'responseStatus' => 429], 429)]);
+
+        $this->actingAs($this->admin)->postJson(route('admin.translate'), ['text' => 'Hello', 'target' => 'ceb'])
+            ->assertStatus(503)->assertJsonPath('message', 'The free daily translation limit has been reached. Try again tomorrow.');
+        $this->actingAs($this->admin)->postJson(route('admin.translate'), ['text' => 'Hello', 'target' => 'es'])->assertUnprocessable();
+    }
+
+    public function test_only_admins_can_use_the_translator(): void
+    {
+        $this->actingAs(User::factory()->create())->postJson(route('admin.translate'), ['text' => 'Hello', 'target' => 'fil'])->assertRedirect();
     }
 }

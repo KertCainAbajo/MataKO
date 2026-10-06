@@ -42,7 +42,49 @@ class TipController extends Controller
             ->orderBy('position')->orderBy('id')
             ->get();
 
-        return view('admin.tips.index', ['tabs' => self::TABS, 'tab' => $tab, 'kind' => $kind, 'items' => $items]);
+        $lang = in_array($request->query('lang'), array_keys(Tip::LANGUAGES), true) ? $request->query('lang') : 'en';
+
+        return view('admin.tips.index', [
+            'tabs' => self::TABS,
+            'tab' => $tab,
+            'kind' => $kind,
+            'items' => $items,
+            'lang' => $lang,
+            'tabStats' => $this->tabStats(),
+        ]);
+    }
+
+    /**
+     * Per tab: how many items, how many are hidden, and how complete each translation is.
+     *
+     * @return array<string, array{items: int, hidden: int, fields: int, translated: array<string, int>}>
+     */
+    private function tabStats(): array
+    {
+        $stats = [];
+        foreach (array_keys(self::TABS) as $tab) {
+            $stats[$tab] = ['items' => 0, 'hidden' => 0, 'fields' => 0, 'translated' => array_fill_keys(array_keys(Tip::LANGUAGES), 0)];
+        }
+
+        foreach (Tip::with('parent')->get() as $tip) {
+            $tab = Tip::KINDS[$tip->kind]['tab'] === 'audience' ? ($tip->kind === 'tip' ? $tip->parent?->audience : $tip->audience) : Tip::KINDS[$tip->kind]['tab'];
+            if (! isset($stats[$tab])) {
+                continue;
+            }
+            $stats[$tab]['items']++;
+            $stats[$tab]['hidden'] += $tip->is_active ? 0 : 1;
+            foreach ($tip->translatableFields() as $field) {
+                if (blank($tip->field($field))) {
+                    continue;
+                }
+                $stats[$tab]['fields']++;
+                foreach (array_keys(Tip::LANGUAGES) as $code) {
+                    $stats[$tab]['translated'][$code] += filled($tip->translations[$code][$field] ?? null) ? 1 : 0;
+                }
+            }
+        }
+
+        return $stats;
     }
 
     public function create(Request $request): View|RedirectResponse

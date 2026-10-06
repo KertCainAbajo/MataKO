@@ -107,16 +107,6 @@
                     </button>
                 </form>
 
-                <div class="my-6 flex items-center gap-3 text-xs font-medium tracking-wider text-slate-400">
-                    <span class="h-px flex-1 bg-slate-200"></span>OR<span class="h-px flex-1 bg-slate-200"></span>
-                </div>
-
-                <div class="flex gap-3 rounded-2xl bg-brand-50 p-4 text-sm text-slate-600 ring-1 ring-brand/10">
-                    <svg class="mt-0.5 h-5 w-5 shrink-0 text-brand" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="m11.25 11.25.041-.02a.75.75 0 0 1 1.063.852l-.708 2.836a.75.75 0 0 0 1.063.853l.041-.021M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9-3.75h.008v.008H12V8.25Z"/></svg>
-                    <p>Admin accounts are created by the system owner with
-                        <code class="mt-1 inline-block rounded-md bg-white px-1.5 py-0.5 text-xs font-medium text-navy ring-1 ring-slate-200">php artisan matako:make-admin</code>
-                    </p>
-                </div>
             </div>
         </main>
     </div>

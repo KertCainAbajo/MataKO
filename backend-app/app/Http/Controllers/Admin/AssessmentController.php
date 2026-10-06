@@ -5,9 +5,11 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\AdminActivity;
 use App\Models\Assessment;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
@@ -15,7 +17,13 @@ class AssessmentController extends Controller
 {
     public function index(Request $request): View
     {
+        $riskCounts = $this->filtered($request)->reorder()->select('risk_level', DB::raw('count(*) as total'))->groupBy('risk_level')->pluck('total', 'risk_level');
+        $usersByRole = User::where('is_admin', false)->select('role', DB::raw('count(*) as total'))->groupBy('role')->pluck('total', 'role');
+
         return view('admin.assessments.index', [
+            'riskCounts' => ['LOW' => $riskCounts['LOW'] ?? 0, 'MEDIUM' => $riskCounts['MEDIUM'] ?? 0, 'HIGH' => $riskCounts['HIGH'] ?? 0],
+            'students' => $usersByRole['student'] ?? 0,
+            'professionals' => $usersByRole['professional'] ?? 0,
             'assessments' => $this->filtered($request)->with('user:id,name,email,role')->paginate(25)->withQueryString(),
             'filters' => $request->only(['risk', 'role', 'search']),
         ]);

@@ -68,6 +68,11 @@ return [
     'timezone' => 'UTC',
 
     /*
+    | Times are stored in UTC; the admin dashboard shows them in this time zone.
+    */
+    'display_timezone' => env('APP_DISPLAY_TIMEZONE', 'Asia/Manila'),
+
+    /*
     |--------------------------------------------------------------------------
     | Application Locale Configuration
     |--------------------------------------------------------------------------

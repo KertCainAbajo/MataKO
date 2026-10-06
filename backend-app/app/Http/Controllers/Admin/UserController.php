@@ -34,7 +34,9 @@ class UserController extends Controller
             ->paginate(20)
             ->withQueryString();
 
-        return view('admin.users.index', compact('users', 'search', 'role', 'status'));
+        $recentActivity = AdminActivity::with('admin:id,name')->latest('created_at')->latest('id')->limit(4)->get();
+
+        return view('admin.users.index', compact('users', 'search', 'role', 'status', 'recentActivity'));
     }
 
     public function show(User $user): View

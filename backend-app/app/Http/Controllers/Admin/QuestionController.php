@@ -7,6 +7,7 @@ use App\Models\AdminActivity;
 use App\Models\Question;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
 use Illuminate\View\View;
@@ -17,9 +18,22 @@ class QuestionController extends Controller
     {
         $audience = in_array($request->query('audience'), Question::AUDIENCES, true) ? $request->query('audience') : 'student';
 
+        // How users of this audience answered each symptom: average points (0-2) and number of answers.
+        $answers = DB::table('symptoms')
+            ->join('assessments', 'assessments.id', '=', 'symptoms.assessment_id')
+            ->join('users', 'users.id', '=', 'assessments.user_id')
+            ->where('users.role', $audience)
+            ->groupBy('symptoms.symptom_name')
+            ->select('symptoms.symptom_name', DB::raw('avg(symptoms.value) as average'), DB::raw('count(*) as answers'))
+            ->get()
+            ->keyBy('symptom_name');
+
         return view('admin.questions.index', [
             'audience' => $audience,
             'questions' => Question::where('audience', $audience)->orderBy('position')->orderBy('id')->get(),
+            'answers' => $answers,
+            'counts' => Question::select('audience', DB::raw('count(*) as total'))->groupBy('audience')->pluck('total', 'audience'),
+            'lang' => in_array($request->query('lang'), ['fil', 'ceb'], true) ? $request->query('lang') : 'en',
         ]);
     }
 

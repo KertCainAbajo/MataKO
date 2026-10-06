@@ -25,6 +25,8 @@ class AdminUserManagementTest extends TestCase
     {
         User::factory()->create(['name' => 'Ana Student', 'email' => 'ana@example.com']);
         User::factory()->professional()->create(['name' => 'Ben Worker', 'email' => 'ben@example.com']);
+        // Move past the notification bell's 24-hour window so it does not list these users.
+        $this->travel(2)->days();
 
         $this->actingAs($this->admin)->get(route('admin.users.index', ['search' => 'ana']))
             ->assertOk()->assertSee('Ana Student')->assertDontSee('Ben Worker');

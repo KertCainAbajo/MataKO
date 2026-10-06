@@ -35,4 +35,9 @@ return [
         ],
     ],
 
+    'mymemory' => [
+        // Optional: an email address raises MyMemory's free daily translation limit.
+        'email' => env('MYMEMORY_EMAIL'),
+    ],
+
 ];

@@ -1,6 +1,7 @@
 <x-admin.layout :title="$question->exists ? 'Edit question' : 'Add '.$question->audience.' question'">
     <form method="POST" action="{{ $question->exists ? route('admin.questions.update', $question) : route('admin.questions.store') }}" enctype="multipart/form-data" class="admin-card max-w-2xl space-y-4">
         @csrf
+        <x-admin.translate-script />
         @if ($question->exists)
             @method('PUT')
             <p class="text-sm text-slate-500">{{ ucfirst($question->audience) }} questionnaire</p>
@@ -15,7 +16,10 @@
             <div class="mt-3 grid gap-3 sm:grid-cols-2">
                 @foreach (\App\Models\Tip::LANGUAGES as $code => $language)
                     <div>
-                        <label for="question_{{ $code }}" class="admin-label text-xs text-slate-500">{{ $language }}</label>
+                        <div class="mb-1.5 flex items-center justify-between gap-2">
+                            <label for="question_{{ $code }}" class="text-xs font-medium text-slate-500">{{ $language }}</label>
+                            <x-admin.translate-button source="question" :target="'question_'.$code" :lang="$code" />
+                        </div>
                         <textarea id="question_{{ $code }}" name="translations[{{ $code }}][question]" rows="2" maxlength="500" class="admin-input">{{ old("translations.{$code}.question", $question->translations[$code]['question'] ?? '') }}</textarea>
                     </div>
                 @endforeach

@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Hash;
 use Tests\TestCase;
 
 class AdminAccessTest extends TestCase
@@ -60,5 +61,38 @@ class AdminAccessTest extends TestCase
             ->assertRedirect(route('admin.login'));
 
         $this->assertGuest();
+    }
+
+    public function test_an_admin_can_change_their_name_and_email_with_their_password(): void
+    {
+        $admin = User::factory()->admin()->create(['email' => 'old@example.com']);
+
+        $this->actingAs($admin)->put(route('admin.profile.update'), ['name' => 'New Name', 'email' => 'wrong@example.com', 'current_password' => 'nope'])
+            ->assertSessionHasErrorsIn('details', 'current_password');
+        $this->assertSame('old@example.com', $admin->fresh()->email);
+
+        $this->actingAs($admin)->put(route('admin.profile.update'), ['name' => 'New Name', 'email' => 'NEW@example.com', 'current_password' => 'password'])
+            ->assertRedirect(route('admin.profile'));
+        $this->assertSame(['New Name', 'new@example.com'], [$admin->fresh()->name, $admin->fresh()->email]);
+    }
+
+    public function test_an_admin_can_change_their_password(): void
+    {
+        $admin = User::factory()->admin()->create();
+
+        $this->actingAs($admin)->put(route('admin.profile.password'), ['current_password' => 'password', 'password' => 'short', 'password_confirmation' => 'short'])
+            ->assertSessionHasErrorsIn('password', 'password');
+
+        $this->actingAs($admin)->put(route('admin.profile.password'), ['current_password' => 'password', 'password' => 'NewSecret123', 'password_confirmation' => 'NewSecret123'])
+            ->assertRedirect(route('admin.profile'));
+        $this->assertTrue(Hash::check('NewSecret123', $admin->fresh()->password));
+        $this->assertDatabaseHas('admin_activities', ['admin_id' => $admin->id, 'action' => 'user.password_reset']);
+    }
+
+    public function test_the_profile_page_loads(): void
+    {
+        $admin = User::factory()->admin()->create(['name' => 'Profile Person']);
+
+        $this->actingAs($admin)->get(route('admin.profile'))->assertOk()->assertSee('Profile Person')->assertSee('Password & security');
     }
 }

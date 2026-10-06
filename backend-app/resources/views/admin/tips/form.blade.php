@@ -9,6 +9,9 @@
 <x-admin.layout :title="($tip->exists ? 'Edit ' : 'Add ').Str::lower($config['label'])">
     <form method="POST" action="{{ $tip->exists ? route('admin.tips.update', $tip) : route('admin.tips.store') }}" class="admin-card max-w-3xl space-y-5">
         @csrf
+        @if (collect($config['fields'])->contains(fn ($field) => in_array($field[1], ['text', 'textarea'], true)))
+            <x-admin.translate-script />
+        @endif
         @if ($tip->exists)
             @method('PUT')
         @else
@@ -53,7 +56,10 @@
                             @foreach (Tip::LANGUAGES as $code => $language)
                                 @php($translated = old("translations.{$code}.{$name}", $tip->translations[$code][$name] ?? ''))
                                 <div>
-                                    <label for="{{ "{$name}_{$code}" }}" class="admin-label text-xs text-slate-500">{{ $language }}</label>
+                                    <div class="mb-1.5 flex items-center justify-between gap-2">
+                                        <label for="{{ "{$name}_{$code}" }}" class="text-xs font-medium text-slate-500">{{ $language }}</label>
+                                        <x-admin.translate-button :source="$name" :target="$name.'_'.$code" :lang="$code" />
+                                    </div>
                                     @if ($type === 'textarea')
                                         <textarea id="{{ "{$name}_{$code}" }}" name="{{ $inputName($code, $name) }}" rows="2" class="admin-input">{{ $translated }}</textarea>
                                     @else

@@ -31,9 +31,9 @@
     .admin-btn-secondary { @apply inline-flex items-center justify-center gap-2 rounded-xl border border-slate-300 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 shadow-xs transition hover:bg-slate-50 focus:ring-4 focus:ring-slate-200 focus:outline-none disabled:opacity-40; }
     .admin-btn-navy { @apply inline-flex items-center justify-center gap-2 rounded-xl bg-navy px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-navy-700 focus:ring-4 focus:ring-navy/20 focus:outline-none disabled:opacity-50; }
     .admin-btn-danger { @apply inline-flex items-center justify-center gap-2 rounded-xl bg-red-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-red-700 focus:ring-4 focus:ring-red-200 focus:outline-none disabled:opacity-50; }
-    .admin-badge { @apply inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-medium ring-1 ring-inset ring-current/15; }
-    .admin-th { @apply bg-slate-50/80 px-5 py-3 text-left text-xs font-semibold tracking-wider text-slate-500 uppercase; }
-    .admin-td { @apply px-5 py-4 text-sm text-slate-700; }
+    .admin-badge { @apply inline-flex items-center gap-1 rounded-full whitespace-nowrap px-2.5 py-0.5 text-xs font-medium ring-1 ring-inset ring-current/15; }
+    .admin-th { @apply bg-slate-50/80 px-4 py-3 text-left text-xs font-semibold tracking-wider text-slate-500 uppercase; }
+    .admin-td { @apply px-4 py-4 text-sm text-slate-700; }
     .admin-tab { @apply rounded-lg px-3.5 py-2 text-sm font-medium text-slate-600 transition hover:bg-white hover:text-slate-900; }
     .admin-tab-active { @apply rounded-lg bg-white px-3.5 py-2 text-sm font-semibold text-navy shadow-sm ring-1 ring-slate-200; }
 }
