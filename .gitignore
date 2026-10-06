@@ -1,0 +1,46 @@
+# Project-wide safety net: never upload secrets, local data or build output from any folder.
+# Each app folder has its own .gitignore as well.
+
+# Environment files and secrets (keep the .env.example templates)
+.env
+.env.*
+!.env.example
+*.key
+*.pem
+*.p12
+*.p8
+*.jks
+*.keystore
+key.properties
+auth.json
+google-services.json
+GoogleService-Info.plist
+credentials*.json
+service-account*.json
+secrets*.json
+
+# Databases and their backups (they contain user accounts and results)
+*.sqlite
+*.sqlite3
+*.sqlite-journal
+*.db
+*.backup-*.sqlite
+
+# Personal notes that may contain passwords
+notes*.txt
+passwords*.*
+*.secret
+
+# Dependencies and build output
+node_modules/
+vendor/
+build/
+.dart_tool/
+.gradle/
+local.properties
+
+# Logs and editor / OS files
+*.log
+.DS_Store
+Thumbs.db
+.idea/
