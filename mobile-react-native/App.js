@@ -28,8 +28,14 @@ import Slider from '@react-native-community/slider';
 import translatedStrings from './translations/strings.json';
 
 const packagerHost = Constants.expoConfig?.hostUri?.split(':')[0];
-const defaultApiHost = Platform.OS === 'android' ? '10.0.2.2' : packagerHost || '127.0.0.1';
-const API_URL = process.env.EXPO_PUBLIC_API_URL || `http://${defaultApiHost}:8000/api`;
+// On Android the backend is tried through `adb reverse tcp:8000 tcp:8000` first: the emulator's own route to the
+// computer (10.0.2.2) cuts off the end of larger downloads such as uploaded pictures. 10.0.2.2 is the fallback.
+const API_URLS = process.env.EXPO_PUBLIC_API_URL ? [process.env.EXPO_PUBLIC_API_URL]
+  : Platform.OS === 'android' ? ['http://127.0.0.1:8000/api', 'http://10.0.2.2:8000/api']
+  : [`http://${packagerHost || '127.0.0.1'}:8000/api`];
+// The address that last answered; pictures are loaded from the same place.
+let apiUrl = API_URLS[0];
+const apiOrigin = () => apiUrl.replace(/\/api\/?$/, '');
 const ORANGE = '#F58216';
 const NAVY = '#062A3C';
 const WARM = '#F2EFED';
@@ -53,7 +59,7 @@ const STUDENT_QUESTIONS = [
   { symptom: 'Light sensitivity', question: 'Do your eyes feel more sensitive to light when using your devices?', image: require('./assets/images/assessment/q13.png') },
   { symptom: 'Colored halos', question: 'Do you see colored halos or glares around images on your screen?', image: require('./assets/images/assessment/q14.png') },
   { symptom: 'Worsening vision', question: 'Do you feel like your vision is slowly getting worse due to screen use?', image: require('./assets/images/assessment/q15.png') },
-  { symptom: 'Worsening vision (Q16)', question: 'Do you feel like your vision is slowly getting worse due to screen use?', image: require('./assets/images/assessment/q16.png') },
+  { symptom: 'Headache', question: 'Do you get headaches after studying or using your devices for school for a long time?', image: require('./assets/images/assessment/q16.png') },
 ];
 // Professional questionnaire in the designed order, with the same illustrations as the student one.
 const PROFESSIONAL_QUESTIONS = [
@@ -285,12 +291,11 @@ const maxScore = (assessment) => assessment?.max_score || (assessment?.symptoms?
 // The original five-symptom assessment, scored out of 15, keeps its old result screen.
 const isLegacyAssessment = (assessment) => maxScore(assessment) === SYMPTOMS.length * 3;
 const BUNDLED_QUESTION_IMAGES = Object.fromEntries(STUDENT_QUESTIONS.map((item, index) => [`q${index + 1}`, item.image]));
-const API_ORIGIN = API_URL.replace(/\/api\/?$/, '');
 // Questions from the server; images are either built-in mascots or files uploaded in the admin.
 const fromServerQuestions = (questions) => questions.map((item) => ({
   symptom: item.symptom,
   question: item.question,
-  image: item.image_path ? { uri: `${API_ORIGIN}${item.image_path}` } : BUNDLED_QUESTION_IMAGES[item.image_key] || require('./assets/images/student.png'),
+  image: item.image_path ? { uri: `${apiOrigin()}${item.image_path}` } : BUNDLED_QUESTION_IMAGES[item.image_key] || require('./assets/images/student.png'),
 }));
 const LANGUAGES = ['English', 'Filipino', 'Cebuano'];
 
@@ -333,7 +338,7 @@ Object.assign(translations.Filipino, {
   'Your personal companion in protecting your eyes from Digital Eye Strain.': 'Ang iyong katuwang sa pagprotekta sa mga mata laban sa digital eye strain.',
   'Take a quick tour of your eye care dashboard, assessment, progress, and healthy screen habits.': 'Tingnan ang dashboard, pagsusuri, progreso, at mabubuting gawi sa paggamit ng screen.',
   'Take a Tour': 'Tingnan ang gabay', 'Go to Home': 'Pumunta sa Home', 'Quick Tour': 'Maikling gabay',
-  '1. Check in with your eyes': '1. Suriin ang kalusugan ng iyong mga mata', 'Answer five questions and get a screening result with practical suggestions.': 'Sagutin ang limang tanong upang makita ang resulta at makatanggap ng mga mungkahi.',
+  '1. Check in with your eyes': '1. Suriin ang kalusugan ng iyong mga mata', 'Answer a few quick questions and get a screening result with practical suggestions.': 'Sagutin ang ilang mabilis na tanong upang makita ang resulta at makatanggap ng mga mungkahi.',
   '2. Track your progress': '2. Subaybayan ang iyong progreso', 'Review your saved assessment history from the Progress tab.': 'Tingnan ang mga na-save na pagsusuri sa tab na Progreso.',
   '3. Build healthy habits': '3. Bumuo ng mabubuting gawi', 'Read eye care tips and turn on 20-minute break reminders.': 'Basahin ang mga payo sa pangangalaga ng mata at i-on ang paalala sa pahinga kada 20 minuto.',
   'Digital eye strain risk · ': 'Panganib ng digital eye strain · ', ' of 15 points': ' sa 15 puntos', 'Suggestions for you': 'Mga mungkahi para sa iyo',
@@ -351,7 +356,7 @@ Object.assign(translations.Filipino, {
   'Reminder on': 'Naka-on ang paalala', 'Reminder off': 'Naka-off ang paalala', 'Everyday eye care': 'Pang-araw-araw na pangangalaga sa mata', 'Take regular breaks, blink often, and keep your screen at a comfortable distance.': 'Magpahinga nang regular, kumurap nang madalas, at panatilihin ang komportableng layo ng screen.',
   'Eye care tips': 'Mga payo sa pangangalaga ng mata', 'Follow the 20-20-20 rule': 'Sundin ang tuntuning 20-20-20', 'Adjust screen brightness to match your surroundings': 'Itugma ang liwanag ng screen sa liwanag ng paligid', 'Blink often to keep your eyes comfortable': 'Madalas na kumurap upang maging komportable ang mga mata', 'Keep a comfortable distance from your screen': 'Panatilihin ang komportableng layo mula sa screen', 'Take regular breaks and stretch': 'Magpahinga at mag-unat nang regular', 'Small, regular habits can help reduce digital eye strain.': 'Makakatulong ang maliliit at regular na gawi upang mabawasan ang pagkapagod ng mata mula sa screen.',
   'Profile': 'Profile', 'Personal Information': 'Personal na Impormasyon', 'Email': 'Email', 'Phone': 'Telepono', 'User Type': 'Uri ng user', 'Student': 'Estudyante', 'Professional': 'Propesyonal', 'Not provided': 'Hindi ibinigay',
-  'Break Reminders': 'Mga paalala sa pahinga', 'Monochrome': 'Monochrome', 'Grayscale mode': 'Grayscale mode', 'Grayscale mode on': 'Naka-on ang grayscale mode', 'Latest Assessment': 'Pinakabagong Pagsusuri', ' Eye Strain': 'Pagkapagod ng Mata',
+  'Break Reminders': 'Mga paalala sa pahinga', 'Monochrome': 'Monochrome', 'Grayscale mode': 'Itim at puting display', 'Grayscale mode on': 'Naka-on ang grayscale mode', 'Latest Assessment': 'Pinakabagong Pagsusuri', ' Eye Strain': 'Pagkapagod ng Mata',
   'Assessed on ': 'Sinuri noong ', 'Your assessment shows significant symptoms. Consider taking regular breaks and adjusting your screen habits.': 'May mahahalagang sintomas sa resulta. Magpahinga nang regular at ayusin ang mga gawi sa paggamit ng screen.',
   'Your assessment shows moderate symptoms. Consider taking more frequent breaks and adjusting screen brightness.': 'May katamtamang sintomas sa resulta. Magpahinga nang mas madalas at ayusin ang liwanag ng screen.', 'Your assessment shows mild symptoms. Keep practicing healthy screen habits and taking regular breaks.': 'May bahagyang sintomas sa resulta. Ipagpatuloy ang mabubuting gawi sa screen at regular na pagpapahinga.',
   'Complete a self-assessment to see your latest result here.': 'Kumpletuhin ang pagsusuri sa sarili upang makita rito ang pinakabagong resulta.', 'View All Results': 'Tingnan ang Lahat ng Resulta',
@@ -381,7 +386,7 @@ Object.assign(translations.Cebuano, {
   'Your personal companion in protecting your eyes from Digital Eye Strain.': 'Imong kauban sa pagpanalipod sa imong mga mata batok sa digital eye strain.',
   'Take a quick tour of your eye care dashboard, assessment, progress, and healthy screen habits.': 'Tan-awa ang dashboard sa pag-atiman sa mata, pagtimbang-timbang, progreso, ug maayong batasan sa paggamit sa screen.',
   'Take a Tour': 'Tan-awa ang giya', 'Go to Home': 'Adto sa Home', 'Quick Tour': 'Mubo nga giya',
-  '1. Check in with your eyes': '1. Susiha ang kahimsog sa imong mga mata', 'Answer five questions and get a screening result with practical suggestions.': 'Tubaga ang lima ka pangutana aron makita ang resulta ug makadawat og praktikal nga mga sugyot.',
+  '1. Check in with your eyes': '1. Susiha ang kahimsog sa imong mga mata', 'Answer a few quick questions and get a screening result with practical suggestions.': 'Tubaga ang pipila ka dali nga pangutana aron makita ang resulta ug makadawat og praktikal nga mga sugyot.',
   '2. Track your progress': '2. Bantayi ang imong progreso', 'Review your saved assessment history from the Progress tab.': 'Tan-awa ang natipig nga kasaysayan sa pagsusi sa tab nga Kauswagan.',
   '3. Build healthy habits': '3. Himoa ang maayong mga batasan', 'Read eye care tips and turn on 20-minute break reminders.': 'Basaha ang mga tambag sa pag-atiman sa mata ug i-on ang pahinumdom sa pagpahulay matag 20 minutos.',
   'Digital eye strain risk · ': 'Peligro sa digital eye strain · ', ' of 15 points': ' sa 15 ka puntos', 'Suggestions for you': 'Mga sugyot para kanimo',
@@ -398,7 +403,7 @@ Object.assign(translations.Cebuano, {
   'Reminder on': 'Naka-on ang pahinumdom', 'Reminder off': 'Naka-off ang pahinumdom', 'Everyday eye care': 'Adlaw-adlaw nga pag-atiman sa mata', 'Take regular breaks, blink often, and keep your screen at a comfortable distance.': 'Pahuway kanunay, kurap kanunay, ug ipahilayo ang screen sa komportableng gilay-on.',
   'Eye care tips': 'Mga tambag sa pag-atiman sa mata', 'Follow the 20-20-20 rule': 'Sunda ang lagda nga 20-20-20', 'Adjust screen brightness to match your surroundings': 'Ipares ang kahayag sa screen sa kahayag sa palibot', 'Blink often to keep your eyes comfortable': 'Kurap kanunay aron komportable ang imong mga mata', 'Keep a comfortable distance from your screen': 'Pagpabiling komportable ang gilay-on sa screen', 'Take regular breaks and stretch': 'Pahuway ug pag-unat kanunay', 'Small, regular habits can help reduce digital eye strain.': 'Makatabang ang gagmay ug kanunay nga maayong batasan sa pagpakunhod sa kakapoy sa mata tungod sa screen.',
   'Profile': 'Profile', 'Personal Information': 'Personal nga Impormasyon', 'Email': 'Email', 'Phone': 'Telepono', 'User Type': 'Klase sa user', 'Student': 'Estudyante', 'Professional': 'Propesyonal', 'Not provided': 'Wala gihatag',
-  'Break Reminders': 'Mga pahinumdom sa pahulay', 'Monochrome': 'Monochrome', 'Grayscale mode': 'Grayscale mode', 'Grayscale mode on': 'Naka-on ang grayscale mode', 'Latest Assessment': 'Pinakabag-ong Pagsusi', ' Eye Strain': 'Kakapoy sa Mata',
+  'Break Reminders': 'Mga pahinumdom sa pahulay', 'Monochrome': 'Monochrome', 'Grayscale mode': 'Itom ug puti nga display', 'Grayscale mode on': 'Naka-on ang grayscale mode', 'Latest Assessment': 'Pinakabag-ong Pagsusi', ' Eye Strain': 'Kakapoy sa Mata',
   'Assessed on ': 'Gisusi niadtong ', 'Your assessment shows significant symptoms. Consider taking regular breaks and adjusting your screen habits.': 'Nagpakita ang resulta og dakong mga sintomas. Pahuway kanunay ug usba ang imong batasan sa paggamit sa screen.',
   'Your assessment shows moderate symptoms. Consider taking more frequent breaks and adjusting screen brightness.': 'Nagpakita ang resulta og kasarangang mga sintomas. Pahuway kanunay ug usba ang kahayag sa screen.', 'Your assessment shows mild symptoms. Keep practicing healthy screen habits and taking regular breaks.': 'Nagpakita ang resulta og gaan nga mga sintomas. Padayon sa maayong batasan sa screen ug kanunay nga pagpahulay.',
   'Complete a self-assessment to see your latest result here.': 'Kompletoha ang pagsusi sa kaugalingon aron makita dinhi ang pinakabag-ong resulta.', 'View All Results': 'Tan-awa ang Tanang Resulta',
@@ -539,19 +544,25 @@ const mergeTranslations = (incoming) => {
 
 async function request(path, { token, method = 'GET', body } = {}) {
   let response;
-  try {
-    response = await fetch(`${API_URL}${path}`, {
-      method,
-      headers: {
-        Accept: 'application/json',
-        'Accept-Language': LANGUAGE_CODES[currentLanguage] || 'en',
-        'Content-Type': 'application/json',
-        ...(token ? { Authorization: `Bearer ${token}` } : {}),
-      },
-      ...(body ? { body: JSON.stringify(body) } : {}),
-    });
-  } catch {
-    throw new Error(`${translate('Cannot connect to the MataKo server. Check your internet connection and try again.')}\n\n${API_URL}`);
+  // Start with the address that worked last; a refused connection moves on to the next one.
+  for (const url of [apiUrl, ...API_URLS.filter((item) => item !== apiUrl)]) {
+    try {
+      response = await fetch(`${url}${path}`, {
+        method,
+        headers: {
+          Accept: 'application/json',
+          'Accept-Language': LANGUAGE_CODES[currentLanguage] || 'en',
+          'Content-Type': 'application/json',
+          ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        },
+        ...(body ? { body: JSON.stringify(body) } : {}),
+      });
+      apiUrl = url;
+      break;
+    } catch {}
+  }
+  if (!response) {
+    throw new Error(`${translate('Cannot connect to the MataKo server. Check your internet connection and try again.')}\n\n${apiUrl}`);
   }
   const data = await response.json().catch(() => ({}));
   if (!response.ok) {
@@ -596,12 +607,15 @@ export default function App() {
   const [milestoneDates, setMilestoneDates] = useState({});
   // Eye exercises completed per day: { [dayKey]: [exercise ids] }.
   const [exerciseLog, setExerciseLog] = useState({});
+  // Progress is kept per account, so people sharing a phone each see their own.
+  const userId = user?.id;
+  const userKey = (name) => `${name}_${userId}`;
   const completeExercise = (id) => setExerciseLog((current) => {
     const key = dayKey(new Date());
     const done = current[key] || [];
     if (done.includes(id)) return current;
     const next = { ...current, [key]: [...done, id] };
-    AsyncStorage.setItem('matako_exercises', JSON.stringify(next)).catch(() => {});
+    if (userId) AsyncStorage.setItem(userKey('matako_exercises'), JSON.stringify(next)).catch(() => {});
     return next;
   });
   const remindersToday = dailyStats[dayKey(new Date())]?.breaks || 0;
@@ -613,6 +627,8 @@ export default function App() {
   });
   const [showEarlierNotifications, setShowEarlierNotifications] = useState(false);
   const [loading, setLoading] = useState(false);
+  // Once someone has signed in on this device, logging out returns to Sign In instead of the intro.
+  const [hasAccount, setHasAccount] = useState(false);
   const t = (value) => translations[language]?.[value] || value;
 
   useEffect(() => {
@@ -622,7 +638,7 @@ export default function App() {
       const previousScreen = {
         profile: 'welcome',
         language: 'profile',
-        login: 'welcome',
+        login: hasAccount ? null : 'welcome',
         register: 'login',
         welcomeNew: 'home',
         tourSteps: 'home',
@@ -642,7 +658,7 @@ export default function App() {
     });
 
     return () => subscription.remove();
-  }, [screen, homeTab, legalOrigin]);
+  }, [screen, homeTab, legalOrigin, hasAccount]);
 
   useEffect(() => {
     (async () => {
@@ -656,6 +672,7 @@ export default function App() {
         const savedDisplay = await AsyncStorage.getItem('matako_display');
         if (savedDisplay) setDisplay((current) => ({ ...current, ...JSON.parse(savedDisplay) }));
         if (savedLanguage && LANGUAGES.includes(savedLanguage)) setLanguage(savedLanguage);
+        setHasAccount(hasAccount === 'true');
         if (savedToken) {
           setToken(savedToken);
           setScreen('home');
@@ -678,35 +695,40 @@ export default function App() {
   }, [remindersOn]);
 
   useEffect(() => {
-    if (!token) return undefined;
+    if (!userId) return undefined;
+    let active = true;
     (async () => {
+      const names = ['matako_daily_stats', 'matako_milestones', 'matako_exercises'];
       try {
-        const [stored, legacy, milestones, exercises] = await Promise.all([
-          AsyncStorage.getItem('matako_daily_stats'),
-          AsyncStorage.getItem('matako_screen_time'),
-          AsyncStorage.getItem('matako_milestones'),
-          AsyncStorage.getItem('matako_exercises'),
-        ]);
-        if (exercises) setExerciseLog(JSON.parse(exercises));
-        const stats = stored ? JSON.parse(stored) : {};
-        // Carry over today's minutes saved by the earlier single-day format.
-        if (!stored && legacy) {
-          const usage = JSON.parse(legacy);
-          stats[dayKey(new Date(usage.day))] = { minutes: usage.minutes || 0, breaks: 0 };
+        let [stored, milestones, exercises] = await Promise.all(names.map((name) => AsyncStorage.getItem(userKey(name))));
+        // Progress saved before it was kept per account goes to the first account that signs in.
+        const [oldStats, oldMilestones, oldExercises, legacy] = await Promise.all([...names, 'matako_screen_time'].map((name) => AsyncStorage.getItem(name)));
+        if (oldStats || oldMilestones || oldExercises || legacy) {
+          stored = stored || oldStats;
+          milestones = milestones || oldMilestones;
+          exercises = exercises || oldExercises;
+          if (!stored && legacy) {
+            const usage = JSON.parse(legacy);
+            stored = JSON.stringify({ [dayKey(new Date(usage.day))]: { minutes: usage.minutes || 0, breaks: 0 } });
+          }
+          await AsyncStorage.multiSet([[userKey(names[0]), stored || '{}'], [userKey(names[1]), milestones || '{}'], [userKey(names[2]), exercises || '{}']]);
+          await AsyncStorage.multiRemove([...names, 'matako_screen_time']);
         }
-        setDailyStats((current) => ({ ...stats, ...current }));
-        if (milestones) setMilestoneDates(JSON.parse(milestones));
+        if (!active) return;
+        setDailyStats(stored ? JSON.parse(stored) : {});
+        setMilestoneDates(milestones ? JSON.parse(milestones) : {});
+        setExerciseLog(exercises ? JSON.parse(exercises) : {});
       } catch {}
-      setDailyStatsLoaded(true);
+      if (active) setDailyStatsLoaded(true);
     })();
     const timer = setInterval(() => {
       if (AppState.currentState === 'active') bumpToday('minutes');
     }, 60 * 1000);
-    return () => clearInterval(timer);
-  }, [token]);
+    return () => { active = false; clearInterval(timer); };
+  }, [userId]);
 
   useEffect(() => {
-    if (dailyStatsLoaded) AsyncStorage.setItem('matako_daily_stats', JSON.stringify(dailyStats)).catch(() => {});
+    if (dailyStatsLoaded && userId) AsyncStorage.setItem(userKey('matako_daily_stats'), JSON.stringify(dailyStats)).catch(() => {});
   }, [dailyStats, dailyStatsLoaded]);
 
   // Record the first day each milestone is reached.
@@ -718,7 +740,7 @@ export default function App() {
     if (!Object.keys(added).length) return;
     const next = { ...milestoneDates, ...added };
     setMilestoneDates(next);
-    AsyncStorage.setItem('matako_milestones', JSON.stringify(next)).catch(() => {});
+    if (userId) AsyncStorage.setItem(userKey('matako_milestones'), JSON.stringify(next)).catch(() => {});
   }, [dailyStats, assessments, monochrome, dailyStatsLoaded]);
 
   useEffect(() => {
@@ -731,14 +753,28 @@ export default function App() {
         setAssessments(history.assessments || []);
       })
       .catch((error) => {
-        if (error.status === 401) {
-          AsyncStorage.removeItem('matako_token');
-          setToken(null);
-          setScreen('login');
-        }
+        if (error.status === 401) endSession();
       });
     return () => { active = false; };
   }, [screen, token]);
+
+  // Clears the signed-in account from memory, so the next person starts fresh.
+  const endSession = () => {
+    AsyncStorage.removeItem('matako_token').catch(() => {});
+    setToken(null);
+    setUser(null);
+    setAssessments([]);
+    setResult(null);
+    setServerQuestions(null);
+    setServerContent(null);
+    setRemindersOn(false);
+    setDailyStatsLoaded(false);
+    setDailyStats({});
+    setMilestoneDates({});
+    setExerciseLog({});
+    setHomeTab('home');
+    setScreen('login');
+  };
 
   const saveLanguage = async (nextLanguage) => {
     setLanguage(nextLanguage);
@@ -757,11 +793,13 @@ export default function App() {
     } finally { setLoading(false); }
   };
 
-  const signIn = async ({ email, password }) => {
+  const signIn = async ({ email, password, remember }) => {
     setLoading(true);
     try {
       const data = await request('/login', { method: 'POST', body: { email: email.trim(), password } });
-      await AsyncStorage.multiSet([['matako_token', data.token], ['matako_has_account', 'true']]);
+      // Without "Remember me" the session lasts only until the app is closed.
+      await AsyncStorage.multiSet(remember ? [['matako_token', data.token], ['matako_has_account', 'true']] : [['matako_has_account', 'true']]);
+      setHasAccount(true);
       setToken(data.token);
       setUser(data.user);
       setScreen('home');
@@ -775,9 +813,10 @@ export default function App() {
     try {
       const data = await request('/register', {
         method: 'POST',
-        body: { ...form, age: Number(form.age), role },
+        body: { ...form, remember: undefined, age: Number(form.age), role },
       });
       await AsyncStorage.multiSet([['matako_token', data.token], ['matako_has_account', 'true']]);
+      setHasAccount(true);
       setToken(data.token);
       setUser(data.user);
       setScreen('welcomeNew');
@@ -788,23 +827,21 @@ export default function App() {
 
   const logOut = async () => {
     if (token) request('/logout', { token, method: 'POST' }).catch(() => {});
-    await AsyncStorage.removeItem('matako_token');
-    setToken(null);
-    setUser(null);
-    setAssessments([]);
-    setHomeTab('home');
-    setScreen('welcome');
+    endSession();
   };
+
+  // Tips, exercises and result texts the admin edits. Reloaded when the app comes back to the
+  // foreground and on pull-to-refresh, so changes reach people who stay signed in.
+  const loadContent = () => request('/content', { token }).then((data) => {
+    mergeTranslations(data.translations);
+    setServerContent(data);
+  }).catch(() => {});
 
   useEffect(() => {
     if (!token) return undefined;
-    let active = true;
-    request('/content', { token }).then((data) => {
-      if (!active) return;
-      mergeTranslations(data.translations);
-      setServerContent(data);
-    }).catch(() => {});
-    return () => { active = false; };
+    loadContent();
+    const subscription = AppState.addEventListener('change', (state) => { if (state === 'active') loadContent(); });
+    return () => subscription.remove();
   }, [token, user?.role]);
 
   const startAssessment = async () => {
@@ -905,8 +942,8 @@ export default function App() {
     </>
   );
 
-  const renderLogin = () => <AuthForm mode="login" language={language} onSubmit={signIn} loading={loading} onSignUp={() => setScreen('register')} onBack={() => setScreen('welcome')} onLegal={(tab) => { setLegalTab(tab); setLegalOrigin('login'); setScreen('legal'); }} />;
-  const renderRegister = () => <AuthForm mode="register" language={language} role={role} values={registerValues} onValuesChange={setRegisterValues} agreed={legalAccepted} onAgreementChange={setLegalAccepted} onSubmit={signUp} loading={loading} onSignIn={() => setScreen('login')} onBack={() => setScreen('login')} onLegal={(tab) => { setLegalTab(tab); setLegalOrigin('register'); setScreen('legal'); }} />;
+  const renderLogin = () => <AuthForm mode="login" language={language} onSubmit={signIn} loading={loading} onSignUp={() => setScreen('register')} onBack={hasAccount ? null : () => setScreen('welcome')} onLegal={(tab) => { setLegalTab(tab); setLegalOrigin('login'); setScreen('legal'); }} />;
+  const renderRegister = () => <AuthForm mode="register" language={language} role={role} onRoleChange={setRole} values={registerValues} onValuesChange={setRegisterValues} agreed={legalAccepted} onAgreementChange={setLegalAccepted} onSubmit={signUp} loading={loading} onSignIn={() => setScreen('login')} onBack={() => setScreen('login')} onLegal={(tab) => { setLegalTab(tab); setLegalOrigin('register'); setScreen('legal'); }} />;
 
   const renderTour = () => (
     <>
@@ -925,7 +962,7 @@ export default function App() {
     <>
       {header(t('Quick Tour'), () => setScreen('home'))}
       <ScrollView contentContainerStyle={styles.page}>
-        {card(<><Text style={styles.cardTitle}>{t('1. Check in with your eyes')}</Text><Text style={styles.bodyText}>{t('Answer five questions and get a screening result with practical suggestions.')}</Text></>)}
+        {card(<><Text style={styles.cardTitle}>{t('1. Check in with your eyes')}</Text><Text style={styles.bodyText}>{t('Answer a few quick questions and get a screening result with practical suggestions.')}</Text></>)}
         {card(<><Text style={styles.cardTitle}>{t('2. Track your progress')}</Text><Text style={styles.bodyText}>{t('Review your saved assessment history from the Progress tab.')}</Text></>)}
         {card(<><Text style={styles.cardTitle}>{t('3. Build healthy habits')}</Text><Text style={styles.bodyText}>{t('Read eye care tips and turn on 20-minute break reminders.')}</Text></>)}
         {button(t('Go to Home'), () => setScreen('home'))}
@@ -941,7 +978,7 @@ export default function App() {
     onNotification={() => setScreen('notifications')} onHistory={openHistoryResult}
     onReminder={setRemindersOn} onMonochrome={(enabled) => { setMonochrome(enabled); AsyncStorage.setItem('matako_monochrome', String(enabled)).catch(() => {}); }} onLogout={logOut} onLanguage={saveLanguage} onSaveProfile={updateProfile} loading={loading}
     language={language} onLegal={(tab) => { setLegalTab(tab); setLegalOrigin('home'); setScreen('legal'); }}
-    onRefresh={refreshHistory} t={t} card={card} button={button}
+    onRefresh={() => { refreshHistory(); loadContent(); }} t={t} card={card} button={button}
   />;
 
   const renderAssessment = () => {
@@ -1103,9 +1140,9 @@ export default function App() {
   return <SafeAreaProvider><SafeAreaView style={[styles.safe, monochrome && styles.grayscale]}><LanguageContext.Provider value={language}><StatusBar barStyle={display.dark ? 'light-content' : 'dark-content'} backgroundColor={paint(WARM, 'background')} /><KeyboardAvoidingView style={styles.fill} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>{content}</KeyboardAvoidingView></LanguageContext.Provider></SafeAreaView></SafeAreaProvider>;
 }
 
-function AuthForm({ mode, language, role, values: savedValues, onValuesChange, agreed = false, onAgreementChange, onSubmit, loading, onSignUp, onSignIn, onBack, onLegal }) {
+function AuthForm({ mode, language, role, onRoleChange, values: savedValues, onValuesChange, agreed = false, onAgreementChange, onSubmit, loading, onSignUp, onSignIn, onBack, onLegal }) {
   const [localValues, setLocalValues] = useState({ name: '', email: '', phone: '', age: '', password: '', password_confirmation: '' });
-  const [remember, setRemember] = useState(false);
+  const [remember, setRemember] = useState(true);
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [confirmVisible, setConfirmVisible] = useState(false);
   const isRegister = mode === 'register';
@@ -1132,11 +1169,11 @@ function AuthForm({ mode, language, role, values: savedValues, onValuesChange, a
       if (values.password.length < 8 || values.password !== values.password_confirmation) { Alert.alert(t('Create Account'), t('Use at least 8 characters and make sure the passwords match.')); return; }
       if (!agreed) { Alert.alert(t('Create Account'), t('Please agree to the Terms and Privacy Policy.')); return; }
     }
-    onSubmit(values);
+    onSubmit({ ...values, remember });
   };
   return <>
     <View style={styles.header}>
-      <Pressable onPress={onBack} style={styles.back}><Text style={styles.backText}>‹</Text></Pressable>
+      {onBack ? <Pressable onPress={onBack} style={styles.back}><Text style={styles.backText}>‹</Text></Pressable> : <View style={styles.back} />}
       <Text style={styles.headerTitle}>{isRegister ? t('Sign Up') : t('Sign In')}</Text>
       <View style={styles.back} />
     </View>
@@ -1149,6 +1186,10 @@ function AuthForm({ mode, language, role, values: savedValues, onValuesChange, a
         {field('email', 'Email Address', { keyboardType: 'email-address', autoCapitalize: 'none' })}
         {isRegister ? field('phone', 'Phone Number', { keyboardType: 'phone-pad' }) : null}
         {isRegister ? field('age', 'Age', { keyboardType: 'number-pad' }) : null}
+        {isRegister ? <View style={styles.field}>
+          <Text style={styles.fieldLabel}>{t('User Type')}</Text>
+          <View style={styles.wrapRow}>{['student', 'professional'].map((item) => <Pressable key={item} accessibilityRole="radio" accessibilityState={{ checked: role === item }} onPress={() => onRoleChange(item)} style={[styles.languagePill, role === item && styles.languageSelected]}><Text style={styles.bodyText}>{t(item === 'student' ? 'Student' : 'Professional')}</Text></Pressable>)}</View>
+        </View> : null}
         {field('password', 'Password', { secure: true, autoCapitalize: 'none' })}
         {isRegister ? field('password_confirmation', 'Confirm Password', { secure: true, autoCapitalize: 'none' }) : null}
         {!isRegister ? <View style={styles.inlineRow}>
@@ -1314,7 +1355,7 @@ function Home({ user, assessments, remindersOn, remindersToday, appMinutes, mono
   </Pressable>;
   const content = selectedTab === 'home' ? (
     <ScrollView contentContainerStyle={styles.homePage} refreshControl={<RefreshControl refreshing={false} onRefresh={onRefresh} tintColor={ORANGE} />}>
-      {card(<View style={styles.greeting}><View style={styles.flex}><Text style={styles.greetingTitle}>{t('Hi, ')}{user?.name?.split(' ')[0] || t('User')}!</Text><Text style={styles.bodyText}>{t('Ready to take care of your eyes today?')}</Text></View><Image source={require('./assets/images/student.png')} style={styles.greetingImage} resizeMode="contain" /></View>, styles.greetingCard)}
+      {card(<View style={styles.greeting}><View style={styles.flex}><Text style={styles.greetingTitle}>{t('Hi, ')}{user?.name?.split(' ')[0] || t('User')}!</Text><Text style={styles.bodyText}>{t('Ready to take care of your eyes today?')}</Text></View><Image source={user?.role === 'professional' ? require('./assets/images/employee.png') : require('./assets/images/student.png')} style={styles.greetingImage} resizeMode="contain" /></View>, styles.greetingCard)}
       {feature('assessment', 'Start Self-Assessment', 'Quick check-up for your eye health', confirmAssessmentStart)}
       {feature('tips', 'View Care Tips', 'Learn how to protect your vision', confirmTipsOpen)}
       {feature('reminders', 'Set Screen Break Reminders', 'Schedule healthy breaks from screens', confirmRemindersOpen)}
@@ -2034,6 +2075,8 @@ function Progress({ view, onView, dailyStats, assessments, milestoneDates, monoc
 function SelfAssessment({ questions, introImage, name, onBack, onSubmit, loading, t, header }) {
   const [step, setStep] = useState('intro');
   const [answers, setAnswers] = useState({});
+  // Questions whose uploaded picture failed to load show the default mascot instead of a blank space.
+  const [brokenImages, setBrokenImages] = useState([]);
 
   if (step === 'intro') return <>
     {header(t('Self-Assessment'), onBack)}
@@ -2078,7 +2121,7 @@ function SelfAssessment({ questions, introImage, name, onBack, onSubmit, loading
           <Text style={styles.studentProgressText}>{progress}%</Text>
         </View>
         <View style={styles.studentProgressTrack}><View style={[styles.studentProgressFill, { width: `${Math.max(progress, 2)}%` }]} /></View>
-        <Image source={question.image} style={styles.studentQuestionImage} resizeMode="contain" />
+        <Image source={brokenImages.includes(step) ? require('./assets/images/student.png') : question.image} style={styles.studentQuestionImage} resizeMode="contain" onError={() => setBrokenImages((current) => [...current, step])} />
       </View>
       <ScrollView style={styles.studentQuestionBody} contentContainerStyle={styles.studentQuestionContent}>
         <View style={styles.studentQuestionCard}><Text style={styles.studentQuestionText}>{t(question.question)}</Text></View>

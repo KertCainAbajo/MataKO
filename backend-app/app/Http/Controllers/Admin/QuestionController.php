@@ -48,7 +48,7 @@ class QuestionController extends Controller
     {
         $data = $this->validated($request);
         $data['position'] = (int) Question::where('audience', $data['audience'])->max('position') + 1;
-        $data['image'] = $request->file('image')?->store('questions', 'public');
+        $data['image'] = $this->chosenImage($request, $data);
 
         $question = Question::create($data);
         AdminActivity::record('question.created', "Added {$question->audience} question \"{$question->symptom}\"");
@@ -65,9 +65,13 @@ class QuestionController extends Controller
     {
         $data = $this->validated($request, $question);
 
-        if ($request->hasFile('image') || $request->boolean('remove_image')) {
-            $this->deleteUploadedImage($question);
-            $data['image'] = $request->file('image')?->store('questions', 'public');
+        $choice = $request->input('illustration');
+        if ($request->hasFile('image') || $request->boolean('remove_image') || ($choice !== null && $choice !== 'upload')) {
+            $image = $this->chosenImage($request, $data);
+            if ($image !== $question->image) {
+                $this->deleteUploadedImage($question);
+            }
+            $data['image'] = $image;
         }
 
         $question->update($data);
@@ -120,6 +124,7 @@ class QuestionController extends Controller
             'symptom' => ['required', 'string', 'max:60', Rule::unique('questions')->where('audience', $audience)->ignore($question?->id)],
             'question' => ['required', 'string', 'max:500'],
             'image' => ['nullable', 'image', 'mimes:png,jpg,jpeg,webp', 'max:2048'],
+            'illustration' => ['nullable', Rule::in([...array_keys(Question::ILLUSTRATIONS), 'none', 'upload'])],
             'is_active' => ['boolean'],
             'translations.fil.question' => ['nullable', 'string', 'max:500'],
             'translations.ceb.question' => ['nullable', 'string', 'max:500'],
@@ -129,9 +134,32 @@ class QuestionController extends Controller
             'fil' => array_filter(['question' => trim((string) ($data['translations']['fil']['question'] ?? ''))]),
             'ceb' => array_filter(['question' => trim((string) ($data['translations']['ceb']['question'] ?? ''))]),
         ]);
-        unset($data['image']);
+        unset($data['image'], $data['illustration']);
 
         return $data;
+    }
+
+    /**
+     * The picture to save: an uploaded file, a chosen built-in mascot, or none. When the form sends no
+     * choice, the mascot that best fits the question is used.
+     *
+     * @param  array<string, mixed>  $data
+     */
+    private function chosenImage(Request $request, array $data): ?string
+    {
+        if ($request->hasFile('image')) {
+            return $request->file('image')->store('questions', 'public');
+        }
+
+        $choice = $request->input('illustration');
+        if ($choice === 'none' || $request->boolean('remove_image')) {
+            return null;
+        }
+        if ($choice === null) {
+            $choice = Question::suggestIllustration($data['symptom'], $data['question']);
+        }
+
+        return isset(Question::ILLUSTRATIONS[$choice]) ? 'bundled:'.$choice : null;
     }
 
     private function deleteUploadedImage(Question $question): void

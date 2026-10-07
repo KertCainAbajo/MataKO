@@ -18,7 +18,8 @@ class AssessmentQuestionsApiTest extends TestCase
         $student = $this->getJson('/api/questions')->assertOk()->assertJsonCount(16, 'questions');
         $this->assertSame('Burning sensation', $student->json('questions.0.symptom'));
         $this->assertSame('q1', $student->json('questions.0.image_key'));
-        $this->assertSame('Worsening vision (Q16)', $student->json('questions.15.symptom'));
+        $this->assertSame('Headache', $student->json('questions.15.symptom'));
+        $this->assertSame('q16', $student->json('questions.15.image_key'));
 
         Sanctum::actingAs(User::factory()->professional()->create());
         $this->assertSame('Headache', $this->getJson('/api/questions')->json('questions.15.symptom'));
@@ -52,7 +53,10 @@ class AssessmentQuestionsApiTest extends TestCase
     public function test_answers_for_an_outdated_questionnaire_are_rejected(): void
     {
         Sanctum::actingAs(User::factory()->create());
-        $answers = array_fill_keys(Question::forAudience('professional')->pluck('symptom')->all(), 1);
+        // Answers saved before a question was renamed: right count, but one symptom no longer exists.
+        $answers = array_fill_keys(Question::forAudience('student')->pluck('symptom')->all(), 1);
+        unset($answers['Headache']);
+        $answers['Worsening vision (Q16)'] = 1;
 
         $this->postJson('/api/assessment', ['answers' => $answers])->assertUnprocessable();
     }

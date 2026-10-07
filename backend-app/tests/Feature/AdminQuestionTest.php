@@ -89,6 +89,67 @@ class AdminQuestionTest extends TestCase
         $this->assertSame(2, Question::where('audience', 'student')->where('symptom', 'Burning sensation')->value('position'));
     }
 
+    public function test_the_mascot_that_fits_the_question_is_suggested(): void
+    {
+        $this->assertSame('q16', Question::suggestIllustration('Headache', 'Does your head hurt after class?'));
+        $this->assertSame('q9', Question::suggestIllustration('Dry eyes', 'Do your eyes feel dry?'));
+        $this->assertSame('q8', Question::suggestIllustration('Tired eyes', 'Do your eyes feel tired at night?'));
+        $this->assertNull(Question::suggestIllustration('Posture', 'Do you sit up straight?'));
+    }
+
+    public function test_a_new_question_gets_a_matching_mascot_when_no_picture_is_chosen(): void
+    {
+        $this->actingAs($this->admin)->post(route('admin.questions.store'), [
+            'audience' => 'professional', 'symptom' => 'Eye twitching', 'question' => 'Do your eyes twitch or blink a lot during meetings?', 'is_active' => '1',
+        ])->assertSessionHasNoErrors();
+
+        $this->assertSame('bundled:q5', Question::where('symptom', 'Eye twitching')->value('image'));
+    }
+
+    public function test_the_admin_can_choose_a_mascot_or_no_picture(): void
+    {
+        $this->actingAs($this->admin)->post(route('admin.questions.store'), [
+            'audience' => 'student', 'symptom' => 'Neck strain', 'question' => 'Does your neck ache?', 'illustration' => 'q7', 'is_active' => '1',
+        ])->assertSessionHasNoErrors();
+        $this->actingAs($this->admin)->post(route('admin.questions.store'), [
+            'audience' => 'student', 'symptom' => 'Dry mouth', 'question' => 'Is your mouth dry?', 'illustration' => 'none', 'is_active' => '1',
+        ])->assertSessionHasNoErrors();
+        $this->actingAs($this->admin)->post(route('admin.questions.store'), [
+            'audience' => 'student', 'symptom' => 'Other', 'question' => 'Other?', 'illustration' => '../secret',
+        ])->assertSessionHasErrors('illustration');
+
+        $this->assertSame('bundled:q7', Question::where('symptom', 'Neck strain')->value('image'));
+        $this->assertNull(Question::where('symptom', 'Dry mouth')->value('image'));
+    }
+
+    public function test_switching_from_an_upload_to_a_mascot_deletes_the_upload(): void
+    {
+        Storage::fake('public');
+        $path = UploadedFile::fake()->image('q.png')->store('questions', 'public');
+        $question = Question::factory()->create(['audience' => 'student', 'image' => $path]);
+
+        $this->actingAs($this->admin)->get(route('admin.questions.edit', $question))->assertOk()->assertSee('Your upload');
+        $this->actingAs($this->admin)->put(route('admin.questions.update', $question), [
+            'symptom' => $question->symptom, 'question' => $question->question, 'illustration' => 'upload', 'is_active' => '1',
+        ])->assertSessionHasNoErrors();
+        $this->assertSame($path, $question->fresh()->image);
+
+        $this->actingAs($this->admin)->put(route('admin.questions.update', $question), [
+            'symptom' => $question->symptom, 'question' => $question->question, 'illustration' => 'q13', 'is_active' => '1',
+        ])->assertSessionHasNoErrors();
+
+        $this->assertSame('bundled:q13', $question->fresh()->image);
+        Storage::disk('public')->assertMissing($path);
+    }
+
+    public function test_the_student_questionnaire_has_no_duplicate_questions(): void
+    {
+        $questions = Question::where('audience', 'student')->pluck('question');
+
+        $this->assertSame($questions->count(), $questions->unique()->count());
+        $this->assertSame('bundled:q16', Question::where('audience', 'student')->where('symptom', 'Headache')->value('image'));
+    }
+
     public function test_deleting_a_question_removes_its_uploaded_image(): void
     {
         Storage::fake('public');
