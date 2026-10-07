@@ -4,12 +4,14 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Services\GoogleIdTokenVerifier;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
+use RuntimeException;
 
 class AuthController extends Controller
 {
@@ -59,6 +61,56 @@ class AuthController extends Controller
             'user' => $user,
             'token' => $user->createToken('mobile-app')->plainTextToken,
         ]);
+    }
+
+    /**
+     * Sign in with a Google ID token from the app. An account with the same verified email is linked.
+     * A new person is asked once for the details MataKo needs (age, user type, phone) before an
+     * account is created; the app then sends the same token again with those details.
+     */
+    public function google(Request $request, GoogleIdTokenVerifier $verifier): JsonResponse
+    {
+        $request->validate(['id_token' => ['required', 'string', 'max:4096']]);
+
+        try {
+            $google = $verifier->verify($request->input('id_token'));
+        } catch (RuntimeException $exception) {
+            throw ValidationException::withMessages(['id_token' => [__($exception->getMessage())]]);
+        }
+
+        $user = User::where('google_id', $google['sub'])->first() ?? User::where('email', $google['email'])->first();
+
+        if (! $user) {
+            if (! $request->hasAny(['age', 'role', 'phone'])) {
+                return response()->json(['needs_profile' => true, 'name' => $google['name'], 'email' => $google['email']]);
+            }
+
+            $data = $request->validate([
+                'name' => ['nullable', 'string', 'max:255'],
+                'phone' => ['required', 'string', 'max:20'],
+                'age' => ['required', 'integer', 'min:18', 'max:120'],
+                'role' => ['required', 'in:student,professional'],
+            ]);
+            $user = User::create([
+                ...$data,
+                'name' => ($data['name'] ?? null) ?: $google['name'],
+                'email' => $google['email'],
+                // Google accounts sign in without a MataKo password; this random one is never shown.
+                'password' => Hash::make(Str::random(40)),
+            ]);
+            $status = 201;
+        }
+
+        if ($user->isDisabled()) {
+            throw ValidationException::withMessages(['email' => [__('This account has been disabled. Please contact the MataKo team.')]]);
+        }
+
+        $user->forceFill(['google_id' => $google['sub'], 'last_login_at' => now()])->save();
+
+        return response()->json([
+            'user' => $user->fresh(),
+            'token' => $user->createToken('mobile-app')->plainTextToken,
+        ], $status ?? 200);
     }
 
     public function user(Request $request): JsonResponse

@@ -1,10 +1,10 @@
 # Project-wide safety net: never upload secrets, local data or build output from any folder.
 # Each app folder has its own .gitignore as well.
 
-# Environment files and secrets (keep the .env.example templates)
+# Environment files and secrets, including the .env.example templates (kept on this computer only)
 .env
 .env.*
-!.env.example
+*.env
 *.key
 *.pem
 *.p12
@@ -25,6 +25,15 @@ secrets*.json
 *.sqlite-journal
 *.db
 *.backup-*.sqlite
+*.backup*
+
+# Built app files (an APK is signed with this computer's key)
+*.apk
+*.aab
+
+# Pictures admins upload and files users add (personal data)
+backend-app/storage/app/public/*
+!backend-app/storage/app/public/.gitignore
 
 # Personal notes that may contain passwords
 notes*.txt

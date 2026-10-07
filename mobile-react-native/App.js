@@ -25,6 +25,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import Slider from '@react-native-community/slider';
+import { GoogleSignin, statusCodes } from '@react-native-google-signin/google-signin';
 import translatedStrings from './translations/strings.json';
 
 const packagerHost = Constants.expoConfig?.hostUri?.split(':')[0];
@@ -33,6 +34,10 @@ const packagerHost = Constants.expoConfig?.hostUri?.split(':')[0];
 const API_URLS = process.env.EXPO_PUBLIC_API_URL ? [process.env.EXPO_PUBLIC_API_URL]
   : Platform.OS === 'android' ? ['http://127.0.0.1:8000/api', 'http://10.0.2.2:8000/api']
   : [`http://${packagerHost || '127.0.0.1'}:8000/api`];
+// Google sign-in: the Web client ID from Google Cloud, set in mobile-react-native/.env. The backend accepts ID
+// tokens issued to this client ID (GOOGLE_CLIENT_IDS in backend-app/.env).
+const GOOGLE_WEB_CLIENT_ID = process.env.EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID;
+if (GOOGLE_WEB_CLIENT_ID) GoogleSignin.configure({ webClientId: GOOGLE_WEB_CLIENT_ID });
 // The address that last answered; pictures are loaded from the same place.
 let apiUrl = API_URLS[0];
 const apiOrigin = () => apiUrl.replace(/\/api\/?$/, '');
@@ -629,6 +634,8 @@ export default function App() {
   const [loading, setLoading] = useState(false);
   // Once someone has signed in on this device, logging out returns to Sign In instead of the intro.
   const [hasAccount, setHasAccount] = useState(false);
+  // A new Google user's verified token, name and email while they add the details MataKo needs.
+  const [googleSignUp, setGoogleSignUp] = useState(null);
   const t = (value) => translations[language]?.[value] || value;
 
   useEffect(() => {
@@ -640,6 +647,7 @@ export default function App() {
         language: 'profile',
         login: hasAccount ? null : 'welcome',
         register: 'login',
+        googleProfile: 'login',
         welcomeNew: 'home',
         tourSteps: 'home',
         assessment: 'home',
@@ -808,6 +816,64 @@ export default function App() {
     } finally { setLoading(false); }
   };
 
+  const finishSignIn = async (data, isNewAccount) => {
+    await AsyncStorage.multiSet([['matako_token', data.token], ['matako_has_account', 'true']]);
+    setHasAccount(true);
+    setGoogleSignUp(null);
+    setToken(data.token);
+    setUser(data.user);
+    setScreen(isNewAccount ? 'welcomeNew' : 'home');
+  };
+
+  const signInWithGoogle = async () => {
+    if (!GOOGLE_WEB_CLIENT_ID) {
+      Alert.alert(t('Unavailable'), t('Google sign-in is not set up yet. Use your email and password for now.'));
+      return;
+    }
+    setLoading(true);
+    try {
+      await GoogleSignin.hasPlayServices({ showPlayServicesUpdateDialog: true });
+      // Start from Google's account picker every time, so people can choose which account to use.
+      await GoogleSignin.signOut().catch(() => {});
+      const response = await GoogleSignin.signIn();
+      if (response.type !== 'success') return;
+      const idToken = response.data.idToken;
+      const data = await request('/auth/google', { method: 'POST', body: { id_token: idToken } });
+      if (data.needs_profile) {
+        setGoogleSignUp({ idToken, name: data.name, email: data.email });
+        setScreen('googleProfile');
+        return;
+      }
+      await finishSignIn(data, false);
+    } catch (error) {
+      if (error.code === statusCodes.SIGN_IN_CANCELLED || error.code === statusCodes.IN_PROGRESS) return;
+      if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
+        Alert.alert(t('Continue with Google'), t('Google Play services is needed for Google sign-in. Update it and try again.'));
+        return;
+      }
+      Alert.alert(t('Continue with Google'), t(error.message || 'Google sign-in failed. Please try again.'));
+    } finally { setLoading(false); }
+  };
+
+  const completeGoogleSignUp = async (details) => {
+    setLoading(true);
+    try {
+      const data = await request('/auth/google', {
+        method: 'POST',
+        body: { id_token: googleSignUp.idToken, name: details.name, phone: details.phone, age: Number(details.age), role: details.role },
+      });
+      await finishSignIn(data, true);
+    } catch (error) {
+      Alert.alert(t('Create Account'), t(error.message));
+    } finally { setLoading(false); }
+  };
+
+  const cancelGoogleSignUp = () => {
+    GoogleSignin.signOut().catch(() => {});
+    setGoogleSignUp(null);
+    setScreen('login');
+  };
+
   const signUp = async (form) => {
     setLoading(true);
     try {
@@ -827,6 +893,7 @@ export default function App() {
 
   const logOut = async () => {
     if (token) request('/logout', { token, method: 'POST' }).catch(() => {});
+    if (GOOGLE_WEB_CLIENT_ID) GoogleSignin.signOut().catch(() => {});
     endSession();
   };
 
@@ -942,8 +1009,9 @@ export default function App() {
     </>
   );
 
-  const renderLogin = () => <AuthForm mode="login" language={language} onSubmit={signIn} loading={loading} onSignUp={() => setScreen('register')} onBack={hasAccount ? null : () => setScreen('welcome')} onLegal={(tab) => { setLegalTab(tab); setLegalOrigin('login'); setScreen('legal'); }} />;
-  const renderRegister = () => <AuthForm mode="register" language={language} role={role} onRoleChange={setRole} values={registerValues} onValuesChange={setRegisterValues} agreed={legalAccepted} onAgreementChange={setLegalAccepted} onSubmit={signUp} loading={loading} onSignIn={() => setScreen('login')} onBack={() => setScreen('login')} onLegal={(tab) => { setLegalTab(tab); setLegalOrigin('register'); setScreen('legal'); }} />;
+  const renderGoogleProfile = () => <GoogleProfileForm account={googleSignUp} role={role} language={language} loading={loading} onSubmit={completeGoogleSignUp} onBack={cancelGoogleSignUp} onLegal={(tab) => { setLegalTab(tab); setLegalOrigin('googleProfile'); setScreen('legal'); }} />;
+  const renderLogin = () => <AuthForm mode="login" language={language} onGoogle={signInWithGoogle} onSubmit={signIn} loading={loading} onSignUp={() => setScreen('register')} onBack={hasAccount ? null : () => setScreen('welcome')} onLegal={(tab) => { setLegalTab(tab); setLegalOrigin('login'); setScreen('legal'); }} />;
+  const renderRegister = () => <AuthForm mode="register" language={language} onGoogle={signInWithGoogle} role={role} onRoleChange={setRole} values={registerValues} onValuesChange={setRegisterValues} agreed={legalAccepted} onAgreementChange={setLegalAccepted} onSubmit={signUp} loading={loading} onSignIn={() => setScreen('login')} onBack={() => setScreen('login')} onLegal={(tab) => { setLegalTab(tab); setLegalOrigin('register'); setScreen('legal'); }} />;
 
   const renderTour = () => (
     <>
@@ -1128,6 +1196,7 @@ export default function App() {
   else if (screen === 'language') content = renderLanguage();
   else if (screen === 'login') content = renderLogin();
   else if (screen === 'register') content = renderRegister();
+  else if (screen === 'googleProfile' && googleSignUp) content = renderGoogleProfile();
   else if (screen === 'welcomeNew') content = renderTour();
   else if (screen === 'tourSteps') content = renderTourSteps();
   else if (screen === 'assessment') content = renderAssessment();
@@ -1140,7 +1209,7 @@ export default function App() {
   return <SafeAreaProvider><SafeAreaView style={[styles.safe, monochrome && styles.grayscale]}><LanguageContext.Provider value={language}><StatusBar barStyle={display.dark ? 'light-content' : 'dark-content'} backgroundColor={paint(WARM, 'background')} /><KeyboardAvoidingView style={styles.fill} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>{content}</KeyboardAvoidingView></LanguageContext.Provider></SafeAreaView></SafeAreaProvider>;
 }
 
-function AuthForm({ mode, language, role, onRoleChange, values: savedValues, onValuesChange, agreed = false, onAgreementChange, onSubmit, loading, onSignUp, onSignIn, onBack, onLegal }) {
+function AuthForm({ mode, language, onGoogle, role, onRoleChange, values: savedValues, onValuesChange, agreed = false, onAgreementChange, onSubmit, loading, onSignUp, onSignIn, onBack, onLegal }) {
   const [localValues, setLocalValues] = useState({ name: '', email: '', phone: '', age: '', password: '', password_confirmation: '' });
   const [remember, setRemember] = useState(true);
   const [passwordVisible, setPasswordVisible] = useState(false);
@@ -1201,10 +1270,56 @@ function AuthForm({ mode, language, role, onRoleChange, values: savedValues, onV
         </View>}
         <Pressable onPress={submit} disabled={loading} style={[styles.button, { marginTop: 12 }, loading && styles.disabled]}><Text style={styles.buttonText}>{loading ? (isRegister ? 'Creating account…' : 'Signing in…') : t(isRegister ? 'Create Account' : 'Sign In')}</Text></Pressable>
         <Text style={styles.separator}>────────  <Text>{t('or continue with')}</Text>  ────────</Text>
-        <Pressable style={styles.socialButton} onPress={() => Alert.alert(t('Unavailable'), t('Google sign-in is not configured yet.'))}><Text style={styles.bodyText}>◎  {t('Continue with Google')}</Text></Pressable>
+        <Pressable accessibilityRole="button" style={[styles.socialButton, loading && styles.disabled]} disabled={loading} onPress={onGoogle}><Icon name="logo-google" size={18} color={NAVY} style={{ marginRight: 8 }} /><Text style={styles.bodyText}>{t('Continue with Google')}</Text></Pressable>
         {Platform.OS === 'ios' ? <Pressable style={styles.socialButton} onPress={() => Alert.alert(t('Unavailable'), t('Apple sign-in is not configured yet.'))}><Text style={styles.bodyText}>●  {t('Continue with Apple')}</Text></Pressable> : null}
       </View>
       <Pressable onPress={isRegister ? onSignIn : onSignUp} style={styles.bottomLink}><Text style={styles.bodyText}>{t(isRegister ? 'Already have an account? ' : "Don't have an account? ")}<Text style={styles.link}>{isRegister ? t('Sign In') : t('Sign Up')}</Text></Text></Pressable>
+    </ScrollView>
+  </>;
+}
+
+// Shown once to people who sign up with Google: their name and email come from Google, the rest is asked here.
+function GoogleProfileForm({ account, role: initialRole, language, loading, onSubmit, onBack, onLegal }) {
+  const t = (value) => translations[language]?.[value] || value;
+  const [values, setValues] = useState({ name: account.name || '', phone: '', age: '', role: initialRole || 'student' });
+  const [agreed, setAgreed] = useState(false);
+  const update = (key, value) => setValues((current) => ({ ...current, [key]: value }));
+  const submit = () => {
+    if (!values.name.trim() || !values.phone.trim() || Number(values.age) < 18 || Number(values.age) > 120) { Alert.alert(t('Create Account'), t('Complete each field. You must be at least 18 to sign up.')); return; }
+    if (!agreed) { Alert.alert(t('Create Account'), t('Please agree to the Terms and Privacy Policy.')); return; }
+    onSubmit(values);
+  };
+  const field = (key, label, options = {}) => <View style={styles.field}>
+    <Text style={styles.fieldLabel}>{t(label)}</Text>
+    <TextInput value={values[key]} onChangeText={(value) => update(key, value)} placeholder={t(label)} placeholderTextColor="#9AA3B2" keyboardType={options.keyboardType || 'default'} autoCapitalize={options.autoCapitalize || 'sentences'} style={styles.input} />
+  </View>;
+  return <>
+    <View style={styles.header}>
+      <Pressable accessibilityRole="button" accessibilityLabel={t('Back')} onPress={onBack} style={styles.back}><Text style={styles.backText}>‹</Text></Pressable>
+      <Text style={styles.headerTitle}>{t('Complete your profile')}</Text>
+      <View style={styles.back} />
+    </View>
+    <ScrollView keyboardShouldPersistTaps="handled" contentContainerStyle={styles.authPage}>
+      <Image source={logoSource()} style={styles.authLogo} resizeMode="contain" />
+      <Text style={styles.authSubtitle}>{t('Just a few details to finish creating your MataKo account.')}</Text>
+      <View style={styles.authCard}>
+        <View style={[styles.inlineRow, { marginBottom: 12 }]}>
+          <Icon name="logo-google" size={18} color={ORANGE} style={{ marginRight: 8 }} />
+          <Text style={[styles.smallText, { flex: 1 }]}>{t('Signing up with Google as')} {account.email}</Text>
+        </View>
+        {field('name', 'Full Name', { autoCapitalize: 'words' })}
+        {field('phone', 'Phone Number', { keyboardType: 'phone-pad' })}
+        {field('age', 'Age', { keyboardType: 'number-pad' })}
+        <View style={styles.field}>
+          <Text style={styles.fieldLabel}>{t('User Type')}</Text>
+          <View style={styles.wrapRow}>{['student', 'professional'].map((item) => <Pressable key={item} accessibilityRole="radio" accessibilityState={{ checked: values.role === item }} onPress={() => update('role', item)} style={[styles.languagePill, values.role === item && styles.languageSelected]}><Text style={styles.bodyText}>{t(item === 'student' ? 'Student' : 'Professional')}</Text></Pressable>)}</View>
+        </View>
+        <View style={[styles.inlineRow, { alignItems: 'flex-start', marginVertical: 8 }]}>
+          <Pressable accessibilityRole="checkbox" accessibilityState={{ checked: agreed }} onPress={() => setAgreed(!agreed)}><Text style={styles.checkbox}>{agreed ? '☑' : '□'}</Text></Pressable>
+          <Text style={[styles.smallText, { flex: 1 }]}>{t('I agree to the ')}<Text style={styles.link} onPress={() => onLegal('Terms of Service')}>{t('Terms of Service')}</Text>{t(' and ')}<Text style={styles.link} onPress={() => onLegal('Privacy Policy')}>{t('Privacy Policy')}</Text>.</Text>
+        </View>
+        <Pressable onPress={submit} disabled={loading} style={[styles.button, { marginTop: 12 }, loading && styles.disabled]}><Text style={styles.buttonText}>{loading ? t('Creating account…') : t('Create Account')}</Text></Pressable>
+      </View>
     </ScrollView>
   </>;
 }
@@ -2285,7 +2400,7 @@ const styleDefs = {
   page: { padding: 20, paddingBottom: 28 }, title: { color: NAVY, fontSize: 22, fontWeight: '700', textAlign: 'center', marginBottom: 8 }, muted: { color: '#666666', fontSize: 12, lineHeight: 18, marginBottom: 12 }, bodyText: { color: NAVY, fontSize: 14, lineHeight: 21 }, card: { backgroundColor: WHITE, borderRadius: 15, padding: 16, marginVertical: 7, elevation: 1 }, cardTitle: { color: NAVY, fontSize: 15, fontWeight: '700', marginBottom: 6 }, button: { minHeight: 48, backgroundColor: ORANGE, borderRadius: 12, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 16, marginVertical: 7, elevation: 2 }, buttonText: { color: WHITE, fontWeight: '700', fontSize: 15, textAlign: 'center' }, buttonSecondary: { backgroundColor: NAVY }, buttonSecondaryText: { color: WHITE }, disabled: { opacity: 0.55 }, link: { color: ORANGE, fontWeight: '600', fontSize: 12 }, linkCenter: { color: '#777777', fontSize: 13, textAlign: 'center', padding: 12, textDecorationLine: 'underline' },
   roleCard: { backgroundColor: WHITE, borderRadius: 12, borderWidth: 1, borderColor: '#E2E2E2', marginVertical: 9, padding: 12, alignItems: 'center' }, roleSelected: { borderColor: ORANGE, backgroundColor: '#FFF8F1' }, roleImage: { width: 142, height: 144 }, roleText: { color: WHITE, backgroundColor: NAVY, overflow: 'hidden', borderRadius: 7, textAlign: 'center', width: '100%', padding: 12, fontSize: 16 }, languageImage: { width: 200, height: 170, alignSelf: 'center', marginVertical: 6 }, languageChoice: { backgroundColor: WHITE, borderRadius: 9, padding: 14, marginVertical: 5, flexDirection: 'row', justifyContent: 'space-between', borderWidth: 1, borderColor: '#DDDDDD' }, languageSelected: { borderColor: ORANGE, backgroundColor: '#FFF8F1' }, languagePill: { borderWidth: 1, borderColor: '#D9DEE4', borderRadius: 18, paddingHorizontal: 12, paddingVertical: 8, margin: 4 },
   homePage: { paddingHorizontal: 18, paddingTop: 14, paddingBottom: 24 }, greeting: { flexDirection: 'row', alignItems: 'center', minHeight: 96 }, greetingCard: { padding: 16, minHeight: 108, marginBottom: 10 }, greetingTitle: { color: NAVY, fontSize: 18, fontWeight: '700', marginBottom: 8 }, flex: { flex: 1 }, greetingImage: { width: 112, height: 104 }, featureCard: { minHeight: 110, flexDirection: 'row', alignItems: 'center', backgroundColor: NAVY, borderRadius: 13, paddingHorizontal: 18, paddingVertical: 16, marginVertical: 6, elevation: 3 }, featureIconCircle: { width: 38, height: 38, borderRadius: 19, backgroundColor: WHITE, alignItems: 'center', justifyContent: 'center', marginRight: 12 }, featureCopy: { flex: 1 }, featureTitle: { color: WHITE, fontSize: 15, lineHeight: 19, fontWeight: '700', marginBottom: 5 }, featureSubtitle: { color: '#D7E0E6', fontSize: 11, lineHeight: 16 }, featureArrow: { color: WHITE, fontSize: 30, paddingLeft: 8 }, clipboardIcon: { width: 15, height: 18, backgroundColor: ORANGE, borderRadius: 2, alignItems: 'center', paddingTop: 3 }, clipboardClip: { position: 'absolute', top: -2, width: 8, height: 4, borderRadius: 2, borderWidth: 1, borderColor: ORANGE, backgroundColor: WHITE }, clipboardCheck: { color: WHITE, fontSize: 8, lineHeight: 8, fontWeight: '700' }, clipboardLine: { width: 8, height: 1, backgroundColor: WHITE, marginTop: 2 }, heartIcon: { color: ORANGE, fontSize: 23, lineHeight: 27 }, clockIcon: { width: 19, height: 19, borderRadius: 10, backgroundColor: ORANGE, position: 'relative' }, clockHandLong: { position: 'absolute', width: 2, height: 6, top: 4, left: 8, backgroundColor: WHITE, borderRadius: 1 }, clockHandShort: { position: 'absolute', width: 5, height: 2, top: 9, left: 9, backgroundColor: WHITE, borderRadius: 1 }, settingsIcon: { color: ORANGE, fontSize: 22, lineHeight: 26 }, statRow: { flexDirection: 'row', justifyContent: 'space-around', paddingTop: 10 }, stat: { color: NAVY, fontSize: 22, textAlign: 'center', lineHeight: 27 }, smallText: { color: '#666666', fontSize: 11 }, tipRow: { flexDirection: 'row', alignItems: 'flex-start' }, tipIconCircle: { width: 32, height: 32, borderRadius: 16, backgroundColor: ORANGE, alignItems: 'center', justifyContent: 'center', marginRight: 10 }, eyeTipGlyph: { width: 16, height: 20, alignItems: 'center', justifyContent: 'center' }, eyeTipBulb: { width: 13, height: 13, borderRadius: 7, backgroundColor: WHITE, alignItems: 'center', justifyContent: 'center' }, eyeTipHighlight: { width: 3, height: 3, borderRadius: 2, backgroundColor: ORANGE, position: 'absolute', top: 2, left: 3 }, eyeTipBulbNeck: { width: 7, height: 2, backgroundColor: WHITE, marginTop: -1 }, eyeTipBulbBase: { width: 6, height: 2, borderRadius: 1, backgroundColor: WHITE, marginTop: 1 }, activityRow: { flexDirection: 'row', alignItems: 'center', paddingTop: 10 }, activityIconCircle: { width: 26, height: 26, borderRadius: 13, backgroundColor: ORANGE, alignItems: 'center', justifyContent: 'center', marginRight: 8 }, activityIcon: { color: WHITE, fontSize: 15, fontWeight: '700' }, activityCopy: { flex: 1 }, activityTitle: { color: NAVY, fontSize: 12, marginBottom: 2 }, retakeButton: { backgroundColor: NAVY, borderRadius: 6, paddingVertical: 5, paddingHorizontal: 10 }, retakeText: { color: WHITE, fontSize: 10, fontWeight: '600' }, recommendation: { color: NAVY, paddingVertical: 6, fontSize: 14 }, resultEye: { color: ORANGE, fontSize: 56, textAlign: 'center' }, resultRisk: { fontSize: 35, fontWeight: '800', textAlign: 'center' },
-  bottomNav: { height: 62, backgroundColor: WHITE, flexDirection: 'row', borderTopWidth: 1, borderTopColor: '#E8E6E4', justifyContent: 'space-around', alignItems: 'center' }, navItem: { flex: 1, alignItems: 'center' }, navIcon: { fontSize: 18, color: '#9A9A9A' }, navLabel: { fontSize: 10, color: '#9A9A9A', marginTop: 3 }, navSelected: { color: ORANGE, fontWeight: '700' }, switchRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginTop: 10 }, inlineRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }, checkbox: { color: NAVY, fontSize: 18, marginRight: 7 }, separator: { color: '#7A8492', fontSize: 11, textAlign: 'center', marginVertical: 16 }, socialButton: { minHeight: 42, borderRadius: 10, borderWidth: 1, borderColor: '#E0E3E8', alignItems: 'center', justifyContent: 'center', marginTop: 9 }, bottomLink: { alignItems: 'center', marginTop: 18 }, tourImage: { width: '100%', height: 260, marginVertical: 10 }, wrapRow: { flexDirection: 'row', flexWrap: 'wrap', marginTop: 10 },
+  bottomNav: { height: 62, backgroundColor: WHITE, flexDirection: 'row', borderTopWidth: 1, borderTopColor: '#E8E6E4', justifyContent: 'space-around', alignItems: 'center' }, navItem: { flex: 1, alignItems: 'center' }, navIcon: { fontSize: 18, color: '#9A9A9A' }, navLabel: { fontSize: 10, color: '#9A9A9A', marginTop: 3 }, navSelected: { color: ORANGE, fontWeight: '700' }, switchRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginTop: 10 }, inlineRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }, checkbox: { color: NAVY, fontSize: 18, marginRight: 7 }, separator: { color: '#7A8492', fontSize: 11, textAlign: 'center', marginVertical: 16 }, socialButton: { minHeight: 42, borderRadius: 10, borderWidth: 1, borderColor: '#E0E3E8', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', marginTop: 9 }, bottomLink: { alignItems: 'center', marginTop: 18 }, tourImage: { width: '100%', height: 260, marginVertical: 10 }, wrapRow: { flexDirection: 'row', flexWrap: 'wrap', marginTop: 10 },
 };
 
 // Display theme. The style definitions above are the light design; Dark Mode, High Contrast and the

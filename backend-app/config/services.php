@@ -40,4 +40,10 @@ return [
         'email' => env('MYMEMORY_EMAIL'),
     ],
 
+    'google' => [
+        // OAuth client IDs from Google Cloud whose sign-ins the API accepts (comma separated). The app
+        // asks Google for ID tokens issued to the Web client ID, so that one must be listed.
+        'client_ids' => array_filter(array_map('trim', explode(',', (string) env('GOOGLE_CLIENT_IDS', '')))),
+    ],
+
 ];

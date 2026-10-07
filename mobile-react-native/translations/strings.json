@@ -1678,5 +1678,29 @@
  "Do you get headaches after studying or using your devices for school for a long time?": [
   "Sumasakit ba ang ulo mo pagkatapos ng matagal na pag-aaral o paggamit ng iyong mga device para sa paaralan?",
   "Mosakit ba ang imong ulo human sa dugay nga pagtuon o paggamit sa imong mga device para sa eskwelahan?"
+ ],
+ "Google sign-in is not set up yet. Use your email and password for now.": [
+  "Hindi pa naka-set up ang Google sign-in. Gamitin muna ang iyong email at password.",
+  "Wala pa ma-set up ang Google sign-in. Gamita una ang imong email ug password."
+ ],
+ "Google Play services is needed for Google sign-in. Update it and try again.": [
+  "Kailangan ang Google Play services para sa Google sign-in. I-update ito at subukang muli.",
+  "Kinahanglan ang Google Play services para sa Google sign-in. I-update kini ug sulayi pag-usab."
+ ],
+ "Google sign-in failed. Please try again.": [
+  "Hindi nagtagumpay ang Google sign-in. Pakisubukang muli.",
+  "Napakyas ang Google sign-in. Palihug sulayi pag-usab."
+ ],
+ "Complete your profile": [
+  "Kumpletuhin ang iyong profile",
+  "Kompletoha ang imong profile"
+ ],
+ "Just a few details to finish creating your MataKo account.": [
+  "Ilang detalye na lang para matapos ang paggawa ng iyong MataKo account.",
+  "Pipila na lang ka detalye aron mahuman ang paghimo sa imong MataKo account."
+ ],
+ "Signing up with Google as": [
+  "Nagsa-sign up gamit ang Google bilang",
+  "Nag-sign up gamit ang Google isip"
  ]
 }
