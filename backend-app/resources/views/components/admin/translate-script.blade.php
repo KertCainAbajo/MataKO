@@ -11,7 +11,7 @@
 </div>
 <p id="translate-status" class="hidden text-sm" role="status" aria-live="polite"></p>
 
-<script>
+<script @nonce>
     (() => {
         const status = document.getElementById('translate-status');
         const token = document.querySelector('input[name="_token"]').value;

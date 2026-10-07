@@ -99,13 +99,13 @@
                             <input id="activity-search" name="search" value="{{ $filters['search'] }}" placeholder="Search activity…" class="admin-input py-2 pl-9">
                         </div>
                         <label class="sr-only" for="activity-range">Time range</label>
-                        <select id="activity-range" name="range" class="admin-input w-40 py-2" onchange="this.form.submit()">
+                        <select id="activity-range" name="range" class="admin-input w-40 py-2" data-autosubmit>
                             @foreach ($ranges as $key => [$label])
                                 <option value="{{ $key }}" @selected($filters['range'] === $key)>{{ $label }}</option>
                             @endforeach
                         </select>
                         <label class="sr-only" for="activity-admin">Admin</label>
-                        <select id="activity-admin" name="admin" class="admin-input w-44 py-2" onchange="this.form.submit()">
+                        <select id="activity-admin" name="admin" class="admin-input w-44 py-2" data-autosubmit>
                             <option value="">All admins</option>
                             @foreach ($admins as $admin)
                                 <option value="{{ $admin->id }}" @selected($filters['admin'] === $admin->id)>{{ $admin->name }}</option>

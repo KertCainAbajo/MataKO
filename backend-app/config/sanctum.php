@@ -50,7 +50,8 @@ return [
     |
     */
 
-    'expiration' => null,
+    // Backstop for tokens made without an expiry date: 30 days, like the app's own sign-ins.
+    'expiration' => (int) env('SANCTUM_EXPIRATION', 60 * 24 * 30),
 
     /*
     |--------------------------------------------------------------------------

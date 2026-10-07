@@ -9,7 +9,10 @@
             ['Strong, unique password', (bool) $passwordChanged, $passwordChanged ? 'Changed '.$passwordChanged->diffForHumans() : 'Not changed since the account was created'],
             ['Recent sign-in', (bool) $admin->last_login_at, $admin->last_login_at ? 'Last on '.$admin->last_login_at->copy()->timezone($tz)->format('M j, g:i A') : 'No sign-in recorded'],
             ['Email you can reach', ! str_ends_with($admin->email, '.test'), $admin->email],
+            ['Two-factor sign-in', $admin->hasTwoFactor(), $admin->hasTwoFactor() ? 'On since '.$admin->two_factor_confirmed_at->copy()->timezone($tz)->format('M j, Y') : 'Off: turn it on below'],
         ];
+        $total = count($checks);
+        $twoFactorErrors = $errors->getBag('twoFactor');
         $score = collect($checks)->where(1, true)->count();
         $activityIcon = fn (string $action) => match (true) {
             $action === 'login' => ['log-in-outline', 'bg-navy/10 text-navy'],
@@ -54,7 +57,7 @@
         {{-- Settings menu --}}
         <nav class="admin-card self-start p-3 lg:sticky lg:top-6" aria-label="Profile sections">
             <p class="px-3 pt-2 pb-2 text-[11px] font-semibold tracking-widest text-slate-400 uppercase">Settings</p>
-            @foreach ([['#account', 'Account details', 'person-circle-outline', 'Name and email'], ['#security', 'Password & security', 'lock-closed-outline', 'Change your password'], ['#activity', 'Your activity', 'time-outline', 'What you did recently']] as [$href, $label, $icon, $caption])
+            @foreach ([['#account', 'Account details', 'person-circle-outline', 'Name and email'], ['#security', 'Password & security', 'lock-closed-outline', 'Change your password'], ['#two-factor', 'Two-factor sign-in', 'phone-portrait-outline', $admin->hasTwoFactor() ? 'On' : 'Off: recommended'], ['#activity', 'Your activity', 'time-outline', 'What you did recently']] as [$href, $label, $icon, $caption])
                 <a href="{{ $href }}" class="group flex items-center gap-3 rounded-xl px-3 py-2.5 transition hover:bg-brand-50">
                     <span class="flex h-9 w-9 items-center justify-center rounded-lg bg-slate-100 text-slate-600 transition group-hover:bg-brand-100 group-hover:text-brand"><ion-icon name="{{ $icon }}" class="text-lg"></ion-icon></span>
                     <span><span class="block text-sm font-semibold text-navy">{{ $label }}</span><span class="block text-xs text-slate-400">{{ $caption }}</span></span>
@@ -126,11 +129,11 @@
                     <div class="grid gap-5 md:grid-cols-2">
                         <div>
                             <label for="pw_password" class="admin-label">New password</label>
-                            <x-admin.password-input id="pw_password" name="password" autocomplete="new-password" minlength="8" />
+                            <x-admin.password-input id="pw_password" name="password" autocomplete="new-password" minlength="12" />
                         </div>
                         <div>
                             <label for="pw_password_confirmation" class="admin-label">Confirm new password</label>
-                            <x-admin.password-input id="pw_password_confirmation" name="password_confirmation" autocomplete="new-password" minlength="8" />
+                            <x-admin.password-input id="pw_password_confirmation" name="password_confirmation" autocomplete="new-password" minlength="12" />
                             <p class="mt-1.5 hidden items-center gap-1 text-xs" id="match-hint"></p>
                         </div>
                     </div>
@@ -145,7 +148,7 @@
                             </div>
                         </div>
                         <ul class="grid grid-cols-2 gap-x-4 gap-y-1.5 text-xs text-slate-500">
-                            @foreach ([['length', 'At least 8 characters'], ['letter', 'Contains a letter'], ['number', 'Contains a number'], ['symbol', 'Symbol or mixed case']] as [$rule, $text])
+                            @foreach ([['length', 'At least 12 characters'], ['letter', 'Upper and lower case'], ['number', 'Contains a number'], ['symbol', 'Contains a symbol']] as [$rule, $text])
                                 <li class="flex items-center gap-1.5" data-rule="{{ $rule }}"><ion-icon name="ellipse-outline" class="text-sm"></ion-icon>{{ $text }}</li>
                             @endforeach
                         </ul>
@@ -156,6 +159,73 @@
                     </div>
                 </div>
             </form>
+
+            {{-- Two-factor sign-in --}}
+            <section class="admin-card scroll-mt-6 p-0" id="two-factor">
+                <div class="flex flex-wrap items-center gap-3 border-b border-slate-100 px-6 py-5">
+                    <span class="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-50 text-emerald-600"><ion-icon name="phone-portrait" class="text-lg"></ion-icon></span>
+                    <div class="flex-1"><h2 class="admin-card-title">Two-factor sign-in</h2><p class="admin-card-subtitle">After your password, enter a 6-digit code from an app on your phone. A stolen password alone is then not enough.</p></div>
+                    <span @class(['admin-badge', 'bg-emerald-50 text-emerald-700' => $admin->hasTwoFactor(), 'bg-amber-50 text-amber-700' => ! $admin->hasTwoFactor()])>{{ $admin->hasTwoFactor() ? 'On' : 'Off' }}</span>
+                </div>
+                <div class="space-y-5 px-6 py-6">
+                    @if ($twoFactorErrors->any())
+                        <div class="flex items-center gap-2 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800" role="alert"><ion-icon name="alert-circle" class="text-lg"></ion-icon>{{ $twoFactorErrors->first() }}</div>
+                    @endif
+
+                    @if (session('recovery_codes'))
+                        <div class="rounded-2xl border border-amber-200 bg-amber-50 p-5">
+                            <p class="flex items-center gap-2 text-sm font-semibold text-amber-900"><ion-icon name="warning" class="text-lg"></ion-icon>Save these recovery codes now. They are shown only once.</p>
+                            <p class="mt-1 text-xs text-amber-800">If you lose your phone, each code lets you sign in one time. Write them down or keep them in a password manager, not on this computer's desktop.</p>
+                            <ul class="mt-4 grid grid-cols-2 gap-2 font-mono text-sm sm:grid-cols-4">
+                                @foreach (session('recovery_codes') as $code)
+                                    <li class="rounded-lg bg-white px-3 py-2 text-center text-navy ring-1 ring-amber-200">{{ $code }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
+
+                    @if ($admin->hasTwoFactor())
+                        <p class="flex items-center gap-2 text-sm text-slate-600"><ion-icon name="checkmark-circle" class="text-lg text-emerald-500"></ion-icon>On since {{ $admin->two_factor_confirmed_at->copy()->timezone($tz)->format('M j, Y g:i A') }}. {{ count($admin->two_factor_recovery_codes ?? []) }} recovery codes left.</p>
+                        <form method="POST" action="{{ route('admin.two-factor.destroy') }}" class="flex flex-wrap items-end gap-4 rounded-2xl bg-slate-50 p-4 ring-1 ring-slate-100">
+                            @csrf @method('DELETE')
+                            <div class="min-w-64 flex-1">
+                                <label for="tf_off_password" class="admin-label">Current password</label>
+                                <x-admin.password-input id="tf_off_password" name="current_password" autocomplete="current-password" />
+                            </div>
+                            <button class="admin-btn-danger h-[42px]"><ion-icon name="close-circle-outline" class="text-lg"></ion-icon>Turn off</button>
+                        </form>
+                    @elseif ($setupSecret)
+                        <ol class="grid gap-6 md:grid-cols-[auto_minmax(0,1fr)]">
+                            <li class="flex flex-col items-center gap-2">
+                                <div class="rounded-2xl bg-white p-3 ring-1 ring-slate-200">{!! $setupQrCode !!}</div>
+                                <p class="text-xs text-slate-500">Can't scan? Enter this key:</p>
+                                <code class="rounded-lg bg-slate-100 px-2 py-1 text-xs break-all text-navy">{{ trim(chunk_split($setupSecret, 4, ' ')) }}</code>
+                            </li>
+                            <li class="space-y-4 text-sm text-slate-600">
+                                <p><span class="font-semibold text-navy">1.</span> Install an authenticator app on your phone: Google Authenticator, Microsoft Authenticator or Authy (all free).</p>
+                                <p><span class="font-semibold text-navy">2.</span> In the app, tap <strong>+</strong> and scan this QR code. "MataKo Admin" appears with a 6-digit code.</p>
+                                <form method="POST" action="{{ route('admin.two-factor.confirm') }}" class="space-y-3">
+                                    @csrf
+                                    <label for="tf_code" class="block"><span class="font-semibold text-navy">3.</span> Enter the code shown in the app:</label>
+                                    <div class="flex flex-wrap gap-3">
+                                        <input id="tf_code" name="code" required inputmode="numeric" autocomplete="one-time-code" maxlength="10" placeholder="123 456" class="admin-input w-44 text-center text-lg font-semibold tracking-[0.3em]">
+                                        <button class="admin-btn-primary"><ion-icon name="shield-checkmark-outline" class="text-lg"></ion-icon>Turn on</button>
+                                    </div>
+                                </form>
+                            </li>
+                        </ol>
+                    @else
+                        <form method="POST" action="{{ route('admin.two-factor.start') }}" class="flex flex-wrap items-end gap-4 rounded-2xl bg-slate-50 p-4 ring-1 ring-slate-100">
+                            @csrf
+                            <div class="min-w-64 flex-1">
+                                <label for="tf_on_password" class="admin-label">Confirm with your current password</label>
+                                <x-admin.password-input id="tf_on_password" name="current_password" autocomplete="current-password" />
+                            </div>
+                            <button class="admin-btn-primary h-[42px]"><ion-icon name="phone-portrait-outline" class="text-lg"></ion-icon>Set up two-factor sign-in</button>
+                        </form>
+                    @endif
+                </div>
+            </section>
         </div>
 
         {{-- Side column --}}
@@ -166,9 +236,9 @@
                         <span class="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-50 text-emerald-600"><ion-icon name="shield-checkmark" class="text-lg"></ion-icon></span>
                         <h2 class="admin-card-title">Security checklist</h2>
                     </div>
-                    <span @class(['admin-badge', 'bg-emerald-50 text-emerald-700' => $score === 3, 'bg-amber-50 text-amber-700' => $score < 3])>{{ $score }}/3</span>
+                    <span @class(['admin-badge', 'bg-emerald-50 text-emerald-700' => $score === $total, 'bg-amber-50 text-amber-700' => $score < $total])>{{ $score }}/{{ $total }}</span>
                 </div>
-                <div class="mt-4 h-2 rounded-full bg-slate-100"><div @class(['h-2 rounded-full', 'bg-emerald-500' => $score === 3, 'bg-amber-400' => $score < 3]) style="width: {{ $score / 3 * 100 }}%"></div></div>
+                <div class="mt-4 h-2 rounded-full bg-slate-100"><div @class(['h-2 rounded-full', 'bg-emerald-500' => $score === $total, 'bg-amber-400' => $score < $total]) style="width: {{ $score / $total * 100 }}%"></div></div>
                 <ul class="mt-5 space-y-4">
                     @foreach ($checks as [$label, $done, $detail])
                         <li class="flex items-start gap-3">
@@ -205,7 +275,7 @@
         </div>
     </div>
 
-    <script>
+    <script @nonce>
         // Show or hide each password field.
         document.querySelectorAll('[data-toggle]').forEach((button) => {
             button.addEventListener('click', () => {
@@ -225,10 +295,10 @@
         const hint = document.getElementById('match-hint');
         const levels = [['Too short', 'bg-red-500', 'text-red-600'], ['Weak', 'bg-red-500', 'text-red-600'], ['Fair', 'bg-amber-400', 'text-amber-600'], ['Good', 'bg-emerald-400', 'text-emerald-600'], ['Strong', 'bg-emerald-600', 'text-emerald-700']];
         const rules = {
-            length: (v) => v.length >= 8,
-            letter: (v) => /[a-z]/i.test(v),
+            length: (v) => v.length >= 12,
+            letter: (v) => /[a-z]/.test(v) && /[A-Z]/.test(v),
             number: (v) => /\d/.test(v),
-            symbol: (v) => /[^a-z0-9]/i.test(v) || (/[a-z]/.test(v) && /[A-Z]/.test(v)),
+            symbol: (v) => /[^a-z0-9]/i.test(v),
         };
         const update = () => {
             const value = password.value;
@@ -239,7 +309,6 @@
                 item.querySelector('ion-icon').setAttribute('name', ok ? 'checkmark-circle' : 'ellipse-outline');
             });
             let score = Object.values(passed).filter(Boolean).length;
-            if (value.length >= 12 && score >= 3) score = Math.min(4, score + 1);
             if (!passed.length) score = 0;
             const [text, bar, colour] = levels[score];
             bars.forEach((element, index) => { element.className = 'h-2 flex-1 rounded-full ' + (index < score && value ? bar : 'bg-slate-200'); });

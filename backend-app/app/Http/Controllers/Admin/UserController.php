@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\AdminActivity;
+use App\Models\SecurityEvent;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -105,11 +106,13 @@ class UserController extends Controller
 
     public function resetPassword(Request $request, User $user): RedirectResponse
     {
-        $data = $request->validate(['password' => ['required', 'confirmed', Password::min(8)]]);
+        $rule = $user->is_admin ? Password::min(12)->mixedCase()->numbers()->symbols() : Password::defaults();
+        $data = $request->validate(['password' => ['required', 'confirmed', $rule]]);
 
         $user->forceFill(['password' => Hash::make($data['password'])])->save();
         $user->tokens()->delete();
         AdminActivity::record('user.password_reset', "Reset the password for {$user->email}");
+        SecurityEvent::record('password.changed', user: $user, details: 'Reset by admin '.$request->user()->email);
 
         return back()->with('status', 'Password changed. The user has been signed out of the app.');
     }

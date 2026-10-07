@@ -80,13 +80,17 @@ class AdminAccessTest extends TestCase
     {
         $admin = User::factory()->admin()->create();
 
-        $this->actingAs($admin)->put(route('admin.profile.password'), ['current_password' => 'password', 'password' => 'short', 'password_confirmation' => 'short'])
-            ->assertSessionHasErrorsIn('password', 'password');
+        // Admin passwords need 12+ characters with upper and lower case, a number and a symbol.
+        foreach (['short', 'NewSecret123', 'newsecret123!x'] as $weak) {
+            $this->actingAs($admin)->put(route('admin.profile.password'), ['current_password' => 'password', 'password' => $weak, 'password_confirmation' => $weak])
+                ->assertSessionHasErrorsIn('password', 'password');
+        }
 
-        $this->actingAs($admin)->put(route('admin.profile.password'), ['current_password' => 'password', 'password' => 'NewSecret123', 'password_confirmation' => 'NewSecret123'])
+        $this->actingAs($admin)->put(route('admin.profile.password'), ['current_password' => 'password', 'password' => 'New-Secret-2026', 'password_confirmation' => 'New-Secret-2026'])
             ->assertRedirect(route('admin.profile'));
-        $this->assertTrue(Hash::check('NewSecret123', $admin->fresh()->password));
+        $this->assertTrue(Hash::check('New-Secret-2026', $admin->fresh()->password));
         $this->assertDatabaseHas('admin_activities', ['admin_id' => $admin->id, 'action' => 'user.password_reset']);
+        $this->assertDatabaseHas('security_events', ['user_id' => $admin->id, 'type' => 'password.changed']);
     }
 
     public function test_the_profile_page_loads(): void

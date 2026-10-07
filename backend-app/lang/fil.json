@@ -7,5 +7,6 @@
     "Logged out successfully.": "Matagumpay na naka-log out.",
     "Google sign-in is not set up on the server yet.": "Hindi pa naka-set up ang Google sign-in sa server.",
     "Google sign-in could not be verified. Please try again.": "Hindi ma-verify ang Google sign-in. Pakisubukang muli.",
-    "Google sign-in is not available right now. Try again in a moment.": "Hindi available ang Google sign-in ngayon. Subukang muli mamaya."
+    "Google sign-in is not available right now. Try again in a moment.": "Hindi available ang Google sign-in ngayon. Subukang muli mamaya.",
+    "Too many failed sign-in attempts. Try again in :minutes minutes.": "Masyadong maraming maling pag-sign in. Subukang muli pagkalipas ng :minutes minuto."
 }

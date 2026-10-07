@@ -69,6 +69,13 @@
                 <h1 class="mt-8 text-2xl font-bold tracking-tight text-navy">Welcome back</h1>
                 <p class="mt-1.5 text-sm text-slate-500">Sign in to your MataKo admin console.</p>
 
+                @if (session('status'))
+                    <p class="mt-6 flex items-start gap-2 rounded-xl bg-brand-50 px-4 py-3 text-sm text-navy ring-1 ring-brand-100" role="status">
+                        <svg class="mt-0.5 h-4 w-4 shrink-0 text-brand" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m0 3.75h.008M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/></svg>
+                        {{ session('status') }}
+                    </p>
+                @endif
+
                 <form method="POST" action="{{ route('admin.login.store') }}" class="mt-8 space-y-5">
                     @csrf
                     <div>
@@ -111,7 +118,7 @@
         </main>
     </div>
 
-    <script>
+    <script @nonce>
         // Show or hide the password.
         const toggle = document.getElementById('toggle-password');
         const password = document.getElementById('password');

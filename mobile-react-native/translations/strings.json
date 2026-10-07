@@ -1702,5 +1702,9 @@
  "Signing up with Google as": [
   "Nagsa-sign up gamit ang Google bilang",
   "Nag-sign up gamit ang Google isip"
+ ],
+ "Use at least 8 characters with letters and numbers, and make sure the passwords match.": [
+  "Gumamit ng hindi bababa sa 8 character na may mga letra at numero, at tiyaking magkapareho ang mga password.",
+  "Gamit og labing menos 8 ka karakter nga adunay mga letra ug numero, ug siguroha nga parehas ang mga password."
  ]
 }

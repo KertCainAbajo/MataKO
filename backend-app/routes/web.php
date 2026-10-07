@@ -7,8 +7,10 @@ use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\ProfileController;
 use App\Http\Controllers\Admin\QuestionController;
 use App\Http\Controllers\Admin\SearchController;
+use App\Http\Controllers\Admin\SecurityController;
 use App\Http\Controllers\Admin\TipController;
 use App\Http\Controllers\Admin\TranslationController;
+use App\Http\Controllers\Admin\TwoFactorController;
 use App\Http\Controllers\Admin\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -20,9 +22,11 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::middleware('guest')->group(function () {
         Route::get('/login', [AuthController::class, 'create'])->name('login');
         Route::post('/login', [AuthController::class, 'store'])->middleware('throttle:5,1')->name('login.store');
+        Route::get('/two-factor', [AuthController::class, 'twoFactor'])->name('two-factor');
+        Route::post('/two-factor', [AuthController::class, 'verifyTwoFactor'])->middleware('throttle:5,1')->name('two-factor.verify');
     });
 
-    Route::middleware(['auth', 'auth.session', 'admin'])->group(function () {
+    Route::middleware(['auth', 'auth.session', 'admin', 'admin.idle'])->group(function () {
         Route::post('/logout', [AuthController::class, 'destroy'])->name('logout');
         Route::get('/', DashboardController::class)->name('dashboard');
         Route::get('/search', SearchController::class)->name('search');
@@ -31,6 +35,10 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('/profile', [ProfileController::class, 'edit'])->name('profile');
         Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
         Route::put('/profile/password', [ProfileController::class, 'updatePassword'])->name('profile.password');
+        Route::post('/profile/two-factor', [TwoFactorController::class, 'start'])->middleware('throttle:10,1')->name('two-factor.start');
+        Route::post('/profile/two-factor/confirm', [TwoFactorController::class, 'confirm'])->middleware('throttle:10,1')->name('two-factor.confirm');
+        Route::delete('/profile/two-factor', [TwoFactorController::class, 'destroy'])->middleware('throttle:10,1')->name('two-factor.destroy');
+        Route::get('/security', SecurityController::class)->name('security');
 
         Route::resource('users', UserController::class)->except(['create', 'store']);
         Route::patch('/users/{user}/status', [UserController::class, 'toggleStatus'])->name('users.status');

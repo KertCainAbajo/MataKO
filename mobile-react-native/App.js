@@ -22,6 +22,7 @@ import {
   View,
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import * as SecureStore from 'expo-secure-store';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import Slider from '@react-native-community/slider';
@@ -38,6 +39,23 @@ const API_URLS = process.env.EXPO_PUBLIC_API_URL ? [process.env.EXPO_PUBLIC_API_
 // tokens issued to this client ID (GOOGLE_CLIENT_IDS in backend-app/.env).
 const GOOGLE_WEB_CLIENT_ID = process.env.EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID;
 if (GOOGLE_WEB_CLIENT_ID) GoogleSignin.configure({ webClientId: GOOGLE_WEB_CLIENT_ID });
+// The sign-in token is kept in the phone's encrypted storage (Android Keystore / iOS Keychain), not in
+// plain AsyncStorage. A token saved by an older version of the app is moved over the first time it is read.
+const TOKEN_KEY = 'matako_token';
+const tokenStore = {
+  async get() {
+    const token = await SecureStore.getItemAsync(TOKEN_KEY);
+    if (token) return token;
+    const legacy = await AsyncStorage.getItem(TOKEN_KEY);
+    if (legacy) {
+      await SecureStore.setItemAsync(TOKEN_KEY, legacy);
+      await AsyncStorage.removeItem(TOKEN_KEY);
+    }
+    return legacy;
+  },
+  set: (token) => SecureStore.setItemAsync(TOKEN_KEY, token),
+  remove: () => Promise.all([SecureStore.deleteItemAsync(TOKEN_KEY), AsyncStorage.removeItem(TOKEN_KEY)]),
+};
 // The address that last answered; pictures are loaded from the same place.
 let apiUrl = API_URLS[0];
 const apiOrigin = () => apiUrl.replace(/\/api\/?$/, '');
@@ -672,7 +690,7 @@ export default function App() {
     (async () => {
       try {
         const [savedToken, savedLanguage, hasAccount] = await Promise.all([
-          AsyncStorage.getItem('matako_token'),
+          tokenStore.get(),
           AsyncStorage.getItem('matako_language'),
           AsyncStorage.getItem('matako_has_account'),
         ]);
@@ -768,7 +786,7 @@ export default function App() {
 
   // Clears the signed-in account from memory, so the next person starts fresh.
   const endSession = () => {
-    AsyncStorage.removeItem('matako_token').catch(() => {});
+    tokenStore.remove().catch(() => {});
     setToken(null);
     setUser(null);
     setAssessments([]);
@@ -806,7 +824,8 @@ export default function App() {
     try {
       const data = await request('/login', { method: 'POST', body: { email: email.trim(), password } });
       // Without "Remember me" the session lasts only until the app is closed.
-      await AsyncStorage.multiSet(remember ? [['matako_token', data.token], ['matako_has_account', 'true']] : [['matako_has_account', 'true']]);
+      if (remember) await tokenStore.set(data.token);
+      await AsyncStorage.setItem('matako_has_account', 'true');
       setHasAccount(true);
       setToken(data.token);
       setUser(data.user);
@@ -817,7 +836,8 @@ export default function App() {
   };
 
   const finishSignIn = async (data, isNewAccount) => {
-    await AsyncStorage.multiSet([['matako_token', data.token], ['matako_has_account', 'true']]);
+    await tokenStore.set(data.token);
+    await AsyncStorage.setItem('matako_has_account', 'true');
     setHasAccount(true);
     setGoogleSignUp(null);
     setToken(data.token);
@@ -881,7 +901,8 @@ export default function App() {
         method: 'POST',
         body: { ...form, remember: undefined, age: Number(form.age), role },
       });
-      await AsyncStorage.multiSet([['matako_token', data.token], ['matako_has_account', 'true']]);
+      await tokenStore.set(data.token);
+    await AsyncStorage.setItem('matako_has_account', 'true');
       setHasAccount(true);
       setToken(data.token);
       setUser(data.user);
@@ -1235,7 +1256,7 @@ function AuthForm({ mode, language, onGoogle, role, onRoleChange, values: savedV
     if (!values.email.includes('@') || !values.password) { Alert.alert(t('Sign In'), t('Enter a valid email and password.')); return; }
     if (isRegister) {
       if (!values.name.trim() || !values.phone.trim() || Number(values.age) < 18 || Number(values.age) > 120) { Alert.alert(t('Create Account'), t('Complete each field. You must be at least 18 to sign up.')); return; }
-      if (values.password.length < 8 || values.password !== values.password_confirmation) { Alert.alert(t('Create Account'), t('Use at least 8 characters and make sure the passwords match.')); return; }
+      if (values.password.length < 8 || !/[A-Za-z]/.test(values.password) || !/\d/.test(values.password) || values.password !== values.password_confirmation) { Alert.alert(t('Create Account'), t('Use at least 8 characters with letters and numbers, and make sure the passwords match.')); return; }
       if (!agreed) { Alert.alert(t('Create Account'), t('Please agree to the Terms and Privacy Policy.')); return; }
     }
     onSubmit({ ...values, remember });

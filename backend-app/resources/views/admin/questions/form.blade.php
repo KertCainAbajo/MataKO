@@ -82,7 +82,7 @@
             </div>
         </fieldset>
 
-        <script>
+        <script @nonce>
             (() => {
                 const choices = [...document.querySelectorAll('input[name="illustration"]')];
                 const mascots = choices.filter((choice) => choice.dataset.keywords);

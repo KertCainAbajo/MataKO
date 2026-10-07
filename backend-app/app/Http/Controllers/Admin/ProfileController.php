@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\AdminActivity;
+use App\Models\SecurityEvent;
+use App\Services\TwoFactor;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -15,9 +17,10 @@ use Illuminate\View\View;
 
 class ProfileController extends Controller
 {
-    public function edit(Request $request): View
+    public function edit(Request $request, TwoFactor $twoFactor): View
     {
         $admin = $request->user();
+        $setupSecret = $request->session()->has('two_factor_setup') ? decrypt($request->session()->get('two_factor_setup')) : null;
         $activity = AdminActivity::where('admin_id', $admin->id);
 
         return view('admin.profile', [
@@ -27,6 +30,8 @@ class ProfileController extends Controller
             'changeCount' => (clone $activity)->where('action', '!=', 'login')->count(),
             'passwordChangedAt' => (clone $activity)->where('action', 'user.password_reset')->where('description', 'like', 'Changed their own%')->latest('created_at')->value('created_at'),
             'recentActivity' => (clone $activity)->latest('created_at')->latest('id')->limit(6)->get(),
+            'setupSecret' => $setupSecret,
+            'setupQrCode' => $setupSecret ? $twoFactor->qrCodeSvg($admin, $setupSecret) : null,
         ]);
     }
 
@@ -58,7 +63,8 @@ class ProfileController extends Controller
         $admin = $request->user();
         $data = $request->validateWithBag('password', [
             'current_password' => ['required', 'current_password'],
-            'password' => ['required', 'confirmed', 'different:current_password', Password::min(8)->letters()->numbers()],
+            // Admins can see every user's data, so their passwords must be stronger than app users'.
+            'password' => ['required', 'confirmed', 'different:current_password', Password::min(12)->mixedCase()->numbers()->symbols()],
         ], [
             'password.different' => 'The new password must be different from your current password.',
         ]);
@@ -68,6 +74,7 @@ class ProfileController extends Controller
         Auth::logoutOtherDevices($data['password']);
         $request->session()->regenerate();
         AdminActivity::record('user.password_reset', 'Changed their own admin password');
+        SecurityEvent::record('password.changed', user: $admin, details: 'Admin changed their own password');
 
         return redirect()->route('admin.profile')->with('status', 'Password changed. Other browsers have been signed out.');
     }

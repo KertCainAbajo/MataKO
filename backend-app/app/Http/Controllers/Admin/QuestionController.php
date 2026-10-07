@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\AdminActivity;
 use App\Models\Question;
+use App\Services\ImageSanitizer;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -148,7 +149,8 @@ class QuestionController extends Controller
     private function chosenImage(Request $request, array $data): ?string
     {
         if ($request->hasFile('image')) {
-            return $request->file('image')->store('questions', 'public');
+            // Saved as a rebuilt copy, never the uploaded file itself.
+            return app(ImageSanitizer::class)->store($request->file('image'), 'questions');
         }
 
         $choice = $request->input('illustration');

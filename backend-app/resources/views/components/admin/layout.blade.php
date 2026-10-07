@@ -13,9 +13,10 @@
         ],
         'System' => [
             ['admin.activity', 'admin.activity', 'Activity Log', 'time', null],
+            ['admin.security', 'admin.security', 'Security', 'shield-checkmark', 'security'],
         ],
     ];
-    $newToday = ['results' => $sidebar['resultsToday'], 'users' => $sidebar['usersToday']];
+    $newToday = ['results' => $sidebar['resultsToday'], 'users' => $sidebar['usersToday'], 'security' => $sidebar['security']];
     $admin = auth()->user();
     $hour = (int) now(config('app.display_timezone'))->format('G');
     [$greeting, $greetingIcon] = $hour < 12 ? ['Good morning', '☀️'] : ($hour < 18 ? ['Good afternoon', '🌤️'] : ['Good evening', '🌙']);
@@ -32,7 +33,7 @@
     <link href="https://fonts.bunny.net/css?family=inter:400,500,600,700" rel="stylesheet">
     @vite(['resources/css/app.css'])
     {{-- The icon set the mobile app uses, so content icons look the same here. --}}
-    <script type="module" src="https://unpkg.com/ionicons@7.4.0/dist/ionicons/ionicons.esm.js"></script>
+    <script type="module" src="{{ asset('ionicons/ionicons.esm.js') }}" @nonce></script>
 </head>
 <body class="h-full bg-[#F6F4F2] font-admin text-slate-900 antialiased">
     <div class="min-h-full lg:flex">
@@ -185,6 +186,13 @@
             </header>
 
             <main class="w-full max-w-[1760px] flex-1 px-4 py-6 sm:px-8">
+                @if (auth()->user() && ! auth()->user()->hasTwoFactor() && ! request()->routeIs('admin.profile'))
+                    <div class="mb-6 flex flex-wrap items-center gap-3 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900" role="note">
+                        <ion-icon name="shield-half-outline" class="text-xl text-amber-600"></ion-icon>
+                        <span class="flex-1"><strong>Protect the admin account:</strong> turn on two-factor sign-in so a stolen password alone cannot open the dashboard.</span>
+                        <a href="{{ route('admin.profile') }}#two-factor" class="admin-btn-secondary py-1.5 text-xs">Set it up</a>
+                    </div>
+                @endif
                 @if (session('status'))
                     <div class="mb-6 flex items-start gap-3 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-800" role="status">
                         <svg class="mt-0.5 h-5 w-5 shrink-0 text-emerald-600" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/></svg>
@@ -208,5 +216,9 @@
             <footer class="w-full max-w-[1760px] px-4 pb-6 text-xs text-slate-400 sm:px-8">MataKo · Digital eye strain self-assessment · Admin console</footer>
         </div>
     </div>
+    <script @nonce>
+        // Filters marked data-autosubmit apply as soon as they change (inline onchange="" is blocked by the security policy).
+        document.querySelectorAll('[data-autosubmit]').forEach((field) => field.addEventListener('change', () => field.form.requestSubmit()));
+    </script>
 </body>
 </html>
