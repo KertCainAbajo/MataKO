@@ -1349,23 +1349,33 @@ function AuthForm({ mode, language, onGoogle, role, onRoleChange, values: savedV
   const [remember, setRemember] = useState(true);
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [confirmVisible, setConfirmVisible] = useState(false);
+  const [focused, setFocused] = useState(null);
   const isRegister = mode === 'register';
   const values = savedValues || localValues;
   const t = (value) => translations[language]?.[value] || value;
   const update = (key, value) => (onValuesChange || setLocalValues)((current) => ({ ...current, [key]: value }));
-  const field = (key, label, options = {}) => (
-    <View style={styles.field} key={key}>
+  const field = (key, label, options = {}) => {
+    const visible = key === 'password' ? passwordVisible : confirmVisible;
+    const active = focused === key;
+    return <View style={styles.field} key={key}>
       <Text style={styles.fieldLabel}>{t(label)}</Text>
-      <TextInput
-        value={values[key]} onChangeText={(value) => update(key, value)}
-        placeholder={translations[language]?.[options.placeholder || label] || options.placeholder || label} placeholderTextColor="#9AA3B2"
-        keyboardType={options.keyboardType || 'default'} autoCapitalize={options.autoCapitalize || 'sentences'}
-        secureTextEntry={options.secure && !(key === 'password' ? passwordVisible : confirmVisible)}
-        style={styles.input} returnKeyType="next"
-      />
-      {options.secure ? <Pressable onPress={() => key === 'password' ? setPasswordVisible(!passwordVisible) : setConfirmVisible(!confirmVisible)}><Text style={styles.showPassword}>{t((key === 'password' ? passwordVisible : confirmVisible) ? 'Hide' : 'Show')}</Text></Pressable> : null}
-    </View>
-  );
+      <View style={[styles.authInputRow, active && styles.authInputRowActive]}>
+        <View style={[styles.authInputIcon, active && styles.authInputIconActive]}><Icon name={options.icon} size={17} color={active ? ORANGE : '#7A8696'} /></View>
+        <TextInput
+          value={values[key]} onChangeText={(value) => update(key, value)}
+          onFocus={() => setFocused(key)} onBlur={() => setFocused((current) => (current === key ? null : current))}
+          placeholder={translations[language]?.[options.placeholder || label] || options.placeholder || label} placeholderTextColor="#9AA3B2"
+          keyboardType={options.keyboardType || 'default'} autoCapitalize={options.autoCapitalize || 'sentences'}
+          secureTextEntry={options.secure && !visible}
+          style={styles.authInput} returnKeyType="next"
+        />
+        {options.secure ? <Pressable accessibilityRole="button" accessibilityLabel={t(visible ? 'Hide' : 'Show')} hitSlop={8} style={styles.authEye} onPress={() => key === 'password' ? setPasswordVisible(!passwordVisible) : setConfirmVisible(!confirmVisible)}>
+          <Icon name={visible ? 'eye-off-outline' : 'eye-outline'} size={20} color={visible ? ORANGE : '#7A8696'} />
+        </Pressable> : null}
+      </View>
+    </View>;
+  };
+  const checkbox = (checked) => <View style={[styles.authCheck, checked && styles.authCheckOn]}>{checked ? <Icon name="checkmark" size={14} color={WHITE} /> : null}</View>;
   const submit = () => {
     if (!values.email.includes('@') || !values.password) { Alert.alert(t('Sign In'), t('Enter a valid email and password.'), undefined, { tone: 'warning' }); return; }
     if (isRegister) {
@@ -1376,39 +1386,57 @@ function AuthForm({ mode, language, onGoogle, role, onRoleChange, values: savedV
     onSubmit({ ...values, remember });
   };
   return <>
-    <View style={styles.header}>
-      {onBack ? <Pressable onPress={onBack} style={styles.back}><Text style={styles.backText}>‹</Text></Pressable> : <View style={styles.back} />}
+    <View style={styles.authHeader}>
+      {onBack ? <Pressable accessibilityRole="button" accessibilityLabel={t('Back')} onPress={onBack} style={styles.authBack}><Icon name="chevron-back" size={22} color={NAVY} /></Pressable> : <View style={styles.back} />}
       <Text style={styles.headerTitle}>{isRegister ? t('Sign Up') : t('Sign In')}</Text>
       <View style={styles.back} />
     </View>
     <ScrollView keyboardShouldPersistTaps="handled" contentContainerStyle={styles.authPage}>
-      <Image source={logoSource()} style={styles.authLogo} resizeMode="contain" />
-      <Text style={styles.tagline}>{t('YOUR VISION, YOUR POWER.')}</Text>
-      <Text style={styles.authSubtitle}>{t(isRegister ? 'Join us and start your journey today' : 'Sign in to your account to continue')}</Text>
+      <View style={styles.authHero}>
+        <View style={styles.authGlowOrange} />
+        <View style={styles.authGlowNavy} />
+        <Image source={logoSource()} style={styles.authLogo} resizeMode="contain" />
+        <View style={styles.authTaglinePill}><View style={styles.authTaglineDot} /><Text style={styles.authTagline}>{t('YOUR VISION, YOUR POWER.')}</Text></View>
+        <Text style={styles.authTitle}>{t(isRegister ? 'Create your account' : 'Welcome back')}</Text>
+        <Text style={styles.authSubtitle}>{t(isRegister ? 'Join us and start your journey today' : 'Sign in to your account to continue')}</Text>
+      </View>
       <View style={styles.authCard}>
-        {isRegister ? field('name', 'Full Name', { autoCapitalize: 'words' }) : null}
-        {field('email', 'Email Address', { keyboardType: 'email-address', autoCapitalize: 'none' })}
-        {isRegister ? field('phone', 'Phone Number', { keyboardType: 'phone-pad' }) : null}
-        {isRegister ? field('age', 'Age', { keyboardType: 'number-pad' }) : null}
+        {isRegister ? field('name', 'Full Name', { autoCapitalize: 'words', icon: 'person-outline' }) : null}
+        {field('email', 'Email Address', { keyboardType: 'email-address', autoCapitalize: 'none', icon: 'mail-outline' })}
+        {isRegister ? field('phone', 'Phone Number', { keyboardType: 'phone-pad', icon: 'call-outline' }) : null}
+        {isRegister ? field('age', 'Age', { keyboardType: 'number-pad', icon: 'calendar-outline' }) : null}
         {isRegister ? <View style={styles.field}>
           <Text style={styles.fieldLabel}>{t('User Type')}</Text>
-          <View style={styles.wrapRow}>{['student', 'professional'].map((item) => <Pressable key={item} accessibilityRole="radio" accessibilityState={{ checked: role === item }} onPress={() => onRoleChange(item)} style={[styles.languagePill, role === item && styles.languageSelected]}><Text style={styles.bodyText}>{t(item === 'student' ? 'Student' : 'Professional')}</Text></Pressable>)}</View>
+          <View style={styles.authRoleRow}>{[['student', 'school-outline', 'Student'], ['professional', 'briefcase-outline', 'Professional']].map(([item, icon, label]) => <Pressable key={item} accessibilityRole="radio" accessibilityState={{ checked: role === item }} onPress={() => onRoleChange(item)} style={[styles.authRole, role === item && styles.authRoleOn]}>
+            <Icon name={icon} size={18} color={role === item ? ORANGE : '#7A8696'} />
+            <Text style={[styles.authRoleText, role === item && styles.authRoleTextOn]}>{t(label)}</Text>
+          </Pressable>)}</View>
         </View> : null}
-        {field('password', 'Password', { secure: true, autoCapitalize: 'none' })}
-        {isRegister ? field('password_confirmation', 'Confirm Password', { secure: true, autoCapitalize: 'none' }) : null}
-        {!isRegister ? <View style={styles.inlineRow}>
-          <Pressable style={styles.inlineRow} onPress={() => setRemember(!remember)}><Text style={styles.checkbox}>{remember ? '☑' : '□'}</Text><Text style={styles.smallText}>{t('Remember me')}</Text></Pressable>
-          <Pressable onPress={() => Alert.alert(t('Forgot Password?'), t('Password reset is not configured yet.'), undefined, { tone: 'info' })}><Text style={styles.link}>{t('Forgot Password?')}</Text></Pressable>
-        </View> : <View style={[styles.inlineRow, { alignItems: 'flex-start', marginVertical: 8 }]}>
-          <Pressable accessibilityRole="checkbox" accessibilityState={{ checked: agreed }} onPress={() => onAgreementChange?.(!agreed)}><Text style={styles.checkbox}>{agreed ? '☑' : '□'}</Text></Pressable>
-          <Text style={[styles.smallText, { flex: 1 }]}>{t('I agree to the ')}<Text style={styles.link} onPress={() => onLegal('Terms of Service')}>{t('Terms of Service')}</Text>{t(' and ')}<Text style={styles.link} onPress={() => onLegal('Privacy Policy')}>{t('Privacy Policy')}</Text>.</Text>
+        {field('password', 'Password', { secure: true, autoCapitalize: 'none', icon: 'lock-closed-outline' })}
+        {isRegister ? field('password_confirmation', 'Confirm Password', { secure: true, autoCapitalize: 'none', icon: 'shield-checkmark-outline' }) : null}
+        {!isRegister ? <View style={styles.authOptions}>
+          <Pressable accessibilityRole="checkbox" accessibilityState={{ checked: remember }} hitSlop={6} style={styles.authCheckRow} onPress={() => setRemember(!remember)}>{checkbox(remember)}<Text style={styles.authCheckText}>{t('Remember me')}</Text></Pressable>
+          <Pressable hitSlop={6} onPress={() => Alert.alert(t('Forgot Password?'), t('Password reset is not configured yet.'), undefined, { tone: 'info' })}><Text style={styles.authLink}>{t('Forgot Password?')}</Text></Pressable>
+        </View> : <View style={[styles.authCheckRow, styles.authAgreeRow]}>
+          <Pressable accessibilityRole="checkbox" accessibilityState={{ checked: agreed }} hitSlop={8} onPress={() => onAgreementChange?.(!agreed)}>{checkbox(agreed)}</Pressable>
+          <Text style={[styles.authCheckText, { flex: 1 }]}>{t('I agree to the ')}<Text style={styles.authLink} onPress={() => onLegal('Terms of Service')}>{t('Terms of Service')}</Text>{t(' and ')}<Text style={styles.authLink} onPress={() => onLegal('Privacy Policy')}>{t('Privacy Policy')}</Text>.</Text>
         </View>}
-        <Pressable onPress={submit} disabled={loading} style={[styles.button, { marginTop: 12 }, loading && styles.disabled]}><Text style={styles.buttonText}>{loading ? (isRegister ? 'Creating account…' : 'Signing in…') : t(isRegister ? 'Create Account' : 'Sign In')}</Text></Pressable>
-        <Text style={styles.separator}>────────  <Text>{t('or continue with')}</Text>  ────────</Text>
-        <Pressable accessibilityRole="button" style={[styles.socialButton, loading && styles.disabled]} disabled={loading} onPress={onGoogle}><Icon name="logo-google" size={18} color={NAVY} style={{ marginRight: 8 }} /><Text style={styles.bodyText}>{t('Continue with Google')}</Text></Pressable>
-        {Platform.OS === 'ios' ? <Pressable style={styles.socialButton} onPress={() => Alert.alert(t('Unavailable'), t('Apple sign-in is not configured yet.'), undefined, { tone: 'info' })}><Text style={styles.bodyText}>●  {t('Continue with Apple')}</Text></Pressable> : null}
+        <Pressable accessibilityRole="button" onPress={submit} disabled={loading} style={[styles.authButton, loading && styles.disabled]}>
+          <Text style={styles.authButtonText}>{loading ? (isRegister ? 'Creating account…' : 'Signing in…') : t(isRegister ? 'Create Account' : 'Sign In')}</Text>
+          {loading ? null : <View style={styles.authButtonArrow}><Icon name="arrow-forward" size={16} color={WHITE} /></View>}
+        </Pressable>
+        <View style={styles.authDivider}><View style={styles.authDividerLine} /><Text style={styles.authDividerText}>{t('or continue with')}</Text><View style={styles.authDividerLine} /></View>
+        <Pressable accessibilityRole="button" style={[styles.authSocial, loading && styles.disabled]} disabled={loading} onPress={onGoogle}>
+          <View style={styles.authSocialIcon}><Icon name="logo-google" size={17} color="#4285F4" /></View>
+          <Text style={styles.authSocialText}>{t('Continue with Google')}</Text>
+        </Pressable>
+        {Platform.OS === 'ios' ? <Pressable style={styles.authSocial} onPress={() => Alert.alert(t('Unavailable'), t('Apple sign-in is not configured yet.'), undefined, { tone: 'info' })}>
+          <View style={styles.authSocialIcon}><Icon name="logo-apple" size={17} color={NAVY} /></View>
+          <Text style={styles.authSocialText}>{t('Continue with Apple')}</Text>
+        </Pressable> : null}
       </View>
-      <Pressable onPress={isRegister ? onSignIn : onSignUp} style={styles.bottomLink}><Text style={styles.bodyText}>{t(isRegister ? 'Already have an account? ' : "Don't have an account? ")}<Text style={styles.link}>{isRegister ? t('Sign In') : t('Sign Up')}</Text></Text></Pressable>
+      <Pressable onPress={isRegister ? onSignIn : onSignUp} style={styles.authBottom}><Text style={styles.authBottomText}>{t(isRegister ? 'Already have an account? ' : "Don't have an account? ")}<Text style={styles.authBottomLink}>{isRegister ? t('Sign In') : t('Sign Up')}</Text></Text></Pressable>
+      <View style={styles.authSecure}><Icon name="lock-closed" size={12} color="#8A94A3" /><Text style={styles.authSecureText}>{t('Your data is encrypted and kept private')}</Text></View>
     </ScrollView>
   </>;
 }
@@ -2563,7 +2591,49 @@ const styleDefs = {
   radioOuter: { width: 22, height: 22, borderRadius: 11, borderWidth: 2, borderColor: '#C9C0B7', alignItems: 'center', justifyContent: 'center' },
   radioOuterOn: { borderColor: ORANGE },
   radioInner: { width: 10, height: 10, borderRadius: 5, backgroundColor: ORANGE },
-  tagline: { color: '#777777', fontSize: 12, letterSpacing: 0.4, textAlign: 'center', marginTop: 8 }, authPage: { padding: 20, paddingBottom: 32, alignItems: 'stretch' }, authLogo: { alignSelf: 'center', width: 170, height: 58, marginTop: 6 }, authSubtitle: { color: '#526174', fontSize: 14, textAlign: 'center', marginVertical: 22 }, authCard: { backgroundColor: WHITE, borderRadius: 20, padding: 20, elevation: 3 }, field: { marginBottom: 14, position: 'relative' }, fieldLabel: { color: NAVY, fontWeight: '600', fontSize: 12, marginBottom: 7 }, input: { backgroundColor: WHITE, minHeight: 46, borderWidth: 1, borderColor: '#D6DDE4', borderRadius: 10, paddingHorizontal: 13, paddingVertical: 10, color: NAVY }, showPassword: { position: 'absolute', right: 12, bottom: 13, color: ORANGE, fontSize: 12 },
+  tagline: { color: '#777777', fontSize: 12, letterSpacing: 0.4, textAlign: 'center', marginTop: 8 }, authPage: { padding: 20, paddingTop: 4, paddingBottom: 32, alignItems: 'stretch' }, authLogo: { alignSelf: 'center', width: 170, height: 58, marginTop: 6 }, authSubtitle: { color: '#526174', fontSize: 14, lineHeight: 21, textAlign: 'center', marginTop: 6, marginBottom: 22 }, authCard: { backgroundColor: WHITE, borderRadius: 28, paddingHorizontal: 20, paddingTop: 22, paddingBottom: 20, borderWidth: 1, borderColor: '#F0E8E0', elevation: 4 },
+  authHeader: { minHeight: 54, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 14 },
+  authBack: { width: 42, height: 42, borderRadius: 21, alignItems: 'center', justifyContent: 'center', backgroundColor: WHITE, borderWidth: 1, borderColor: '#EDE6DF' },
+  authHero: { alignItems: 'center', paddingTop: 8, position: 'relative' },
+  authGlowOrange: { position: 'absolute', top: 6, right: -24, width: 170, height: 170, borderRadius: 85, backgroundColor: '#FDE3CB', opacity: 0.7 },
+  authGlowNavy: { position: 'absolute', top: 40, left: -30, width: 120, height: 120, borderRadius: 60, backgroundColor: '#DCE6EC', opacity: 0.7 },
+  authTaglinePill: { flexDirection: 'row', alignItems: 'center', marginTop: 12, paddingHorizontal: 12, paddingVertical: 5, borderRadius: 14, backgroundColor: '#FFF1E5', borderWidth: 1, borderColor: '#FFDDBF' },
+  authTaglineDot: { width: 6, height: 6, borderRadius: 3, backgroundColor: ORANGE, marginRight: 7 },
+  authTagline: { color: '#C25E00', fontSize: 11, fontWeight: '700', letterSpacing: 1.2 },
+  authTitle: { color: NAVY, fontSize: 28, fontWeight: '800', letterSpacing: -0.5, textAlign: 'center', marginTop: 16 },
+  authInputRow: { flexDirection: 'row', alignItems: 'center', minHeight: 54, borderRadius: 16, borderWidth: 1.5, borderColor: '#E6DED6', backgroundColor: '#FBF9F7', paddingLeft: 7, paddingRight: 6 },
+  authInputRowActive: { borderColor: ORANGE, backgroundColor: WHITE },
+  authInputIcon: { width: 36, height: 36, borderRadius: 12, alignItems: 'center', justifyContent: 'center', backgroundColor: '#F1ECE7', marginRight: 8 },
+  authInputIconActive: { backgroundColor: '#FFF1E5' },
+  authInput: { flex: 1, color: NAVY, fontSize: 15, paddingVertical: 12 },
+  authEye: { width: 40, height: 40, alignItems: 'center', justifyContent: 'center' },
+  authRoleRow: { flexDirection: 'row', gap: 10 },
+  authRole: { flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8, minHeight: 50, borderRadius: 16, borderWidth: 1.5, borderColor: '#E6DED6', backgroundColor: '#FBF9F7' },
+  authRoleOn: { borderColor: ORANGE, backgroundColor: '#FFF6ED' },
+  authRoleText: { color: '#526174', fontSize: 14, fontWeight: '600' },
+  authRoleTextOn: { color: NAVY, fontWeight: '700' },
+  authOptions: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: 2, marginBottom: 6 },
+  authCheckRow: { flexDirection: 'row', alignItems: 'center' },
+  authAgreeRow: { alignItems: 'flex-start', marginTop: 4, marginBottom: 6 },
+  authCheck: { width: 22, height: 22, borderRadius: 7, borderWidth: 1.5, borderColor: '#C9C0B7', backgroundColor: WHITE, alignItems: 'center', justifyContent: 'center', marginRight: 9 },
+  authCheckOn: { borderColor: ORANGE, backgroundColor: ORANGE },
+  authCheckText: { color: '#4A5565', fontSize: 13, lineHeight: 20 },
+  authLink: { color: ORANGE, fontWeight: '700', fontSize: 13 },
+  authButton: { flexDirection: 'row', minHeight: 56, borderRadius: 18, backgroundColor: ORANGE, alignItems: 'center', justifyContent: 'center', marginTop: 14, elevation: 6, shadowColor: ORANGE, shadowOpacity: 0.35, shadowRadius: 14, shadowOffset: { width: 0, height: 8 } },
+  authButtonText: { color: WHITE, fontSize: 16, fontWeight: '800', letterSpacing: 0.3 },
+  authButtonArrow: { width: 26, height: 26, borderRadius: 13, backgroundColor: 'rgba(255,255,255,0.22)', alignItems: 'center', justifyContent: 'center', marginLeft: 10 },
+  authDivider: { flexDirection: 'row', alignItems: 'center', marginVertical: 20 },
+  authDividerLine: { flex: 1, height: 1, backgroundColor: '#EDE6DF' },
+  authDividerText: { color: '#8A94A3', fontSize: 12, fontWeight: '600', marginHorizontal: 12 },
+  authSocial: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', minHeight: 54, borderRadius: 18, borderWidth: 1.5, borderColor: '#E6DED6', backgroundColor: WHITE, marginBottom: 2 },
+  authSocialIcon: { width: 30, height: 30, borderRadius: 15, backgroundColor: '#EEF3FE', alignItems: 'center', justifyContent: 'center', marginRight: 10 },
+  authSocialText: { color: NAVY, fontSize: 15, fontWeight: '700' },
+  authBottom: { alignItems: 'center', marginTop: 22, paddingVertical: 6 },
+  authBottomText: { color: '#526174', fontSize: 14 },
+  authBottomLink: { color: ORANGE, fontSize: 14, fontWeight: '800' },
+  authSecure: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', marginTop: 10 },
+  authSecureText: { color: '#8A94A3', fontSize: 12, marginLeft: 6 },
+ field: { marginBottom: 14, position: 'relative' }, fieldLabel: { color: NAVY, fontWeight: '700', fontSize: 13, marginBottom: 8, marginLeft: 2 }, input: { backgroundColor: WHITE, minHeight: 46, borderWidth: 1, borderColor: '#D6DDE4', borderRadius: 10, paddingHorizontal: 13, paddingVertical: 10, color: NAVY }, showPassword: { position: 'absolute', right: 12, bottom: 13, color: ORANGE, fontSize: 12 },
   header: { minHeight: 54, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 14, backgroundColor: WHITE }, headerTitle: { color: NAVY, fontSize: 17, fontWeight: '600' }, back: { width: 42, alignItems: 'center' }, backText: { fontSize: 36, lineHeight: 40, color: NAVY }, homeHeader: { height: 54, backgroundColor: WHITE, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 16 }, brandText: { color: NAVY, fontSize: 21, fontWeight: '700' }, homeLogo: { width: 116, height: 42 }, headerAction: { width: 48, height: 48, alignItems: 'center', justifyContent: 'center' }, headerIcon: { color: ORANGE, fontSize: 24 }, avatarButton: { width: 44, height: 44, alignItems: 'center', justifyContent: 'center' }, avatar: { overflow: 'hidden', backgroundColor: NAVY, color: WHITE, fontSize: 14, fontWeight: '700', textAlign: 'center', textAlignVertical: 'center', width: 30, height: 30, borderRadius: 15 },
   page: { padding: 20, paddingBottom: 28 }, title: { color: NAVY, fontSize: 22, fontWeight: '700', textAlign: 'center', marginBottom: 8 }, muted: { color: '#666666', fontSize: 12, lineHeight: 18, marginBottom: 12 }, bodyText: { color: NAVY, fontSize: 14, lineHeight: 21 }, card: { backgroundColor: WHITE, borderRadius: 15, padding: 16, marginVertical: 7, elevation: 1 }, cardTitle: { color: NAVY, fontSize: 15, fontWeight: '700', marginBottom: 6 }, button: { minHeight: 48, backgroundColor: ORANGE, borderRadius: 12, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 16, marginVertical: 7, elevation: 2 }, buttonText: { color: WHITE, fontWeight: '700', fontSize: 15, textAlign: 'center' }, buttonSecondary: { backgroundColor: NAVY }, buttonSecondaryText: { color: WHITE }, disabled: { opacity: 0.55 }, link: { color: ORANGE, fontWeight: '600', fontSize: 12 }, linkCenter: { color: '#777777', fontSize: 13, textAlign: 'center', padding: 12, textDecorationLine: 'underline' },
   roleCard: { backgroundColor: WHITE, borderRadius: 22, borderWidth: 1.5, borderColor: '#EDE6DF', marginVertical: 9, padding: 12, alignItems: 'center', elevation: 2 }, roleSelected: { borderColor: ORANGE, backgroundColor: '#FFF8F1', elevation: 5 }, roleImage: { width: 142, height: 144 }, roleText: { color: WHITE, backgroundColor: NAVY, overflow: 'hidden', borderRadius: 7, textAlign: 'center', width: '100%', padding: 12, fontSize: 16 }, languageImage: { width: 200, height: 170, alignSelf: 'center', marginVertical: 6 }, languageChoice: { backgroundColor: WHITE, borderRadius: 9, padding: 14, marginVertical: 5, flexDirection: 'row', justifyContent: 'space-between', borderWidth: 1, borderColor: '#DDDDDD' }, languageSelected: { borderColor: ORANGE, backgroundColor: '#FFF8F1' }, languagePill: { borderWidth: 1, borderColor: '#D9DEE4', borderRadius: 18, paddingHorizontal: 12, paddingVertical: 8, margin: 4 },

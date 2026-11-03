@@ -54,73 +54,79 @@
     </header>
 
     <main id="top">
-        {{-- Hero --}}
-        <section class="relative isolate overflow-hidden bg-gradient-to-b from-[#031822] via-navy-900 to-navy text-white">
-            <div class="pointer-events-none absolute inset-0 -z-10 overflow-hidden" aria-hidden="true">
-                <div class="animate-aurora absolute -top-40 right-[-10%] h-[38rem] w-[38rem] rounded-full bg-brand/35 blur-[120px]"></div>
-                <div class="animate-aurora absolute top-1/3 -left-40 h-[30rem] w-[30rem] rounded-full bg-[#FF9A3D]/20 blur-[120px] [animation-delay:-6s]"></div>
-                <div class="animate-aurora absolute bottom-[-12rem] left-1/3 h-[26rem] w-[26rem] rounded-full bg-sky-400/15 blur-[120px] [animation-delay:-12s]"></div>
-                <div class="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.05)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.05)_1px,transparent_1px)] [background-size:56px_56px] [mask-image:radial-gradient(ellipse_at_60%_30%,black,transparent_70%)]"></div>
+        {{-- Hero: centred headline over an "iris" of rings, with three phones rising from the bottom edge --}}
+        <section class="relative isolate overflow-hidden rounded-b-[2.5rem] bg-[#03121B] text-white sm:rounded-b-[4rem]">
+            <div class="pointer-events-none absolute inset-0 -z-10" aria-hidden="true">
+                <div class="absolute inset-0 bg-[radial-gradient(ellipse_70%_55%_at_50%_-8%,rgba(64,150,196,0.30),transparent_70%)]"></div>
+                <div class="absolute inset-0 bg-[radial-gradient(rgba(255,255,255,0.09)_1px,transparent_1px)] [background-size:26px_26px] [mask-image:radial-gradient(ellipse_65%_55%_at_50%_30%,black,transparent_75%)]"></div>
+                {{-- Iris rings centred behind the phones --}}
+                <div class="absolute top-[58rem] left-1/2 sm:top-[60rem]">
+                    <div class="absolute top-1/2 left-1/2 h-[56rem] w-[56rem] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(circle,rgba(18,82,114,0.55),transparent_62%)]"></div>
+                    @foreach (['h-[22rem] w-[22rem] border-white/[0.08]', 'h-[30rem] w-[30rem] border-brand/30', 'h-[46rem] w-[46rem] border-white/[0.06]', 'h-[60rem] w-[60rem] border-white/[0.04]'] as $ring)
+                        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full border {{ $ring }}"></div>
+                    @endforeach
+                    <div class="animate-orbit absolute -top-[15rem] -left-[15rem] h-[30rem] w-[30rem] rounded-full bg-[conic-gradient(from_0deg,transparent_0deg,transparent_250deg,#FFB067_330deg,#F58216_360deg)] [mask-image:radial-gradient(farthest-side,transparent_calc(100%-2px),black_calc(100%-2px))]"></div>
+                    <div class="animate-orbit-reverse absolute -top-[23rem] -left-[23rem] h-[46rem] w-[46rem] rounded-full bg-[conic-gradient(from_180deg,transparent_0deg,transparent_290deg,rgba(125,200,240,0.7)_360deg)] [mask-image:radial-gradient(farthest-side,transparent_calc(100%-1px),black_calc(100%-1px))]"></div>
+                </div>
             </div>
 
-            <div class="mx-auto grid max-w-6xl items-center gap-16 px-5 pt-32 pb-32 lg:grid-cols-[1.05fr_1fr] lg:pt-40 lg:pb-40">
-                <div data-reveal>
-                    <p class="inline-flex items-center gap-2 rounded-full bg-white/10 px-3.5 py-1.5 text-xs font-semibold text-orange-200 ring-1 ring-white/15 backdrop-blur">
-                        <span class="relative flex h-2 w-2"><span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-brand opacity-75"></span><span class="relative inline-flex h-2 w-2 rounded-full bg-brand"></span></span>
-                        Digital eye strain self-assessment · Free for Android
-                    </p>
-                    <h1 class="mt-6 text-5xl leading-[1.02] font-black tracking-tight sm:text-7xl">
-                        Your vision,<br>
-                        <span class="animate-shimmer bg-[linear-gradient(110deg,#F58216,#FFB067,#F58216,#FFB067)] [background-size:200%_auto] bg-clip-text text-transparent">your power.</span>
-                    </h1>
-                    <p class="mt-6 max-w-xl text-lg leading-relaxed text-slate-300">
-                        MataKo helps students and professionals spot digital eye strain early — a quick self-assessment, a clear result with a care plan, and guided eye exercises to build healthier screen habits.
-                    </p>
-                    <div class="mt-9 flex flex-wrap gap-3">
-                        <a href="{{ $apkUrl ?: '#download' }}" class="group inline-flex items-center gap-2.5 rounded-2xl bg-brand px-6 py-3.5 font-semibold text-white shadow-[0_12px_40px_-8px_rgba(245,130,22,0.7)] transition hover:-translate-y-0.5 hover:bg-brand-600">
-                            <ion-icon name="logo-android" class="text-xl"></ion-icon> Download for Android
-                            <ion-icon name="arrow-forward" class="transition group-hover:translate-x-1"></ion-icon>
-                        </a>
-                        <a href="#screens" class="inline-flex items-center gap-2 rounded-2xl bg-white/10 px-6 py-3.5 font-semibold text-white ring-1 ring-white/20 backdrop-blur transition hover:-translate-y-0.5 hover:bg-white/15">
-                            <ion-icon name="play-circle-outline" class="text-xl"></ion-icon> Explore the app
-                        </a>
-                    </div>
-                    <dl class="mt-12 grid max-w-lg grid-cols-3 gap-3">
-                        @foreach ([[$stats['questions'], 'Question check-up', 'clipboard-outline'], [$stats['exercises'], 'Guided exercises', 'eye-outline'], [3, 'Languages', 'language-outline']] as [$value, $label, $icon])
-                            <div class="flex flex-col rounded-2xl bg-white/[0.06] p-4 ring-1 ring-white/10 backdrop-blur">
-                                <ion-icon name="{{ $icon }}" class="text-lg text-orange-300"></ion-icon>
-                                <dd class="mt-2 text-3xl font-black tabular-nums" data-count="{{ $value }}">{{ $value }}</dd>
-                                <dt class="order-last text-xs text-slate-400">{{ $label }}</dt>
-                            </div>
-                        @endforeach
-                    </dl>
+            <div class="mx-auto max-w-4xl px-5 pt-32 text-center sm:pt-36" data-reveal>
+                <p class="inline-flex items-center gap-2 rounded-full bg-white/[0.06] py-1.5 pr-4 pl-1.5 text-xs font-semibold text-slate-200 ring-1 ring-white/10 backdrop-blur">
+                    <span class="rounded-full bg-brand px-2.5 py-0.5 text-[11px] font-bold text-white">Free</span>
+                    Digital eye strain self-assessment for Android
+                </p>
+                <h1 class="mt-7 text-[3.4rem] leading-[0.95] font-black tracking-[-0.04em] sm:text-8xl">
+                    Your vision,<br>
+                    <span class="animate-shimmer bg-[linear-gradient(100deg,#FFC48A,#F58216_35%,#FFB067_55%,#F58216_80%)] [background-size:200%_auto] bg-clip-text pr-1 text-transparent">your power.</span>
+                </h1>
+                <p class="mx-auto mt-7 max-w-2xl text-lg leading-relaxed text-slate-300/90 sm:text-xl">
+                    Spot digital eye strain early. A quick self-assessment, a clear result with a care plan, and guided eye exercises — for students and professionals.
+                </p>
+                <div class="mt-10 flex flex-wrap justify-center gap-3">
+                    <a href="{{ $apkUrl ?: '#download' }}" class="group relative inline-flex items-center gap-2.5 overflow-hidden rounded-full bg-gradient-to-b from-[#FF9634] to-brand px-7 py-4 font-bold text-white shadow-[0_0_0_1px_rgba(255,255,255,0.15)_inset,0_18px_40px_-12px_rgba(245,130,22,0.8)] transition hover:-translate-y-0.5">
+                        <span class="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/30 to-transparent transition duration-700 group-hover:translate-x-full"></span>
+                        <ion-icon name="logo-android" class="text-xl"></ion-icon> Download for Android
+                        <ion-icon name="arrow-forward" class="transition group-hover:translate-x-1"></ion-icon>
+                    </a>
+                    <a href="#screens" class="inline-flex items-center gap-2 rounded-full bg-white/[0.06] px-7 py-4 font-bold text-white ring-1 ring-white/15 backdrop-blur transition hover:-translate-y-0.5 hover:bg-white/10">
+                        Explore the app <ion-icon name="chevron-down" class="text-lg"></ion-icon>
+                    </a>
                 </div>
+                <dl class="mx-auto mt-10 flex max-w-xl justify-center divide-x divide-white/10">
+                    @foreach ([[$stats['questions'], 'Question check-up'], [$stats['exercises'], 'Guided exercises'], [3, 'Languages']] as [$value, $label])
+                        <div class="flex flex-1 flex-col items-center px-3">
+                            <dd class="text-3xl font-black tabular-nums sm:text-4xl" data-count="{{ $value }}">{{ $value }}</dd>
+                            <dt class="order-last mt-1 text-xs font-medium tracking-wide text-slate-400 sm:text-sm">{{ $label }}</dt>
+                        </div>
+                    @endforeach
+                </dl>
+            </div>
 
-                {{-- Phones in 3D with floating glass cards --}}
-                <div class="relative mx-auto w-full max-w-md [perspective:1600px] lg:max-w-none" data-reveal>
-                    <div class="relative mx-auto w-[64%] max-w-[18rem] transition duration-700 [transform-style:preserve-3d] [transform:rotateY(-14deg)_rotateX(6deg)] hover:[transform:rotateY(-4deg)_rotateX(2deg)]">
-                        <div class="absolute top-10 -right-[58%] w-[86%] opacity-90 [transform:translateZ(-90px)]">{!! $phone('result', 'Assessment result screen') !!}</div>
-                        <div class="relative">{!! $phone('home', 'MataKo home screen') !!}</div>
-                    </div>
+            {{-- Phone fan --}}
+            <div class="relative mx-auto mt-14 h-[24rem] max-w-6xl sm:h-[30rem]" data-reveal>
+                <div class="absolute top-16 left-1/2 w-40 -translate-x-[128%] -rotate-[9deg] opacity-80 sm:w-52">{!! $phone('question', 'Assessment question screen') !!}</div>
+                <div class="absolute top-16 left-1/2 w-40 translate-x-[28%] rotate-[9deg] opacity-80 sm:w-52">{!! $phone('result', 'Assessment result screen') !!}</div>
+                <div class="absolute top-0 left-1/2 z-10 w-52 -translate-x-1/2 sm:w-64">{!! $phone('home', 'MataKo home screen', 'shadow-[0_40px_120px_-20px_rgba(245,130,22,0.35)]') !!}</div>
 
-                    <div class="animate-float absolute top-[6%] left-0 rounded-2xl bg-navy-900/60 px-4 py-3 shadow-2xl ring-1 ring-white/20 backdrop-blur-xl sm:-left-4">
-                        <p class="flex items-center gap-2 text-[11px] font-semibold tracking-wide text-slate-300 uppercase"><span class="h-1.5 w-1.5 rounded-full bg-red-400"></span>Result ready</p>
-                        <p class="mt-1 text-sm font-bold">Severe Eye Strain</p>
-                        <p class="text-xs text-slate-300">Care plan included</p>
+                <div class="animate-float absolute top-12 left-[calc(50%-31rem)] z-20 hidden w-56 rounded-2xl bg-[#0A2231]/90 p-4 text-left shadow-2xl ring-1 ring-white/10 backdrop-blur-xl lg:block">
+                    <div class="flex items-center gap-3">
+                        <span class="flex h-10 w-10 items-center justify-center rounded-xl bg-red-500/15 text-red-300 ring-1 ring-red-400/30"><ion-icon name="pulse" class="text-xl"></ion-icon></span>
+                        <div><p class="text-[11px] font-semibold tracking-wider text-slate-400 uppercase">Result ready</p><p class="text-sm font-bold">Severe Eye Strain</p></div>
                     </div>
-                    <div class="animate-float-slow absolute right-0 bottom-[16%] rounded-2xl bg-navy-900/60 px-4 py-3 shadow-2xl ring-1 ring-white/20 backdrop-blur-xl [animation-delay:-3s]">
-                        <p class="flex items-center gap-2 text-sm font-bold"><ion-icon name="timer-outline" class="text-lg text-orange-300"></ion-icon>Eye Palming</p>
-                        <p class="mt-1 font-mono text-2xl font-black tracking-tight text-orange-200">01:00</p>
-                    </div>
-                    <div class="animate-float absolute -bottom-8 left-[18%] flex gap-1.5 rounded-full bg-white/10 p-1.5 shadow-2xl ring-1 ring-white/20 backdrop-blur-xl [animation-delay:-5s]">
+                    <div class="mt-3 h-1.5 overflow-hidden rounded-full bg-white/10"><div class="h-full w-[82%] rounded-full bg-gradient-to-r from-amber-400 to-red-400"></div></div>
+                    <p class="mt-2 text-xs text-slate-400">Care plan included</p>
+                </div>
+                <div class="animate-float-slow absolute top-40 right-[calc(50%-31rem)] z-20 hidden w-52 rounded-2xl bg-[#0A2231]/90 p-4 text-left shadow-2xl ring-1 ring-white/10 backdrop-blur-xl [animation-delay:-3s] lg:block">
+                    <p class="flex items-center gap-2 text-sm font-bold"><span class="flex h-8 w-8 items-center justify-center rounded-lg bg-brand/15 text-orange-300 ring-1 ring-brand/30"><ion-icon name="timer-outline"></ion-icon></span>Eye Palming</p>
+                    <p class="mt-3 font-mono text-3xl font-black tracking-tight text-white">01:00</p>
+                    <div class="mt-3 flex gap-1.5">
                         @foreach (['EN', 'FIL', 'CEB'] as $index => $code)
-                            <span @class(['rounded-full px-3 py-1 text-xs font-bold', 'bg-brand text-white' => $index === 0, 'text-white/80' => $index > 0])>{{ $code }}</span>
+                            <span @class(['rounded-md px-2 py-0.5 text-[11px] font-bold', 'bg-brand text-white' => $index === 0, 'bg-white/10 text-slate-300' => $index > 0])>{{ $code }}</span>
                         @endforeach
                     </div>
-                    <img src="{{ asset('images/mascot.png') }}" alt="" class="animate-float-slow absolute bottom-0 -left-4 hidden w-24 drop-shadow-[0_20px_30px_rgba(0,0,0,0.45)] sm:block">
                 </div>
+                <div class="absolute inset-x-0 bottom-0 z-10 h-28 bg-gradient-to-t from-[#03121B] to-transparent"></div>
             </div>
-            <div class="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-b from-transparent to-[#F6F4F2]"></div>
         </section>
 
         {{-- Built with (endless strip) --}}
@@ -255,9 +261,9 @@
         </section>
 
         {{-- Admin console --}}
-        <section id="admin" class="relative isolate scroll-mt-24 overflow-hidden bg-gradient-to-br from-[#031822] via-navy-900 to-navy text-white">
+        <section id="admin" class="relative isolate scroll-mt-24 overflow-hidden bg-[#03121B] text-white">
             <div class="pointer-events-none absolute inset-0 -z-10" aria-hidden="true">
-                <div class="animate-aurora absolute -top-32 right-0 h-[30rem] w-[30rem] rounded-full bg-brand/25 blur-[120px]"></div>
+                <div class="absolute inset-0 bg-[radial-gradient(ellipse_55%_65%_at_72%_45%,rgba(40,120,165,0.35),transparent_70%)]"></div>
                 <div class="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.04)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.04)_1px,transparent_1px)] [background-size:56px_56px] [mask-image:radial-gradient(ellipse_at_70%_50%,black,transparent_70%)]"></div>
             </div>
             <div class="mx-auto grid max-w-6xl items-center gap-16 px-5 py-28 lg:grid-cols-[0.85fr_1.15fr]">
@@ -311,10 +317,12 @@
 
         {{-- Download --}}
         <section id="download" class="scroll-mt-24 px-5 pb-28">
-            <div class="relative isolate mx-auto max-w-6xl overflow-hidden rounded-[2.75rem] bg-gradient-to-br from-[#031822] via-navy-900 to-navy px-8 py-16 text-white shadow-2xl sm:px-16" data-reveal>
+            <div class="relative isolate mx-auto max-w-6xl overflow-hidden rounded-[2.75rem] bg-[#03121B] px-8 py-16 text-white shadow-2xl sm:px-16" data-reveal>
                 <div class="pointer-events-none absolute inset-0 -z-10" aria-hidden="true">
-                    <div class="animate-aurora absolute -right-24 -bottom-32 h-[28rem] w-[28rem] rounded-full bg-brand/40 blur-[110px]"></div>
-                    <div class="animate-aurora absolute -top-24 -left-24 h-72 w-72 rounded-full bg-[#FF9A3D]/20 blur-[100px] [animation-delay:-8s]"></div>
+                    <div class="absolute inset-0 bg-[radial-gradient(ellipse_60%_80%_at_80%_50%,rgba(40,120,165,0.38),transparent_70%)]"></div>
+                    <div class="absolute top-1/2 right-[6%] h-[30rem] w-[30rem] -translate-y-1/2 rounded-full border border-white/[0.07]"></div>
+                    <div class="absolute top-1/2 right-[calc(6%+5rem)] h-[20rem] w-[20rem] -translate-y-1/2 rounded-full border border-brand/25"></div>
+                    <div class="animate-orbit absolute top-1/2 right-[6%] -mt-[15rem] h-[30rem] w-[30rem] rounded-full bg-[conic-gradient(from_0deg,transparent_0deg,transparent_260deg,#FFB067_330deg,#F58216_360deg)] [mask-image:radial-gradient(farthest-side,transparent_calc(100%-2px),black_calc(100%-2px))]"></div>
                 </div>
                 <div class="grid items-center gap-12 md:grid-cols-[1fr_auto]">
                     <div>

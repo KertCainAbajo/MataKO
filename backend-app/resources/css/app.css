@@ -45,21 +45,20 @@ nav[role='navigation'] svg { @apply h-5 w-5; }
 @theme {
     --animate-float: float 7s ease-in-out infinite;
     --animate-float-slow: float 10s ease-in-out infinite;
-    --animate-aurora: aurora 18s ease-in-out infinite alternate;
     --animate-shimmer: shimmer 5s linear infinite;
     --animate-marquee: marquee 38s linear infinite;
+    --animate-orbit: orbit 14s linear infinite;
+    --animate-orbit-reverse: orbit 22s linear infinite reverse;
 
     @keyframes float {
         0%, 100% { translate: 0 0; }
         50% { translate: 0 -14px; }
     }
-    @keyframes aurora {
-        0% { transform: translate(0, 0) scale(1); }
-        50% { transform: translate(48px, -36px) scale(1.12); }
-        100% { transform: translate(-36px, 24px) scale(0.94); }
-    }
     @keyframes shimmer {
         to { background-position: 200% center; }
+    }
+    @keyframes orbit {
+        to { rotate: 360deg; }
     }
     @keyframes marquee {
         to { transform: translateX(-50%); }
@@ -72,5 +71,5 @@ nav[role='navigation'] svg { @apply h-5 w-5; }
 
 @media (prefers-reduced-motion: reduce) {
     .js [data-reveal] { opacity: 1; transform: none; transition: none; }
-    .animate-float, .animate-float-slow, .animate-aurora, .animate-shimmer, .animate-marquee { animation: none !important; }
+    .animate-float, .animate-float-slow, .animate-shimmer, .animate-marquee, .animate-orbit, .animate-orbit-reverse { animation: none !important; }
 }
