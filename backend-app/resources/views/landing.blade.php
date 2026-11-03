@@ -274,27 +274,50 @@
             </div>
         </section>
 
-        {{-- How it works --}}
-        <section id="how" class="relative scroll-mt-24 overflow-hidden bg-white py-24">
+        {{-- How it works: a timeline rail over three step cards, each with its screen rising from the bottom --}}
+        <section id="how" class="relative scroll-mt-24 overflow-hidden py-24">
             <div class="mx-auto max-w-6xl px-5">
-                <div class="mx-auto max-w-2xl text-center" data-reveal>
-                    <p class="text-sm font-bold tracking-[0.2em] text-brand uppercase">How it works</p>
-                    <h2 class="mt-3 text-4xl font-black tracking-tight sm:text-5xl">From check-up to care plan in minutes.</h2>
+                <div class="mx-auto max-w-3xl text-center" data-reveal>
+                    <p class="inline-flex items-center gap-3 text-sm font-bold tracking-[0.2em] text-brand uppercase"><span class="h-px w-8 bg-brand"></span>How it works<span class="h-px w-8 bg-brand"></span></p>
+                    <h2 class="mt-4 text-4xl leading-[1.05] font-black tracking-[-0.03em] sm:text-6xl">From check-up to care plan in minutes.</h2>
+                    <p class="mx-auto mt-5 max-w-xl text-lg text-slate-600">Three simple steps, in plain language — no medical jargon.</p>
                 </div>
-                <ol class="relative mt-16 grid gap-14 md:grid-cols-3">
+
+                {{-- Rail: fills from orange to navy as the section comes into view --}}
+                <div class="group relative mt-16 hidden grid-cols-3 md:grid" data-reveal aria-hidden="true">
+                    <div class="absolute top-1/2 right-[16.66%] left-[16.66%] h-1 -translate-y-1/2 rounded-full bg-navy/[0.07]"></div>
+                    <div class="absolute top-1/2 right-[16.66%] left-[16.66%] h-1 origin-left -translate-y-1/2 scale-x-0 rounded-full bg-gradient-to-r from-brand via-[#FFB067] to-navy transition-transform delay-300 duration-[1600ms] ease-out group-[.is-visible]:scale-x-100"></div>
+                    @foreach ([1, 2, 3] as $step)
+                        <div class="relative flex justify-center">
+                            <span @class(['flex h-14 w-14 items-center justify-center rounded-full text-lg font-black shadow-[0_10px_30px_-10px_rgba(6,42,60,0.45)] ring-[6px] ring-[#F6F4F2]', 'bg-gradient-to-br from-brand to-[#FF9A3D] text-white' => $step === 1, 'bg-[#03121B] text-white' => $step === 2, 'bg-white text-navy ring-offset-0' => $step === 3])>0{{ $step }}</span>
+                        </div>
+                    @endforeach
+                </div>
+
+                <ol class="mt-8 grid gap-6 md:grid-cols-3">
                     @foreach ([
-                        ['profile', 'Choose your profile', 'Student or professional — the questions and tips follow your day.'],
-                        ['question', 'Answer the check-up', 'Rate how often you feel each symptom: Never, Occasionally, or Often.'],
-                        ['result', 'Get your result', 'See your level, the score breakdown and a care plan to follow.'],
-                    ] as $index => [$image, $title, $text])
-                        <li class="relative flex flex-col items-center text-center" data-reveal @style(['transition-delay: '.($index * 120).'ms'])>
-                            <div class="w-52 transition duration-500 hover:-translate-y-2">{!! $phone($image, $title) !!}</div>
-                            @if ($index < 2)
-                                <span class="absolute top-[24.6rem] left-[calc(50%+2rem)] hidden h-0.5 w-[calc(100%-1rem)] bg-[linear-gradient(90deg,#F58216_0_8px,transparent_8px_16px)] [background-size:16px_2px] md:block" aria-hidden="true"></span>
+                        ['profile', 'Choose your profile', 'Student or professional — the questions and tips follow your day.', 'hand-left-outline', '1 tap'],
+                        ['question', 'Answer the check-up', 'Rate how often you feel each symptom: Never, Occasionally or Often.', 'list-outline', $stats['questions'].' questions'],
+                        ['result', 'Get your result', 'See your level, the score breakdown and a care plan to follow.', 'sparkles-outline', 'Instant'],
+                    ] as $index => [$image, $title, $text, $icon, $chip])
+                        @php($dark = $index === 1)
+                        <li @class(['group relative isolate flex h-[34rem] flex-col overflow-hidden rounded-[2rem] p-8 transition duration-500 hover:-translate-y-1.5', 'bg-[#03121B] text-white shadow-[0_34px_70px_-30px_rgba(3,18,27,0.75)]' => $dark, 'bg-white ring-1 ring-navy/[0.06] shadow-[0_14px_34px_-18px_rgba(6,42,60,0.16)] hover:shadow-[0_34px_64px_-28px_rgba(6,42,60,0.28)]' => ! $dark]) data-reveal @style(['transition-delay: '.($index * 120).'ms'])>
+                            @if ($dark)
+                                <div class="pointer-events-none absolute inset-0 -z-10" aria-hidden="true">
+                                    <div class="absolute inset-0 bg-[radial-gradient(ellipse_80%_55%_at_50%_100%,rgba(40,120,165,0.5),transparent_70%)]"></div>
+                                    <div class="absolute bottom-[-9rem] left-1/2 h-[24rem] w-[24rem] -translate-x-1/2 rounded-full border border-brand/30"></div>
+                                    <div class="absolute bottom-[-13rem] left-1/2 h-[32rem] w-[32rem] -translate-x-1/2 rounded-full border border-white/[0.06]"></div>
+                                </div>
+                            @else
+                                <div class="pointer-events-none absolute inset-x-0 bottom-0 -z-10 h-2/3 bg-gradient-to-t from-brand-50 to-transparent" aria-hidden="true"></div>
                             @endif
-                            <span class="relative z-10 mt-8 flex h-11 w-11 items-center justify-center rounded-full bg-gradient-to-br from-brand to-[#FF9A3D] text-base font-black text-white shadow-lg shadow-brand/40 ring-4 ring-white">{{ $index + 1 }}</span>
-                            <h3 class="mt-4 text-lg font-bold">{{ $title }}</h3>
-                            <p class="mt-1 max-w-xs text-sm text-slate-600">{{ $text }}</p>
+                            <div class="flex items-center justify-between md:justify-start">
+                                <span @class(['text-5xl leading-none font-black tracking-tighter md:hidden', 'text-transparent [-webkit-text-stroke:1.5px_rgba(255,255,255,0.35)]' => $dark, 'text-transparent [-webkit-text-stroke:1.5px_rgba(6,42,60,0.18)]' => ! $dark])>0{{ $index + 1 }}</span>
+                                <span @class(['inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-bold ring-1', 'bg-white/10 text-orange-200 ring-white/15' => $dark, 'bg-brand-50 text-brand-600 ring-brand/20' => ! $dark])><ion-icon name="{{ $icon }}"></ion-icon>{{ $chip }}</span>
+                            </div>
+                            <h3 class="mt-6 text-2xl font-black tracking-tight">{{ $title }}</h3>
+                            <p @class(['mt-2 leading-relaxed', 'text-slate-300' => $dark, 'text-slate-600' => ! $dark])>{{ $text }}</p>
+                            <div class="relative mx-auto mt-9 w-56 shrink-0 transition duration-700 group-hover:-translate-y-3">{!! $phone($image, $title) !!}</div>
                         </li>
                     @endforeach
                 </ol>
