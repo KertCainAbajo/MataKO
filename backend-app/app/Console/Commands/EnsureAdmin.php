@@ -2,7 +2,9 @@
 
 namespace App\Console\Commands;
 
+use App\Models\SecurityEvent;
 use App\Models\User;
+use App\Services\LoginGuard;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -12,7 +14,8 @@ use Illuminate\Validation\Rules\Password;
 /**
  * Creates the first admin from the ADMIN_EMAIL and ADMIN_PASSWORD settings when the server starts, for
  * hosts without a command line (such as Render's free plan). It never changes an existing account's
- * password, so the setting can stay or be removed after the first start.
+ * password, so the setting can stay or be removed after the first start, unless ADMIN_RESET_PASSWORD
+ * is turned on: then the account's password is set to ADMIN_PASSWORD (for a forgotten password).
  */
 class EnsureAdmin extends Command
 {
@@ -31,7 +34,8 @@ class EnsureAdmin extends Command
         }
 
         $user = User::where('email', $email)->first();
-        if ($user) {
+        $reset = filter_var(env('ADMIN_RESET_PASSWORD', false), FILTER_VALIDATE_BOOL);
+        if ($user && ! $reset) {
             if (! $user->is_admin) {
                 $user->forceFill(['is_admin' => true, 'disabled_at' => null])->save();
                 $this->info("{$email} is now an admin.");
@@ -49,6 +53,18 @@ class EnsureAdmin extends Command
             $this->error('Admin not created: '.implode(' ', $validator->errors()->all()));
 
             return self::FAILURE;
+        }
+
+        if ($user) {
+            // Password recovery: new password, admin access back, lockout lifted, every other session signed out.
+            $user->forceFill(['password' => Hash::make($password), 'is_admin' => true, 'disabled_at' => null])->setRememberToken(Str::random(60));
+            $user->save();
+            $user->tokens()->delete();
+            app(LoginGuard::class)->succeeded($email);
+            SecurityEvent::record('admin.password_reset', $email, $user, 'Reset from the ADMIN_RESET_PASSWORD setting');
+            $this->warn("Password reset for {$email}. Remove ADMIN_RESET_PASSWORD now, or it resets again on every restart.");
+
+            return self::SUCCESS;
         }
 
         $user = new User([
