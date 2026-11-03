@@ -49,6 +49,9 @@ nav[role='navigation'] svg { @apply h-5 w-5; }
     --animate-marquee: marquee 38s linear infinite;
     --animate-orbit: orbit 14s linear infinite;
     --animate-orbit-reverse: orbit 22s linear infinite reverse;
+    --animate-blink: blink 6s ease-in-out infinite;
+    --animate-scan: scan 3.6s ease-in-out infinite;
+    --animate-dial: orbit 60s linear infinite;
 
     @keyframes float {
         0%, 100% { translate: 0 0; }
@@ -56,6 +59,15 @@ nav[role='navigation'] svg { @apply h-5 w-5; }
     }
     @keyframes shimmer {
         to { background-position: 200% center; }
+    }
+    @keyframes blink {
+        0%, 93%, 100% { scale: 1 0; }
+        96% { scale: 1 1; }
+    }
+    @keyframes scan {
+        0% { top: 12%; opacity: 0; }
+        15%, 85% { opacity: 1; }
+        100% { top: 88%; opacity: 0; }
     }
     @keyframes orbit {
         to { rotate: 360deg; }
@@ -80,5 +92,5 @@ nav[role='navigation'] svg { @apply h-5 w-5; }
 @media (prefers-reduced-motion: reduce) {
     .js [data-reveal] { opacity: 1; transform: none; transition: none; }
     .js .hero-word, .js .hero-rise { animation: none; }
-    .animate-float, .animate-float-slow, .animate-shimmer, .animate-marquee, .animate-orbit, .animate-orbit-reverse { animation: none !important; }
+    .animate-float, .animate-float-slow, .animate-shimmer, .animate-marquee, .animate-orbit, .animate-orbit-reverse, .animate-blink, .animate-scan, .animate-dial { animation: none !important; }
 }
