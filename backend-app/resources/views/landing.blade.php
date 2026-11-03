@@ -129,81 +129,147 @@
             </div>
         </section>
 
-        {{-- Built with (endless strip) --}}
-        <section class="relative overflow-hidden py-8 [mask-image:linear-gradient(90deg,transparent,black_12%,black_88%,transparent)]" aria-label="Built with">
-            <div class="animate-marquee flex w-max gap-4 hover:[animation-play-state:paused]">
-                @foreach ([1, 2] as $copy)
-                    @foreach ($stack as [$icon, $name])
-                        <span class="inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 text-sm font-semibold whitespace-nowrap text-slate-600 shadow-sm ring-1 ring-navy/5" @if ($copy === 2) aria-hidden="true" @endif>
-                            <ion-icon name="{{ $icon }}" class="text-base text-brand"></ion-icon>{{ $name }}
-                        </span>
+        {{-- Built with: a quiet logo strip --}}
+        <section class="pt-14 pb-6" aria-label="Built with">
+            <p class="text-center text-[11px] font-bold tracking-[0.3em] text-slate-400 uppercase">Built with a modern stack</p>
+            <div class="mt-6 overflow-hidden [mask-image:linear-gradient(90deg,transparent,black_15%,black_85%,transparent)]">
+                <div class="animate-marquee flex w-max items-center hover:[animation-play-state:paused]">
+                    @foreach ([1, 2] as $copy)
+                        @foreach ($stack as [$icon, $name])
+                            <span class="group inline-flex items-center gap-2.5 px-7 text-lg font-bold whitespace-nowrap text-slate-400 transition hover:text-navy" @if ($copy === 2) aria-hidden="true" @endif>
+                                <ion-icon name="{{ $icon }}" class="text-2xl transition group-hover:text-brand"></ion-icon>{{ $name }}
+                            </span>
+                        @endforeach
                     @endforeach
-                @endforeach
+                </div>
             </div>
         </section>
 
-        {{-- Features: bento grid --}}
+        {{-- Features: bento grid, each card showing a small piece of the app --}}
+        @php
+            $card = 'group relative overflow-hidden rounded-[2rem] bg-white p-7 ring-1 ring-navy/[0.06] shadow-[0_1px_2px_rgba(6,42,60,0.04),0_14px_34px_-18px_rgba(6,42,60,0.16)] transition duration-500 hover:-translate-y-1 hover:shadow-[0_34px_64px_-28px_rgba(6,42,60,0.28)] hover:ring-brand/25';
+            $badge = 'flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-brand to-[#FF9A3D] text-white shadow-lg shadow-brand/30';
+        @endphp
         <section id="features" class="mx-auto max-w-6xl scroll-mt-24 px-5 py-20">
-            <div class="max-w-2xl" data-reveal>
-                <p class="text-sm font-bold tracking-[0.2em] text-brand uppercase">Features</p>
-                <h2 class="mt-3 text-4xl font-black tracking-tight sm:text-5xl">Everything for healthier eyes, in one gentle app.</h2>
+            <div class="grid items-end gap-6 lg:grid-cols-[1.6fr_1fr]" data-reveal>
+                <div>
+                    <p class="inline-flex items-center gap-2 text-sm font-bold tracking-[0.2em] text-brand uppercase"><span class="h-px w-8 bg-brand"></span>Features</p>
+                    <h2 class="mt-4 text-4xl leading-[1.05] font-black tracking-[-0.03em] sm:text-6xl">Everything for healthier eyes, in one gentle app.</h2>
+                </div>
+                <p class="text-lg leading-relaxed text-slate-600 lg:pb-2">Short check-ups, clear answers and small daily habits — designed to be easy on tired eyes.</p>
             </div>
-            <div class="mt-12 grid gap-5 lg:grid-cols-6">
-                {{-- Big: assessment --}}
-                <article class="group relative min-h-[26rem] overflow-hidden rounded-[2rem] bg-gradient-to-br from-navy to-navy-700 p-8 text-white shadow-xl lg:col-span-3 lg:row-span-2" data-reveal>
-                    <div class="pointer-events-none absolute -top-24 -right-24 h-72 w-72 rounded-full bg-brand/30 blur-3xl transition duration-700 group-hover:scale-125"></div>
-                    <span class="relative flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-brand to-[#FF9A3D] shadow-lg shadow-brand/40"><ion-icon name="clipboard" class="text-2xl"></ion-icon></span>
-                    <h3 class="relative mt-6 max-w-[13rem] text-2xl font-bold">Guided self-assessment</h3>
-                    <p class="relative mt-2 max-w-xs text-slate-300 lg:max-w-[13rem]">A {{ $stats['questions'] }}-question eye strain check with a friendly character for every symptom, tailored to students or professionals.</p>
-                    <div class="relative mx-auto mt-8 w-52 transition duration-500 group-hover:-translate-y-3 lg:absolute lg:right-6 lg:-bottom-20 lg:mt-0 lg:w-52">{!! $phone('question', 'Assessment question') !!}</div>
-                </article>
-                <article class="group rounded-[2rem] bg-white p-7 shadow-sm ring-1 ring-navy/5 transition duration-300 hover:-translate-y-1 hover:shadow-2xl hover:shadow-brand/10 hover:ring-brand/30 lg:col-span-3" data-reveal>
-                    <span class="flex h-12 w-12 items-center justify-center rounded-2xl bg-brand-100 text-brand transition group-hover:bg-gradient-to-br group-hover:from-brand group-hover:to-[#FF9A3D] group-hover:text-white"><ion-icon name="pulse" class="text-2xl"></ion-icon></span>
-                    <h3 class="mt-5 text-lg font-bold">Clear results &amp; care plans</h3>
-                    <p class="mt-2 text-sm leading-relaxed text-slate-600">Mild, Moderate or Severe — with a score breakdown and practical tips matched to the result.</p>
-                    <div class="mt-5 flex gap-2 text-xs font-bold">
-                        <span class="rounded-full bg-emerald-50 px-3 py-1 text-emerald-700 ring-1 ring-emerald-200">Mild</span>
-                        <span class="rounded-full bg-amber-50 px-3 py-1 text-amber-700 ring-1 ring-amber-200">Moderate</span>
-                        <span class="rounded-full bg-red-50 px-3 py-1 text-red-700 ring-1 ring-red-200">Severe</span>
+
+            <div class="mt-14 grid gap-5 lg:grid-cols-6">
+                {{-- Assessment: dark card with the iris rings and the question screen --}}
+                <article class="group relative isolate flex min-h-[32rem] flex-col overflow-hidden rounded-[2rem] bg-[#03121B] p-8 text-white shadow-[0_30px_60px_-30px_rgba(3,18,27,0.7)] lg:col-span-3 lg:row-span-2" data-reveal>
+                    <div class="pointer-events-none absolute inset-0 -z-10" aria-hidden="true">
+                        <div class="absolute inset-0 bg-[radial-gradient(ellipse_70%_60%_at_80%_95%,rgba(40,120,165,0.45),transparent_70%)]"></div>
+                        <div class="absolute right-[-6rem] bottom-[-8rem] h-[30rem] w-[30rem] rounded-full border border-white/[0.06]"></div>
+                        <div class="absolute right-[-1rem] bottom-[-3rem] h-[20rem] w-[20rem] rounded-full border border-brand/30"></div>
+                        <div class="animate-orbit absolute right-[-1rem] bottom-[-3rem] h-[20rem] w-[20rem] rounded-full bg-[conic-gradient(from_0deg,transparent_0deg,transparent_260deg,#FFB067_330deg,#F58216_360deg)] [mask-image:radial-gradient(farthest-side,transparent_calc(100%-2px),black_calc(100%-2px))]"></div>
                     </div>
-                </article>
-                @foreach ([
-                    ['trending-up', 'Progress tracking', 'Screen breaks, time in the app, eye-health history and milestones.', 'lg:col-span-3'],
-                    ['eye', 'Eye exercises', $stats['exercises'].' guided exercises with timers — focus shifting, palming, blinking and more.', 'lg:col-span-2'],
-                ] as [$icon, $title, $text, $span])
-                    <article class="group rounded-[2rem] bg-white p-7 shadow-sm ring-1 ring-navy/5 transition duration-300 hover:-translate-y-1 hover:shadow-2xl hover:shadow-brand/10 hover:ring-brand/30 {{ $span }}" data-reveal>
-                        <span class="flex h-12 w-12 items-center justify-center rounded-2xl bg-brand-100 text-brand transition group-hover:bg-gradient-to-br group-hover:from-brand group-hover:to-[#FF9A3D] group-hover:text-white"><ion-icon name="{{ $icon }}" class="text-2xl"></ion-icon></span>
-                        <h3 class="mt-5 text-lg font-bold">{{ $title }}</h3>
-                        <p class="mt-2 text-sm leading-relaxed text-slate-600">{{ $text }}</p>
-                    </article>
-                @endforeach
-                <article class="group rounded-[2rem] bg-white p-7 shadow-sm ring-1 ring-navy/5 transition duration-300 hover:-translate-y-1 hover:shadow-2xl hover:shadow-brand/10 hover:ring-brand/30 lg:col-span-2" data-reveal>
-                    <div class="flex items-start justify-between gap-4">
-                        <div>
-                            <h3 class="text-lg font-bold">Comfort display modes</h3>
-                            <p class="mt-2 text-sm text-slate-600">Dark mode, high contrast, monochrome and a text-contrast slider for tired eyes.</p>
-                        </div>
-                        <span class="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-brand-100 text-brand"><ion-icon name="contrast" class="text-2xl"></ion-icon></span>
-                    </div>
-                    <div class="mt-5 grid grid-cols-3 gap-2 text-center text-xs font-semibold">
-                        <span class="rounded-xl bg-[#F6F4F2] py-3 text-navy ring-1 ring-navy/10">Light</span>
-                        <span class="rounded-xl bg-navy py-3 text-white">Dark</span>
-                        <span class="rounded-xl bg-gradient-to-r from-slate-300 to-slate-500 py-3 text-white">Mono</span>
-                    </div>
-                </article>
-                <article class="group rounded-[2rem] bg-gradient-to-br from-brand to-[#FF9A3D] p-7 text-white shadow-xl shadow-brand/20 transition duration-300 hover:-translate-y-1 lg:col-span-2" data-reveal>
-                    <div class="flex items-start justify-between gap-4">
-                        <div>
-                            <h3 class="text-lg font-bold">English, Filipino &amp; Cebuano</h3>
-                            <p class="mt-2 text-sm text-white/90">Every screen, question and tip in three languages — switch any time.</p>
-                        </div>
-                        <span class="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-white/20"><ion-icon name="language" class="text-2xl"></ion-icon></span>
-                    </div>
-                    <div class="mt-5 flex flex-wrap gap-2 text-sm">
-                        @foreach (['“Your vision, your power.”', '“Imong panan-aw, imong kusog.”'] as $line)
-                            <span class="rounded-full bg-white/20 px-3 py-1.5 font-medium backdrop-blur">{{ $line }}</span>
+                    <span class="{{ $badge }}"><ion-icon name="clipboard" class="text-xl"></ion-icon></span>
+                    <h3 class="mt-6 text-3xl font-black tracking-tight lg:max-w-[15rem]">Guided self-assessment</h3>
+                    <p class="mt-3 max-w-sm leading-relaxed text-slate-300 lg:max-w-[15rem]">A {{ $stats['questions'] }}-question check with a friendly character for every symptom, tailored to students or professionals.</p>
+                    <div class="mt-6 flex flex-wrap gap-2 lg:max-w-[15rem]">
+                        @foreach (['Never', 'Occasionally', 'Often'] as $index => $answer)
+                            <span @class(['rounded-full px-3 py-1 text-xs font-semibold ring-1', 'bg-brand/15 text-orange-200 ring-brand/40' => $index === 1, 'bg-white/5 text-slate-300 ring-white/10' => $index !== 1])>{{ $answer }}</span>
                         @endforeach
                     </div>
+                    <div class="relative mx-auto -mb-36 mt-10 w-56 rotate-[4deg] transition duration-700 group-hover:-translate-y-3 group-hover:rotate-0 lg:absolute lg:right-10 lg:-bottom-20 lg:mb-0 lg:mt-0 lg:w-60">{!! $phone('question', 'Assessment question') !!}</div>
+                </article>
+
+                {{-- Results: severity meter --}}
+                <article class="{{ $card }} lg:col-span-3" data-reveal>
+                    <div class="flex items-start gap-4">
+                        <span class="{{ $badge }}"><ion-icon name="pulse" class="text-xl"></ion-icon></span>
+                        <div>
+                            <h3 class="text-lg font-bold">Clear results &amp; care plans</h3>
+                            <p class="mt-1 text-sm leading-relaxed text-slate-600">Your level, a score breakdown, and practical tips matched to it.</p>
+                        </div>
+                    </div>
+                    <div class="mt-7 rounded-2xl bg-[#F8F6F4] p-4 ring-1 ring-navy/5">
+                        <div class="flex items-center justify-between text-xs font-semibold"><span class="text-slate-500">Your result</span><span class="rounded-full bg-red-50 px-2.5 py-0.5 text-red-600 ring-1 ring-red-200">Severe</span></div>
+                        <div class="relative mt-4">
+                            <div class="flex h-2.5 gap-1">
+                                <span class="flex-1 rounded-full bg-emerald-400"></span><span class="flex-1 rounded-full bg-amber-400"></span><span class="flex-1 rounded-full bg-red-400"></span>
+                            </div>
+                            <span class="absolute top-1/2 left-[82%] h-5 w-5 -translate-x-1/2 -translate-y-1/2 rounded-full bg-navy ring-4 ring-white shadow-md transition-all duration-700 group-hover:left-[88%]"></span>
+                        </div>
+                        <div class="mt-2.5 flex justify-between text-[11px] font-semibold text-slate-400"><span>Mild</span><span>Moderate</span><span>Severe</span></div>
+                    </div>
+                </article>
+
+                {{-- Progress: weekly bars --}}
+                <article class="{{ $card }} lg:col-span-3" data-reveal>
+                    <div class="flex items-start justify-between gap-6">
+                        <div class="flex items-start gap-4">
+                            <span class="{{ $badge }}"><ion-icon name="trending-up" class="text-xl"></ion-icon></span>
+                            <div>
+                                <h3 class="text-lg font-bold">Progress tracking</h3>
+                                <p class="mt-1 text-sm leading-relaxed text-slate-600">Screen breaks, time in the app, history and milestones.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-6 flex h-24 items-end gap-2.5" aria-hidden="true">
+                        @foreach ([['M', 38], ['T', 60], ['W', 46], ['T', 74], ['F', 58], ['S', 92], ['S', 66]] as $index => [$day, $height])
+                            <div class="flex h-full flex-1 flex-col items-center gap-1.5">
+                                <div class="flex w-full flex-1 items-end"><div @class(['w-full origin-bottom rounded-lg transition duration-500 group-hover:scale-y-110', 'bg-gradient-to-t from-brand to-[#FFB067]' => $index === 5, 'bg-brand-100' => $index !== 5]) @style(['height: '.$height.'%'])></div></div>
+                                <span class="text-[11px] font-semibold text-slate-400">{{ $day }}</span>
+                            </div>
+                        @endforeach
+                    </div>
+                </article>
+
+                {{-- Exercises: timer ring --}}
+                <article class="{{ $card }} flex items-center justify-between gap-5 lg:col-span-2" data-reveal>
+                    <div>
+                        <span class="{{ $badge }}"><ion-icon name="eye" class="text-xl"></ion-icon></span>
+                        <h3 class="mt-5 text-lg font-bold">Eye exercises</h3>
+                        <p class="mt-1 text-sm leading-relaxed text-slate-600">{{ $stats['exercises'] }} guided exercises with timers.</p>
+                    </div>
+                    <div class="relative h-28 w-28 shrink-0" aria-hidden="true">
+                        <svg viewBox="0 0 100 100" class="h-full w-full -rotate-90">
+                            <circle cx="50" cy="50" r="42" fill="none" stroke="#FFE9D4" stroke-width="9"></circle>
+                            <circle cx="50" cy="50" r="42" fill="none" stroke="#F58216" stroke-width="9" stroke-linecap="round" stroke-dasharray="264" stroke-dashoffset="92" class="transition-all duration-700 group-hover:[stroke-dashoffset:40]"></circle>
+                        </svg>
+                        <div class="absolute inset-0 flex flex-col items-center justify-center"><span class="font-mono text-xl font-black">00:30</span><span class="text-[10px] font-semibold text-slate-400">Focus shift</span></div>
+                    </div>
+                </article>
+
+                {{-- Comfort modes: three mini screens --}}
+                <article class="{{ $card }} lg:col-span-2" data-reveal>
+                    <h3 class="text-lg font-bold">Comfort display modes</h3>
+                    <p class="mt-1 text-sm leading-relaxed text-slate-600">Dark, high contrast, monochrome and a text-contrast slider.</p>
+                    <div class="mt-5 grid grid-cols-3 gap-2.5" aria-hidden="true">
+                        @foreach ([['Light', 'bg-[#F6F4F2] ring-navy/10', 'bg-navy', 'bg-navy/20'], ['Dark', 'bg-[#2B2B2B] ring-black/20', 'bg-white', 'bg-white/30'], ['Mono', 'bg-gradient-to-b from-slate-200 to-slate-400 ring-slate-400/40', 'bg-slate-700', 'bg-slate-600/40']] as [$name, $surface, $ink, $line])
+                            <div class="text-center">
+                                <div class="rounded-xl p-2.5 ring-1 transition duration-500 group-hover:-translate-y-1 {{ $surface }}">
+                                    <span class="block h-3 w-3 rounded-full bg-brand"></span>
+                                    <span class="mt-2 block h-1.5 w-full rounded-full {{ $ink }}"></span>
+                                    <span class="mt-1 block h-1.5 w-2/3 rounded-full {{ $line }}"></span>
+                                    <span class="mt-1 block h-1.5 w-4/5 rounded-full {{ $line }}"></span>
+                                </div>
+                                <span class="mt-1.5 block text-[11px] font-semibold text-slate-500">{{ $name }}</span>
+                            </div>
+                        @endforeach
+                    </div>
+                </article>
+
+                {{-- Languages --}}
+                <article class="group relative isolate overflow-hidden rounded-[2rem] bg-gradient-to-br from-[#FF9634] to-[#E86F00] p-7 text-white shadow-[0_24px_50px_-24px_rgba(245,130,22,0.8)] transition duration-500 hover:-translate-y-1 lg:col-span-2" data-reveal>
+                    <div class="pointer-events-none absolute -top-16 -right-16 -z-10 h-48 w-48 rounded-full border-[18px] border-white/10" aria-hidden="true"></div>
+                    <div class="flex items-start justify-between">
+                        <h3 class="text-lg font-bold">Three languages</h3>
+                        <ion-icon name="language" class="text-2xl text-white/80"></ion-icon>
+                    </div>
+                    <ul class="mt-4 space-y-2 text-sm">
+                        @foreach ([['EN', 'Your vision, your power.'], ['FIL', 'Iyong paningin, iyong lakas.'], ['CEB', 'Imong panan-aw, imong kusog.']] as [$code, $line])
+                            <li class="flex items-center gap-3 rounded-xl bg-white/15 px-3 py-2 ring-1 ring-white/15 backdrop-blur transition duration-300 group-hover:bg-white/20">
+                                <span class="w-8 shrink-0 text-[11px] font-black tracking-wide text-white/80">{{ $code }}</span><span class="truncate font-medium">{{ $line }}</span>
+                            </li>
+                        @endforeach
+                    </ul>
                 </article>
             </div>
         </section>
