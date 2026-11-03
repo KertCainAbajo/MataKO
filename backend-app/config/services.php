@@ -42,8 +42,8 @@ return [
 
     // Links on the public landing page (the site's home page).
     'showcase' => [
-        'apk_url' => env('MATAKO_APK_URL'),
-        'github_url' => env('MATAKO_GITHUB_URL', 'https://github.com/KertCainAbajo/MataKO'),
+        // The newest APK attached to a GitHub release named MataKo.apk (override with MATAKO_APK_URL).
+        'apk_url' => env('MATAKO_APK_URL', 'https://github.com/KertCainAbajo/MataKO/releases/latest/download/MataKo.apk'),
         'author' => env('MATAKO_AUTHOR', 'Kert Cain Abajo'),
     ],
 

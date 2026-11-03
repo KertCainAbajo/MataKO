@@ -244,11 +244,6 @@
                                     <ion-icon name="time-outline" class="text-xl"></ion-icon> Android download coming soon
                                 </span>
                             @endif
-                            @if ($githubUrl)
-                                <a href="{{ $githubUrl }}" class="inline-flex items-center gap-2 rounded-2xl bg-white/15 px-6 py-3.5 font-semibold text-white ring-1 ring-white/40 transition hover:bg-white/25">
-                                    <ion-icon name="logo-github" class="text-xl"></ion-icon> Source on GitHub
-                                </a>
-                            @endif
                         </div>
                         <p class="mt-5 flex items-center gap-1.5 text-xs text-white/80"><ion-icon name="information-circle-outline"></ion-icon>Hosted on a free plan: after a quiet spell, the first load can take up to a minute.</p>
                     </div>
@@ -263,7 +258,6 @@
             <img src="{{ asset('images/matako-eye.png') }}" alt="" class="h-5 w-auto">
             <span>© {{ now()->year }} MataKo · Designed and built by {{ $author }}</span>
             <nav class="ml-auto flex gap-5" aria-label="Footer">
-                @if ($githubUrl)<a href="{{ $githubUrl }}" class="hover:text-brand">GitHub</a>@endif
                 <a href="{{ route('admin.login') }}" class="hover:text-brand">Admin</a>
             </nav>
         </div>

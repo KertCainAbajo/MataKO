@@ -15,7 +15,9 @@ class ExampleTest extends TestCase
             ->assertSee('Your vision,')
             ->assertSee('16') // live count of student questions
             ->assertSee('images/showcase/home.webp', false)
-            ->assertSee('Android download coming soon')
+            ->assertSee('releases/latest/download/MataKo.apk', false)
+            ->assertSee('Download for Android')
+            ->assertDontSee('Source on GitHub')
             ->assertDontSee('laravel.com');
     }
 
