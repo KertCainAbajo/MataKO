@@ -40,6 +40,13 @@ return [
         'email' => env('MYMEMORY_EMAIL'),
     ],
 
+    // Links on the public landing page (the site's home page).
+    'showcase' => [
+        'apk_url' => env('MATAKO_APK_URL'),
+        'github_url' => env('MATAKO_GITHUB_URL', 'https://github.com/KertCainAbajo/MataKO'),
+        'author' => env('MATAKO_AUTHOR', 'Kert Cain Abajo'),
+    ],
+
     'google' => [
         // OAuth client IDs from Google Cloud whose sign-ins the API accepts (comma separated). The app
         // asks Google for ID tokens issued to the Web client ID, so that one must be listed.

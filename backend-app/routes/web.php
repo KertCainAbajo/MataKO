@@ -12,12 +12,12 @@ use App\Http\Controllers\Admin\TipController;
 use App\Http\Controllers\Admin\TranslationController;
 use App\Http\Controllers\Admin\TwoFactorController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\LandingController;
 use App\Models\Question;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('welcome');
-});
+// Public home page presenting MataKo (features, screenshots, admin console, security).
+Route::get('/', LandingController::class)->name('home');
 
 // Question pictures uploaded in the admin (stored in the database). Public: they are shown in the app.
 Route::get('/question-images/{question}', function (Question $question) {
