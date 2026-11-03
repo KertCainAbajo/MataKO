@@ -15,16 +15,16 @@
 
 {{-- Ring chart of Mild / Moderate / Severe results, with user totals. --}}
 <div {{ $attributes }}>
-        <div class="mt-6 flex items-center gap-6">
+        <div class="mt-6 flex flex-wrap items-center justify-center gap-6">
             <div class="relative h-36 w-36 shrink-0 rounded-full" style="background: {{ $ring }}">
                 <div class="absolute inset-4 flex flex-col items-center justify-center rounded-full bg-white shadow-inner">
                     <span class="text-3xl font-bold text-navy">{{ $riskTotal }}</span>
                     <span class="text-xs text-slate-500">{{ $label }}</span>
                 </div>
             </div>
-            <ul class="flex-1 space-y-4">
+            <ul class="min-w-40 flex-1 space-y-4">
                 @foreach ($riskLabels as $risk => [$levelName, $color])
-                    <li class="flex items-center justify-between text-sm">
+                    <li class="flex items-center justify-between gap-3 text-sm">
                         <span class="flex items-center gap-2 text-slate-700"><span class="h-3 w-3 rounded-full" style="background: {{ $color }}"></span>{{ $levelName }}</span>
                         <span class="font-semibold text-navy">{{ $riskCounts[$risk] }} <span class="font-normal text-slate-400">· {{ $riskTotal ? round($riskCounts[$risk] / $riskTotal * 100) : 0 }}%</span></span>
                     </li>

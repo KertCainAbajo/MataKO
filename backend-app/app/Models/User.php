@@ -14,7 +14,7 @@ class User extends Authenticatable
 
     protected $fillable = ['name', 'email', 'password', 'age', 'role', 'phone'];
 
-    protected $hidden = ['password', 'remember_token', 'google_id', 'two_factor_secret', 'two_factor_recovery_codes', 'two_factor_confirmed_at'];
+    protected $hidden = ['password', 'remember_token', 'google_id', 'two_factor_secret', 'two_factor_recovery_codes', 'two_factor_confirmed_at', 'notifications_read_at', 'notifications_cleared_at'];
 
     protected $casts = [
         'age' => 'integer',
@@ -22,6 +22,8 @@ class User extends Authenticatable
         'is_admin' => 'boolean',
         'disabled_at' => 'datetime',
         'last_login_at' => 'datetime',
+        'notifications_read_at' => 'datetime',
+        'notifications_cleared_at' => 'datetime',
         // Encrypted with APP_KEY, so a copy of the database alone does not reveal them.
         'two_factor_secret' => 'encrypted',
         'two_factor_recovery_codes' => 'encrypted:array',

@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\ActivityController;
 use App\Http\Controllers\Admin\AssessmentController;
 use App\Http\Controllers\Admin\AuthController;
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\NotificationController;
 use App\Http\Controllers\Admin\ProfileController;
 use App\Http\Controllers\Admin\QuestionController;
 use App\Http\Controllers\Admin\SearchController;
@@ -66,6 +67,8 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::resource('assessments', AssessmentController::class)->only(['index', 'show', 'destroy']);
 
         Route::get('/activity', [ActivityController::class, 'index'])->name('activity');
+        Route::post('/notifications/read', [NotificationController::class, 'read'])->name('notifications.read');
+        Route::post('/notifications/clear', [NotificationController::class, 'clear'])->name('notifications.clear');
         Route::get('/activity/export', [ActivityController::class, 'export'])->name('activity.export');
     });
 });
