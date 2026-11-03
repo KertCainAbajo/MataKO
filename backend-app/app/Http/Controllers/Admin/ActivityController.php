@@ -139,6 +139,6 @@ class ActivityController extends Controller
             }))
             ->when($days !== null, fn ($query) => $query->where('created_at', '>=', $days === 0 ? now($tz)->startOfDay()->utc() : now()->subDays($days)))
             ->when($filters['admin'], fn ($query, $admin) => $query->where('admin_id', $admin))
-            ->when($filters['search'] !== '', fn ($query) => $query->where('description', 'like', '%'.$filters['search'].'%'));
+            ->when($filters['search'] !== '', fn ($query) => $query->whereLike('description', '%'.$filters['search'].'%'));
     }
 }

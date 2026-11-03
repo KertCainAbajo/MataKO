@@ -271,7 +271,7 @@ class SecurityTest extends TestCase
             'audience' => 'student', 'symptom' => 'Neck strain', 'question' => 'Does your neck ache?', 'image' => $file, 'is_active' => '1',
         ])->assertSessionHasNoErrors();
 
-        $stored = Storage::disk('public')->get(Question::where('symptom', 'Neck strain')->value('image'));
+        $stored = base64_decode(Question::where('symptom', 'Neck strain')->firstOrFail()->image_data);
         $this->assertStringNotContainsString('HIDDEN-PAYLOAD-MARKER', $stored);
         $this->assertSame([1024, 512], array_slice(getimagesizefromstring($stored), 0, 2));
     }
@@ -353,5 +353,16 @@ class SecurityTest extends TestCase
 
         $this->withoutVite()->post(route('admin.login.store'), ['email' => 'boss@example.com', 'password' => 'password'])
             ->assertRedirect(route('admin.dashboard'));
+    }
+
+    public function test_admin_searches_ignore_upper_and_lower_case(): void
+    {
+        // PostgreSQL (used online) compares LIKE case-sensitively, unlike SQLite.
+        $admin = User::factory()->admin()->create();
+        User::factory()->create(['name' => 'Ana Cruz', 'email' => 'Ana.Cruz@Example.com']);
+
+        $this->withoutVite()->actingAs($admin)->get(route('admin.users.index', ['search' => 'ana cruz']))->assertSee('Ana Cruz');
+        $this->actingAs($admin)->get(route('admin.users.index', ['search' => 'ANA.CRUZ@']))->assertSee('Ana Cruz');
+        $this->actingAs($admin)->get(route('admin.search', ['q' => 'aNa']))->assertSee('Ana Cruz');
     }
 }

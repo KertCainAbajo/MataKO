@@ -12,11 +12,22 @@ use App\Http\Controllers\Admin\TipController;
 use App\Http\Controllers\Admin\TranslationController;
 use App\Http\Controllers\Admin\TwoFactorController;
 use App\Http\Controllers\Admin\UserController;
+use App\Models\Question;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('welcome');
 });
+
+// Question pictures uploaded in the admin (stored in the database). Public: they are shown in the app.
+Route::get('/question-images/{question}', function (Question $question) {
+    abort_unless($question->image === Question::UPLOADED && $question->image_data, 404);
+
+    return response(base64_decode($question->image_data), 200, [
+        'Content-Type' => 'image/png',
+        'Cache-Control' => 'public, max-age=31536000, immutable',
+    ]);
+})->name('question-image');
 
 Route::prefix('admin')->name('admin.')->group(function () {
     Route::middleware('guest')->group(function () {

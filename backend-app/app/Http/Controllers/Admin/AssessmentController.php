@@ -86,7 +86,7 @@ class AssessmentController extends Controller
         return Assessment::query()
             ->when(in_array($request->query('risk'), ['LOW', 'MEDIUM', 'HIGH'], true), fn ($query) => $query->where('risk_level', $request->query('risk')))
             ->when(in_array($request->query('role'), ['student', 'professional'], true), fn ($query) => $query->whereHas('user', fn ($user) => $user->where('role', $request->query('role'))))
-            ->when($search !== '', fn ($query) => $query->whereHas('user', fn ($user) => $user->where(fn ($match) => $match->where('name', 'like', "%{$search}%")->orWhere('email', 'like', "%{$search}%"))))
+            ->when($search !== '', fn ($query) => $query->whereHas('user', fn ($user) => $user->where(fn ($match) => $match->whereLike('name', "%{$search}%")->orWhereLike('email', "%{$search}%"))))
             ->latest('created_at')
             ->latest('id');
     }

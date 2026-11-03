@@ -49,9 +49,7 @@ class QuestionController extends Controller
     {
         $data = $this->validated($request);
         $data['position'] = (int) Question::where('audience', $data['audience'])->max('position') + 1;
-        $data['image'] = $this->chosenImage($request, $data);
-
-        $question = Question::create($data);
+        $question = Question::create([...$data, ...$this->chosenImage($request, $data)]);
         AdminActivity::record('question.created', "Added {$question->audience} question \"{$question->symptom}\"");
 
         return redirect()->route('admin.questions.index', ['audience' => $question->audience])->with('status', 'Question added. The app will use it for the next self-assessment.');
@@ -68,11 +66,11 @@ class QuestionController extends Controller
 
         $choice = $request->input('illustration');
         if ($request->hasFile('image') || $request->boolean('remove_image') || ($choice !== null && $choice !== 'upload')) {
-            $image = $this->chosenImage($request, $data);
-            if ($image !== $question->image) {
+            $picture = $this->chosenImage($request, $data);
+            if ($picture['image'] !== $question->image || $request->hasFile('image')) {
                 $this->deleteUploadedImage($question);
             }
-            $data['image'] = $image;
+            $data = [...$data, ...$picture];
         }
 
         $question->update($data);
@@ -144,29 +142,34 @@ class QuestionController extends Controller
      * The picture to save: an uploaded file, a chosen built-in mascot, or none. When the form sends no
      * choice, the mascot that best fits the question is used.
      *
+     * An upload is kept in the database rather than on disk, so it survives on hosts whose disk is wiped
+     * on every restart (such as Render's free plan).
+     *
      * @param  array<string, mixed>  $data
+     * @return array{image: ?string, image_data: ?string}
      */
-    private function chosenImage(Request $request, array $data): ?string
+    private function chosenImage(Request $request, array $data): array
     {
         if ($request->hasFile('image')) {
             // Saved as a rebuilt copy, never the uploaded file itself.
-            return app(ImageSanitizer::class)->store($request->file('image'), 'questions');
+            return ['image' => Question::UPLOADED, 'image_data' => base64_encode(app(ImageSanitizer::class)->png($request->file('image')))];
         }
 
         $choice = $request->input('illustration');
         if ($choice === 'none' || $request->boolean('remove_image')) {
-            return null;
+            return ['image' => null, 'image_data' => null];
         }
         if ($choice === null) {
             $choice = Question::suggestIllustration($data['symptom'], $data['question']);
         }
 
-        return isset(Question::ILLUSTRATIONS[$choice]) ? 'bundled:'.$choice : null;
+        return ['image' => isset(Question::ILLUSTRATIONS[$choice]) ? 'bundled:'.$choice : null, 'image_data' => null];
     }
 
     private function deleteUploadedImage(Question $question): void
     {
-        if ($question->image && ! $question->bundledImage()) {
+        // Pictures uploaded before they were kept in the database are files on disk.
+        if ($question->image && ! $question->bundledImage() && $question->image !== Question::UPLOADED) {
             Storage::disk('public')->delete($question->image);
         }
     }

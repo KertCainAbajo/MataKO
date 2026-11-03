@@ -18,6 +18,17 @@ class ImageSanitizer
 
     public function store(UploadedFile $file, string $directory, string $field = 'image'): string
     {
+        $path = trim($directory, '/').'/'.Str::random(40).'.png';
+        Storage::disk('public')->put($path, $this->png($file, $field));
+
+        return $path;
+    }
+
+    /**
+     * The rebuilt picture as PNG bytes.
+     */
+    public function png(UploadedFile $file, string $field = 'image'): string
+    {
         $source = @imagecreatefromstring((string) file_get_contents($file->getRealPath()));
         if ($source === false) {
             throw ValidationException::withMessages([$field => 'This picture could not be read. Try saving it again as PNG or JPG.']);
@@ -39,9 +50,6 @@ class ImageSanitizer
         imagedestroy($source);
         imagedestroy($clean);
 
-        $path = trim($directory, '/').'/'.Str::random(40).'.png';
-        Storage::disk('public')->put($path, $png);
-
-        return $path;
+        return $png;
     }
 }

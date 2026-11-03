@@ -12,18 +12,21 @@
     "android": {
       "package": "com.matako.mobile",
       "adaptiveIcon": {
-        "backgroundColor": "#E6F4FE",
+        "backgroundColor": "#062A3C",
         "foregroundImage": "./assets/android-icon-foreground.png",
         "backgroundImage": "./assets/android-icon-background.png",
         "monochromeImage": "./assets/android-icon-monochrome.png"
       },
-      "allowBackup": false
+      "allowBackup": false,
+      "versionCode": 1,
+      "permissions": []
     },
     "web": {
       "favicon": "./assets/favicon.png"
     },
     "plugins": [
       "expo-secure-store"
-    ]
+    ],
+    "description": "MataKo: a digital eye strain self-assessment and eye care app for students and professionals, in English, Filipino and Cebuano."
   }
 }

@@ -68,7 +68,12 @@ class Question extends Model
         return $best;
     }
 
-    protected $fillable = ['audience', 'position', 'symptom', 'question', 'image', 'is_active', 'translations'];
+    /** Marks a picture uploaded by an admin and stored in image_data (base64 PNG). */
+    public const UPLOADED = 'uploaded';
+
+    protected $fillable = ['audience', 'position', 'symptom', 'question', 'image', 'image_data', 'is_active', 'translations'];
+
+    protected $hidden = ['image_data'];
 
     protected $casts = [
         'position' => 'integer',
@@ -117,6 +122,25 @@ class Question extends Model
      */
     public function imageUrl(): ?string
     {
+        if ($this->image === self::UPLOADED) {
+            // The version number changes when the picture does, so phones and browsers never show an old copy.
+            return route('question-image', ['question' => $this->id, 'v' => $this->updated_at?->timestamp]);
+        }
+
         return $this->image && ! $this->bundledImage() ? Storage::disk('public')->url($this->image) : null;
+    }
+
+    /**
+     * The picture's address without the host, for the app to join to whichever address it uses for the API.
+     */
+    public function imagePath(): ?string
+    {
+        $url = $this->imageUrl();
+        if (! $url) {
+            return null;
+        }
+        $query = parse_url($url, PHP_URL_QUERY);
+
+        return parse_url($url, PHP_URL_PATH).($query ? '?'.$query : '');
     }
 }

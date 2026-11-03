@@ -24,7 +24,7 @@ class AssessmentController extends Controller
             'question' => $question->question,
             'image_key' => $question->bundledImage(),
             // Relative, so the app can join it to whichever host it uses to reach the API.
-            'image_path' => $question->imageUrl() ? '/storage/'.$question->image : null,
+            'image_path' => $question->imagePath(),
         ]);
 
         return response()->json(['questions' => $questions, 'max_answer' => Question::MAX_ANSWER, 'translations' => $translations]);

@@ -18,6 +18,11 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->append(SecurityHeaders::class);
+        // Online hosts like Render put a proxy in front of the app. Trusting it (TRUSTED_PROXIES=*) makes
+        // HTTPS and the visitor's real IP address visible; without the setting nothing is trusted.
+        if ($proxies = env('TRUSTED_PROXIES')) {
+            $middleware->trustProxies(at: $proxies === '*' ? '*' : explode(',', $proxies));
+        }
         $middleware->alias(['admin' => EnsureUserIsAdmin::class, 'admin.idle' => AdminIdleTimeout::class]);
         $middleware->api(append: [SetLocaleFromRequest::class]);
         $middleware->redirectGuestsTo(fn () => route('admin.login'));

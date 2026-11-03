@@ -21,9 +21,9 @@ class SearchController extends Controller
 
         return view('admin.search', [
             'term' => $term,
-            'users' => $term === '' ? collect() : User::where(fn ($query) => $query->where('name', 'like', $like)->orWhere('email', 'like', $like))->limit(10)->get(),
-            'questions' => $term === '' ? collect() : Question::where(fn ($query) => $query->where('question', 'like', $like)->orWhere('symptom', 'like', $like))->orderBy('audience')->orderBy('position')->limit(10)->get(),
-            'activities' => $term === '' ? collect() : AdminActivity::with('admin:id,name')->where('description', 'like', $like)->latest('created_at')->limit(10)->get(),
+            'users' => $term === '' ? collect() : User::where(fn ($query) => $query->whereLike('name', $like)->orWhereLike('email', $like))->limit(10)->get(),
+            'questions' => $term === '' ? collect() : Question::where(fn ($query) => $query->whereLike('question', $like)->orWhereLike('symptom', $like))->orderBy('audience')->orderBy('position')->limit(10)->get(),
+            'activities' => $term === '' ? collect() : AdminActivity::with('admin:id,name')->whereLike('description', $like)->latest('created_at')->limit(10)->get(),
         ]);
     }
 }

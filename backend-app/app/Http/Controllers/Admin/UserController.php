@@ -25,8 +25,8 @@ class UserController extends Controller
             ->withCount('assessments')
             ->withMax('tokens as last_active_at', 'last_used_at')
             ->when($search !== '', fn ($query) => $query->where(fn ($inner) => $inner
-                ->where('name', 'like', "%{$search}%")
-                ->orWhere('email', 'like', "%{$search}%")))
+                ->whereLike('name', "%{$search}%")
+                ->orWhereLike('email', "%{$search}%")))
             ->when(in_array($role, ['student', 'professional'], true), fn ($query) => $query->where('role', $role))
             ->when($role === 'admin', fn ($query) => $query->where('is_admin', true))
             ->when($status === 'disabled', fn ($query) => $query->whereNotNull('disabled_at'))

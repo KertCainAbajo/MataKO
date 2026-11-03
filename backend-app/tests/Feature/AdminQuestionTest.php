@@ -42,7 +42,13 @@ class AdminQuestionTest extends TestCase
 
         $question = Question::where('symptom', 'Neck strain')->firstOrFail();
         $this->assertSame(17, $question->position);
-        Storage::disk('public')->assertExists($question->image);
+        // Kept in the database (hosts like Render wipe their disk) and served at its own address.
+        $this->assertSame(Question::UPLOADED, $question->image);
+        $this->assertSame([], Storage::disk('public')->allFiles());
+        $picture = $this->get($question->imagePath())->assertOk()->assertHeader('Content-Type', 'image/png');
+        $this->assertSame([300, 300], array_slice(getimagesizefromstring($picture->getContent()), 0, 2));
+        $this->getJson('/api/questions', ['Authorization' => 'Bearer '.User::factory()->create()->createToken('t')->plainTextToken])
+            ->assertJsonFragment(['image_path' => $question->imagePath()]);
         $this->assertDatabaseHas('admin_activities', ['action' => 'question.created']);
     }
 

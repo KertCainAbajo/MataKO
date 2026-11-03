@@ -1,0 +1,24 @@
+# Never copied into the server image: secrets, local data, and things the build makes itself.
+.env
+.env.*
+*.env
+database/*.sqlite
+database/*.sqlite*
+*.backup*
+vendor
+node_modules
+public/build
+public/hot
+public/ionicons
+public/storage
+storage/logs/*
+storage/framework/cache/data/*
+storage/framework/sessions/*
+storage/framework/views/*
+storage/app/public/*
+tests
+.phpunit.result.cache
+.git
+.idea
+.vscode
+*.log
