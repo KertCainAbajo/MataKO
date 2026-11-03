@@ -17,7 +17,7 @@
     $stack = [['logo-react', 'React Native'], ['phone-portrait-outline', 'Expo'], ['logo-laravel', 'Laravel 13'], ['code-slash', 'PHP 8.4'], ['server-outline', 'PostgreSQL'], ['color-palette-outline', 'Tailwind CSS'], ['logo-docker', 'Docker'], ['key-outline', 'Sanctum'], ['logo-google', 'Google Sign-In'], ['language-outline', 'English · Filipino · Cebuano']];
 @endphp
 <!DOCTYPE html>
-<html lang="en" class="scroll-smooth">
+<html lang="en">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -31,7 +31,7 @@
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=inter:400,500,600,700,800,900" rel="stylesheet">
     <script @nonce>document.documentElement.classList.add('js');</script>
-    @vite(['resources/css/app.css'])
+    @vite(['resources/css/app.css', 'resources/js/landing.js'])
     <script type="module" src="{{ asset('ionicons/ionicons.esm.js') }}" @nonce></script>
 </head>
 <body class="bg-[#F6F4F2] font-admin text-navy antialiased selection:bg-brand/30">
