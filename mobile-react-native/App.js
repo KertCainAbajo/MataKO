@@ -1584,16 +1584,16 @@ function Home({ user, assessments, remindersOn, remindersToday, appMinutes, mono
       </>, styles.profileInfoCard)}
       {card(<>
         <View style={styles.profileSectionHeader}><Text style={styles.profileSectionTitle}>{t('Eye Care Settings')}</Text><Pressable accessibilityRole="button" onPress={() => chooseTab('settings')}><Text style={styles.profileMoreLink}>{t('More eye care settings')}  ›</Text></Pressable></View>
-        <View style={styles.profileReminderRow}>
+        <Pressable accessibilityRole="switch" accessibilityState={{ checked: remindersOn }} accessibilityLabel={t('Break Reminders')} onPress={() => onReminder(!remindersOn)} style={styles.profileReminderRow}>
           <View style={styles.profileReminderIcon}><ProfileGlyph kind="bell" color={WHITE} /></View>
           <View style={styles.profileInfoText}><Text style={styles.profileInfoValue}>{t('Break Reminders')}</Text><Text style={styles.profileInfoLabel}>{t('Every 20 minutes')}</Text></View>
-          <Switch value={remindersOn} onValueChange={onReminder} trackColor={{ true: ORANGE }} />
-        </View>
-        <View style={styles.profileReminderRow}>
+          <Switch importantForAccessibility="no" value={remindersOn} onValueChange={onReminder} trackColor={{ true: ORANGE }} />
+        </Pressable>
+        <Pressable accessibilityRole="switch" accessibilityState={{ checked: monochrome }} accessibilityLabel={t('Monochrome')} onPress={() => onMonochrome(!monochrome)} style={styles.profileReminderRow}>
           <View style={styles.profileReminderIcon}><ProfileGlyph kind="gear" color={WHITE} /></View>
           <View style={styles.profileInfoText}><Text style={styles.profileInfoValue}>{t('Monochrome')}</Text><Text style={styles.profileInfoLabel}>{t(monochrome ? 'Grayscale mode on' : 'Grayscale mode')}</Text></View>
-          <Switch accessibilityLabel="Monochrome grayscale mode" value={monochrome} onValueChange={onMonochrome} trackColor={{ true: ORANGE }} />
-        </View>
+          <Switch importantForAccessibility="no" value={monochrome} onValueChange={onMonochrome} trackColor={{ true: ORANGE }} />
+        </Pressable>
       </>, styles.profileInfoCard)}
       {card(<>
         <Text style={styles.profileSectionTitle}>{t('Latest Assessment')}</Text>
@@ -1840,7 +1840,7 @@ function EyeCare({ topics, exercises, stack, onPush, onPop, backRef, exerciseLog
     <View style={styles.progressPanel}>
       <Text style={styles.panelTitle}>{t('20-20-20 break reminder')}</Text>
       <Text style={styles.noteText}>{t('Get an in-app reminder to look 20 feet away for 20 seconds every 20 minutes.')}</Text>
-      <View style={styles.switchRow}><Text style={styles.bodyText}>{t(remindersOn ? 'Reminder on' : 'Reminder off')}</Text><Switch value={remindersOn} onValueChange={onReminder} trackColor={{ true: ORANGE }} /></View>
+      <Pressable accessibilityRole="switch" accessibilityState={{ checked: remindersOn }} accessibilityLabel={t('20-20-20 break reminder')} onPress={() => onReminder(!remindersOn)} style={styles.switchRow}><Text style={styles.bodyText}>{t(remindersOn ? 'Reminder on' : 'Reminder off')}</Text><Switch importantForAccessibility="no" value={remindersOn} onValueChange={onReminder} trackColor={{ true: ORANGE }} /></Pressable>
     </View>
   </ScrollView>;
   }
@@ -1934,7 +1934,7 @@ function ExerciseSession({ exercise, onComplete, onActiveChange, leaveRequest, o
     <Text style={styles.sessionTitle}>{t('Eye Blinking Exercise')}</Text>
     <Text style={styles.sessionSubtitle}>{t('Blink slowly and gently to moisturize your eyes')}</Text>
     <View style={styles.blinkTimer}>
-      <Text style={styles.blinkClock}>{formatClock(timer.status === 'idle' ? 0 : timer.remaining)}</Text>
+      <Text style={styles.blinkClock}>{formatClock(timer.remaining)}</Text>
       <Text style={styles.sessionClockLabel}>{t(timer.status === 'idle' ? 'Tap Start to Begin' : done ? 'Well done!' : 'Time Remaining')}</Text>
     </View>
     <View style={styles.blinkInstruction}><Text style={styles.blinkInstructionText}>{t('Close your eyes gently, hold for 2 seconds, then open slowly')}</Text></View>
@@ -2057,11 +2057,12 @@ function DisplaySettings({ display, onDisplay, monochrome, onMonochrome, t }) {
     </View>
     <Text style={styles.settingsHeading}>{t('Display Theme')}</Text>
     <Text style={styles.settingsSub}>{t('Choose a theme that reduces eye strain')}</Text>
-    <View style={styles.themePanel}>{rows.map(([icon, title, text, value, onChange]) => <View key={title} style={styles.themeRow}>
+    {/* The whole row toggles, not only the small switch. */}
+    <View style={styles.themePanel}>{rows.map(([icon, title, text, value, onChange]) => <Pressable key={title} accessibilityRole="switch" accessibilityState={{ checked: value }} accessibilityLabel={t(title)} onPress={() => onChange(!value)} style={styles.themeRow}>
       <View style={styles.themeIcon}><Icon name={icon} size={18} color={WHITE} /></View>
       <View style={styles.flex}><Text style={styles.themeTitle}>{t(title)}</Text><Text style={styles.themeText}>{t(text)}</Text></View>
-      <Switch accessibilityLabel={t(title)} value={value} onValueChange={onChange} trackColor={{ false: paint(NAVY, 'background'), true: ORANGE }} thumbColor={WHITE} />
-    </View>)}</View>
+      <Switch importantForAccessibility="no" value={value} onValueChange={onChange} trackColor={{ false: paint(NAVY, 'background'), true: ORANGE }} thumbColor={WHITE} />
+    </Pressable>)}</View>
     <Text style={[styles.settingsHeading, { marginBottom: 12 }]}>{t('Contrast Adjustments')}</Text>
     <View style={styles.contrastCard}>
       <View style={styles.progressCardHeader}><Text style={styles.contrastLabel}>{t('Text Contrast')}</Text><Text style={styles.contrastLabel}>{contrast}%</Text></View>
