@@ -7,12 +7,12 @@
         ['settings', 'Comfort settings'], ['language', 'Three languages'],
     ];
     $security = [
-        ['phone-portrait', 'Two-factor admin sign-in', 'Authenticator codes with single-use recovery codes and replay protection.'],
+        ['phone-portrait', 'Two-factor sign-in', 'Admin authenticator codes with single-use recovery codes and replay protection.'],
         ['lock-closed', 'Account lockout', 'Accounts lock for 15 minutes after 5 wrong passwords, from any network.'],
         ['shield-checkmark', 'Browser shield', 'Content Security Policy with nonces, HSTS, clickjacking and sniffing protection.'],
         ['key', 'Encrypted secrets', 'Hashed passwords, encrypted 2FA secrets, and the app token kept in the phone\'s encrypted storage.'],
         ['image', 'Safe uploads', 'Every uploaded picture is rebuilt from its pixels, so hidden content never gets stored.'],
-        ['checkmark-done', 'Tested end to end', '97 automated tests on SQLite and PostgreSQL, plus black-box attack tests.'],
+        ['checkmark-done', 'Tested end to end', '98 automated tests on SQLite and PostgreSQL, plus black-box attack tests.'],
     ];
     $stack = [['logo-react', 'React Native'], ['phone-portrait-outline', 'Expo'], ['logo-laravel', 'Laravel 13'], ['code-slash', 'PHP 8.4'], ['server-outline', 'PostgreSQL'], ['color-palette-outline', 'Tailwind CSS'], ['logo-docker', 'Docker'], ['key-outline', 'Sanctum'], ['logo-google', 'Google Sign-In'], ['language-outline', 'English · Filipino · Cebuano']];
 @endphp
@@ -441,21 +441,51 @@
             </div>
         </section>
 
-        {{-- Security --}}
-        <section id="security" class="mx-auto max-w-6xl scroll-mt-24 px-5 py-24">
-            <div class="max-w-2xl" data-reveal>
-                <p class="text-sm font-bold tracking-[0.2em] text-brand uppercase">Security &amp; quality</p>
-                <h2 class="mt-3 text-4xl font-black tracking-tight sm:text-5xl">Built to protect the people who use it.</h2>
-            </div>
-            <div class="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-                @foreach ($security as $index => [$icon, $title, $text])
-                    <article class="group relative overflow-hidden rounded-[1.75rem] bg-white p-6 ring-1 ring-navy/5 transition duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-emerald-900/5 hover:ring-emerald-300" data-reveal @style(['transition-delay: '.(($index % 3) * 90).'ms'])>
-                        <div class="pointer-events-none absolute -top-16 -right-16 h-40 w-40 rounded-full bg-emerald-100 opacity-0 blur-2xl transition duration-500 group-hover:opacity-100"></div>
-                        <span class="relative flex h-11 w-11 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-600 ring-1 ring-emerald-100"><ion-icon name="{{ $icon }}" class="text-xl"></ion-icon></span>
-                        <h3 class="relative mt-4 font-bold">{{ $title }}</h3>
-                        <p class="relative mt-1.5 text-sm leading-relaxed text-slate-600">{{ $text }}</p>
-                    </article>
-                @endforeach
+        {{-- Security: sticky "layers of protection" shield on the left, the safeguards on the right --}}
+        <section id="security" class="mx-auto max-w-6xl scroll-mt-24 px-5 py-28">
+            <div class="grid items-start gap-14 lg:grid-cols-[0.95fr_1.05fr]">
+                <div class="lg:sticky lg:top-12" data-reveal>
+                    <p class="inline-flex items-center gap-2 text-sm font-bold tracking-[0.2em] text-emerald-600 uppercase"><span class="h-px w-8 bg-emerald-500"></span>Security &amp; quality</p>
+                    <h2 class="mt-4 text-4xl leading-[1.05] font-black tracking-[-0.03em] sm:text-6xl">Built to protect the people who use it.</h2>
+                    <p class="mt-5 max-w-md text-lg leading-relaxed text-slate-600">Layer on layer of protection, from the network to the data — and tested like an attacker would.</p>
+
+                    {{-- Layers of protection --}}
+                    <div class="relative mt-10 overflow-hidden rounded-[2rem] bg-white p-6 ring-1 ring-navy/[0.06] shadow-[0_14px_34px_-18px_rgba(6,42,60,0.16)]" aria-hidden="true">
+                        <div class="absolute inset-0 bg-[radial-gradient(circle_at_50%_55%,rgba(16,185,129,0.12),transparent_60%)]"></div>
+                        <div class="relative mx-auto aspect-square max-w-[22rem]">
+                            @foreach ([['100%', 'border-emerald-500/15', 'Network'], ['78%', 'border-emerald-500/25', 'Browser'], ['56%', 'border-emerald-500/40', 'Sign-in'], ['34%', 'border-emerald-500/60 bg-emerald-50/60', 'Data']] as [$size, $tone, $label])
+                                <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 {{ $tone }}" @style(['width: '.$size, 'height: '.$size])>
+                                    <span class="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-white px-2.5 py-0.5 text-[11px] font-bold whitespace-nowrap text-emerald-700 ring-1 ring-emerald-200">{{ $label }}</span>
+                                </div>
+                            @endforeach
+                            <div class="animate-orbit absolute inset-0 rounded-full">
+                                <span class="absolute top-1/2 -right-1.5 h-3 w-3 rounded-full bg-emerald-400 shadow-[0_0_14px_4px_rgba(52,211,153,0.6)]"></span>
+                            </div>
+                            <div class="absolute top-1/2 left-1/2 flex h-[22%] w-[22%] -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-[1.4rem] bg-gradient-to-br from-emerald-400 to-teal-600 text-white shadow-[0_18px_40px_-10px_rgba(16,185,129,0.7)]">
+                                <ion-icon name="shield-checkmark" class="text-4xl"></ion-icon>
+                            </div>
+                        </div>
+                        <dl class="relative mt-6 grid grid-cols-3 divide-x divide-navy/[0.07] text-center">
+                            @foreach ([['98', 'tests passing'], ['2FA', 'for admins'], ['15 min', 'lockout']] as [$value, $label])
+                                <div class="flex flex-col px-2"><dd class="text-xl font-black tracking-tight sm:text-2xl">{{ $value }}</dd><dt class="order-last text-xs font-medium text-slate-500">{{ $label }}</dt></div>
+                            @endforeach
+                        </dl>
+                    </div>
+                </div>
+
+                <div class="grid gap-4 sm:grid-cols-2">
+                    @foreach ($security as $index => [$icon, $title, $text])
+                        <article class="group relative overflow-hidden rounded-[1.75rem] bg-white p-6 ring-1 ring-navy/[0.06] shadow-[0_1px_2px_rgba(6,42,60,0.04),0_14px_34px_-20px_rgba(6,42,60,0.16)] transition duration-500 hover:-translate-y-1 hover:shadow-[0_30px_60px_-28px_rgba(6,95,70,0.35)] hover:ring-emerald-300 sm:even:translate-y-8 sm:even:hover:translate-y-7" data-reveal @style(['transition-delay: '.(($index % 2) * 90).'ms'])>
+                            <span class="absolute inset-x-0 top-0 h-1 origin-left scale-x-0 bg-gradient-to-r from-emerald-400 to-teal-500 transition-transform duration-500 group-hover:scale-x-100"></span>
+                            <div class="flex items-center justify-between">
+                                <span class="flex h-11 w-11 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-600 ring-1 ring-emerald-100 transition duration-500 group-hover:bg-gradient-to-br group-hover:from-emerald-400 group-hover:to-teal-600 group-hover:text-white group-hover:ring-0"><ion-icon name="{{ $icon }}" class="text-xl"></ion-icon></span>
+                                <span class="font-mono text-xs font-bold text-slate-300">0{{ $index + 1 }}</span>
+                            </div>
+                            <h3 class="mt-5 text-lg font-bold">{{ $title }}</h3>
+                            <p class="mt-1.5 text-sm leading-relaxed text-slate-600">{{ $text }}</p>
+                        </article>
+                    @endforeach
+                </div>
             </div>
         </section>
 
