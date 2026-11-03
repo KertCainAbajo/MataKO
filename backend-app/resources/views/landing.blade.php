@@ -324,26 +324,48 @@
             </div>
         </section>
 
-        {{-- Screens --}}
-        <section id="screens" class="scroll-mt-24 py-24">
-            <div class="mx-auto flex max-w-6xl flex-wrap items-end justify-between gap-6 px-5" data-reveal>
+        {{-- Screens: centre-stage carousel; the screen in the middle is lit, the rest step back --}}
+        <section id="screens" class="relative scroll-mt-24 overflow-hidden py-24">
+            <div class="mx-auto grid max-w-6xl items-end gap-8 px-5 lg:grid-cols-[1.4fr_1fr]" data-reveal>
                 <div>
-                    <p class="text-sm font-bold tracking-[0.2em] text-brand uppercase">Screens</p>
-                    <h2 class="mt-3 text-4xl font-black tracking-tight sm:text-5xl">A calm, eye-friendly design.</h2>
-                    <p class="mt-3 max-w-2xl text-slate-600">Warm low-glare surfaces, soft shadows and readable type — with dark mode, high contrast and monochrome when your eyes need a rest.</p>
+                    <p class="inline-flex items-center gap-2 text-sm font-bold tracking-[0.2em] text-brand uppercase"><span class="h-px w-8 bg-brand"></span>Screens</p>
+                    <h2 class="mt-4 text-4xl leading-[1.05] font-black tracking-[-0.03em] sm:text-6xl">A calm, eye-friendly design.</h2>
+                    <p class="mt-5 max-w-xl text-lg leading-relaxed text-slate-600">Warm low-glare surfaces, soft shadows and readable type — with dark mode, high contrast and monochrome when your eyes need a rest.</p>
                 </div>
-                <div class="flex gap-2">
-                    <button type="button" data-gallery="-1" class="flex h-12 w-12 items-center justify-center rounded-full bg-white text-navy shadow-sm ring-1 ring-navy/10 transition hover:bg-navy hover:text-white" aria-label="Previous screens"><ion-icon name="arrow-back" class="text-lg"></ion-icon></button>
-                    <button type="button" data-gallery="1" class="flex h-12 w-12 items-center justify-center rounded-full bg-brand text-white shadow-lg shadow-brand/30 transition hover:bg-brand-600" aria-label="Next screens"><ion-icon name="arrow-forward" class="text-lg"></ion-icon></button>
+                <div class="flex items-center gap-5 lg:justify-end">
+                    <p class="font-mono text-sm font-bold text-slate-400" aria-live="polite"><span data-gallery-index class="text-2xl text-navy">01</span> / {{ str_pad(count($screens), 2, '0', STR_PAD_LEFT) }}</p>
+                    <div class="flex gap-2">
+                        <button type="button" data-gallery="-1" class="flex h-12 w-12 items-center justify-center rounded-full bg-white text-navy shadow-sm ring-1 ring-navy/10 transition hover:-translate-x-0.5 hover:bg-navy hover:text-white disabled:pointer-events-none disabled:opacity-40" aria-label="Previous screen"><ion-icon name="arrow-back" class="text-lg"></ion-icon></button>
+                        <button type="button" data-gallery="1" class="flex h-12 w-12 items-center justify-center rounded-full bg-brand text-white shadow-lg shadow-brand/30 transition hover:translate-x-0.5 hover:bg-brand-600 disabled:pointer-events-none disabled:opacity-40" aria-label="Next screen"><ion-icon name="arrow-forward" class="text-lg"></ion-icon></button>
+                    </div>
                 </div>
             </div>
-            <div class="relative mt-12 [mask-image:linear-gradient(90deg,transparent,black_5%,black_95%,transparent)]">
-                <div id="gallery" class="flex snap-x snap-mandatory scroll-px-5 gap-7 overflow-x-auto px-5 pt-4 pb-8 [scrollbar-width:none] lg:scroll-px-[max(1.25rem,calc((100vw_-_72rem)/2_+_1.25rem))] lg:px-[max(1.25rem,calc((100vw_-_72rem)/2_+_1.25rem))] [&::-webkit-scrollbar]:hidden">
-                    @foreach ($screens as [$image, $caption])
-                        <figure class="group w-56 shrink-0 snap-start">
-                            <div class="transition duration-500 group-hover:-translate-y-3 group-hover:rotate-1">{!! $phone($image, $caption) !!}</div>
-                            <figcaption class="mt-5 text-center text-sm font-semibold text-slate-600 transition group-hover:text-brand">{{ $caption }}</figcaption>
-                        </figure>
+
+            <div class="relative mt-6">
+                {{-- Spotlight and floor shadow under the centre screen --}}
+                <div class="pointer-events-none absolute inset-0 -z-10" aria-hidden="true">
+                    <div class="absolute top-[45%] left-1/2 h-[36rem] w-[36rem] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(circle,rgba(245,130,22,0.18),transparent_65%)]"></div>
+                    <div class="absolute top-[42%] left-1/2 h-[30rem] w-[30rem] -translate-x-1/2 -translate-y-1/2 rounded-full border border-brand/20"></div>
+                    <div class="absolute top-[42%] left-1/2 h-[42rem] w-[42rem] -translate-x-1/2 -translate-y-1/2 rounded-full border border-navy/[0.05]"></div>
+                    <div class="absolute bottom-24 left-1/2 h-8 w-64 -translate-x-1/2 rounded-[100%] bg-navy/25 blur-2xl"></div>
+                </div>
+                <div class="[mask-image:linear-gradient(90deg,transparent,black_18%,black_82%,transparent)]">
+                    <div id="gallery" class="relative flex snap-x snap-mandatory gap-4 overflow-x-auto px-[calc(50%-7.5rem)] pt-12 pb-28 [scrollbar-width:none] sm:gap-6 sm:px-[calc(50%-8.5rem)] [&::-webkit-scrollbar]:hidden">
+                        @foreach ($screens as $index => [$image, $caption])
+                            <figure data-slide @class(['w-60 shrink-0 cursor-pointer snap-center transition duration-700 ease-out sm:w-68 [&:not(.is-active)]:scale-[0.82] [&:not(.is-active)]:opacity-45 [&.is-active]:-translate-y-2', 'is-active' => $index === 0])>
+                                {!! $phone($image, $caption) !!}
+                            </figure>
+                        @endforeach
+                    </div>
+                </div>
+            </div>
+
+            <div class="mx-auto -mt-16 max-w-4xl px-5">
+                <p class="text-center text-xl font-black tracking-tight" data-gallery-caption>{{ $screens[0][1] }}</p>
+                <div class="mx-auto mt-5 h-1 max-w-xs overflow-hidden rounded-full bg-navy/[0.08]"><div data-gallery-bar class="h-full w-[10%] rounded-full bg-gradient-to-r from-brand to-[#FFB067] transition-all duration-500"></div></div>
+                <div class="mt-7 flex flex-wrap justify-center gap-2">
+                    @foreach ($screens as $index => [$image, $caption])
+                        <button type="button" data-goto="{{ $index }}" @if ($index === 0) aria-current="true" @endif class="rounded-full bg-white px-3.5 py-1.5 text-xs font-semibold text-slate-500 ring-1 ring-navy/10 transition hover:text-navy hover:ring-navy/25 aria-[current=true]:bg-navy aria-[current=true]:text-white aria-[current=true]:ring-navy">{{ $caption }}</button>
                     @endforeach
                 </div>
             </div>
@@ -462,11 +484,41 @@
         }), { threshold: 0.12 });
         document.querySelectorAll('[data-reveal]').forEach((element) => observer.observe(element));
 
-        // Screen gallery arrows.
+        // Screen carousel: whichever screen sits in the middle is the active one.
         const gallery = document.getElementById('gallery');
-        document.querySelectorAll('[data-gallery]').forEach((button) => button.addEventListener('click', () => {
-            gallery.scrollBy({ left: Number(button.dataset.gallery) * gallery.clientWidth * 0.8, behavior: reduce ? 'auto' : 'smooth' });
-        }));
+        const slides = [...gallery.querySelectorAll('[data-slide]')];
+        const chips = [...document.querySelectorAll('[data-goto]')];
+        const [prev, next] = [...document.querySelectorAll('[data-gallery]')];
+        const counter = document.querySelector('[data-gallery-index]');
+        const caption = document.querySelector('[data-gallery-caption]');
+        const bar = document.querySelector('[data-gallery-bar]');
+        let active = 0;
+        const centreOf = (slide) => slide.offsetLeft + slide.offsetWidth / 2;
+        const goTo = (index) => {
+            const slide = slides[Math.max(0, Math.min(slides.length - 1, index))];
+            gallery.scrollTo({ left: centreOf(slide) - gallery.clientWidth / 2, behavior: reduce ? 'auto' : 'smooth' });
+        };
+        const update = () => {
+            const middle = gallery.scrollLeft + gallery.clientWidth / 2;
+            const nearest = slides.reduce((best, slide, index) => (Math.abs(centreOf(slide) - middle) < Math.abs(centreOf(slides[best]) - middle) ? index : best), 0);
+            if (nearest === active && counter.textContent) return;
+            active = nearest;
+            slides.forEach((slide, index) => slide.classList.toggle('is-active', index === active));
+            chips.forEach((chip, index) => chip.setAttribute('aria-current', String(index === active)));
+            counter.textContent = String(active + 1).padStart(2, '0');
+            caption.textContent = slides[active].querySelector('img').alt;
+            bar.style.width = `${((active + 1) / slides.length) * 100}%`;
+            prev.disabled = active === 0;
+            next.disabled = active === slides.length - 1;
+        };
+        let frame = 0;
+        gallery.addEventListener('scroll', () => { cancelAnimationFrame(frame); frame = requestAnimationFrame(update); }, { passive: true });
+        prev.addEventListener('click', () => goTo(active - 1));
+        next.addEventListener('click', () => goTo(active + 1));
+        chips.forEach((chip, index) => chip.addEventListener('click', () => goTo(index)));
+        slides.forEach((slide, index) => slide.addEventListener('click', () => goTo(index)));
+        counter.textContent = '';
+        update();
     </script>
 </body>
 </html>
