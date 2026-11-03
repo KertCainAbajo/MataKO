@@ -376,7 +376,48 @@
             <footer class="w-full max-w-[1760px] px-4 pb-6 text-xs text-slate-400 sm:px-8">MataKo · Digital eye strain self-assessment · Admin console</footer>
         </div>
     </div>
+
+    {{-- Confirmation for forms marked data-confirm (inline confirm() handlers are blocked by the security policy) --}}
+    <dialog id="admin-confirm" class="m-auto w-[min(26rem,calc(100%-2rem))] rounded-3xl bg-white p-0 shadow-2xl backdrop:bg-navy/50 backdrop:backdrop-blur-sm">
+        <div class="p-6 text-center">
+            <span data-confirm-icon class="mx-auto flex h-14 w-14 items-center justify-center rounded-full"></span>
+            <h2 data-confirm-title class="mt-4 text-lg font-bold text-navy"></h2>
+            <p data-confirm-message class="mt-2 text-sm leading-relaxed text-slate-600"></p>
+            <form method="dialog" class="mt-6 grid grid-cols-2 gap-3">
+                <button value="cancel" class="admin-btn-secondary">Cancel</button>
+                <button value="ok" data-confirm-ok></button>
+            </form>
+        </div>
+    </dialog>
+
     <script @nonce>
+        // Branded confirm step before risky actions: data-confirm="message", data-confirm-title, data-confirm-button, data-confirm-tone="danger".
+        const confirmBox = document.getElementById('admin-confirm');
+        const tones = {
+            danger: ['bg-red-50 text-red-600', 'admin-btn-danger', 'M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0'],
+            default: ['bg-brand-50 text-brand', 'admin-btn-primary', 'M9 12.75 11.25 15 15 9.75m-3-7.036A11.959 11.959 0 0 1 3.598 6 11.99 11.99 0 0 0 3 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285Z'],
+        };
+        document.querySelectorAll('form[data-confirm]').forEach((form) => form.addEventListener('submit', (event) => {
+            if (form.dataset.confirmed) return;
+            event.preventDefault();
+            const [iconTone, buttonClass, iconPath] = tones[form.dataset.confirmTone] || tones.default;
+            const icon = confirmBox.querySelector('[data-confirm-icon]');
+            icon.className = `mx-auto flex h-14 w-14 items-center justify-center rounded-full ${iconTone}`;
+            icon.innerHTML = `<svg class="h-7 w-7" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="${iconPath}"/></svg>`;
+            confirmBox.querySelector('[data-confirm-title]').textContent = form.dataset.confirmTitle || 'Are you sure?';
+            confirmBox.querySelector('[data-confirm-message]').textContent = form.dataset.confirm;
+            const ok = confirmBox.querySelector('[data-confirm-ok]');
+            ok.className = buttonClass;
+            ok.textContent = form.dataset.confirmButton || 'Confirm';
+            confirmBox.returnValue = '';
+            confirmBox.showModal();
+            confirmBox.addEventListener('close', () => {
+                if (confirmBox.returnValue !== 'ok') return;
+                form.dataset.confirmed = '1';
+                form.requestSubmit();
+            }, { once: true });
+        }));
+
         // Filters marked data-autosubmit apply as soon as they change (inline onchange="" is blocked by the security policy).
         document.querySelectorAll('[data-autosubmit]').forEach((field) => field.addEventListener('change', () => field.form.requestSubmit()));
 

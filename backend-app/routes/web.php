@@ -53,6 +53,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
         Route::resource('users', UserController::class)->except(['create', 'store']);
         Route::patch('/users/{user}/status', [UserController::class, 'toggleStatus'])->name('users.status');
+        Route::patch('/users/{user}/admin', [UserController::class, 'toggleAdmin'])->name('users.admin');
         Route::put('/users/{user}/password', [UserController::class, 'resetPassword'])->name('users.password');
 
         Route::resource('questions', QuestionController::class)->except(['show']);

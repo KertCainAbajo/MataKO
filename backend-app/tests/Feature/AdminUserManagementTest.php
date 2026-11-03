@@ -93,6 +93,39 @@ class AdminUserManagementTest extends TestCase
         $this->assertDatabaseHas('admin_activities', ['admin_id' => $this->admin->id, 'action' => 'user.updated']);
     }
 
+    public function test_admin_access_can_be_granted_and_removed_in_one_click(): void
+    {
+        $user = User::factory()->create();
+
+        $this->actingAs($this->admin)->patch(route('admin.users.admin', $user))->assertSessionHasNoErrors();
+        $this->assertTrue($user->fresh()->is_admin);
+        $this->assertDatabaseHas('security_events', ['type' => 'admin.access_granted', 'user_id' => $user->id]);
+
+        $this->actingAs($this->admin)->patch(route('admin.users.admin', $user))->assertSessionHasNoErrors();
+        $this->assertFalse($user->fresh()->is_admin);
+        $this->assertDatabaseHas('admin_activities', ['admin_id' => $this->admin->id, 'action' => 'user.admin_revoked']);
+    }
+
+    public function test_admins_cannot_remove_their_own_access_and_app_users_cannot_grant_it(): void
+    {
+        $this->actingAs($this->admin)->patch(route('admin.users.admin', $this->admin))->assertSessionHasErrors('status');
+        $this->assertTrue($this->admin->fresh()->is_admin);
+
+        $appUser = User::factory()->create();
+        $this->actingAs($appUser)->patch(route('admin.users.admin', $appUser))->assertRedirect();
+        $this->assertFalse($appUser->fresh()->is_admin);
+    }
+
+    public function test_the_user_list_offers_admin_and_delete_actions_with_confirmation(): void
+    {
+        $user = User::factory()->create(['name' => 'Ana Student']);
+
+        $this->actingAs($this->admin)->get(route('admin.users.index'))->assertOk()
+            ->assertSee(route('admin.users.admin', $user), false)
+            ->assertSee('Delete this account?')
+            ->assertSee('data-confirm=', false);
+    }
+
     public function test_resetting_a_password_replaces_it_and_signs_the_user_out(): void
     {
         $user = User::factory()->create();

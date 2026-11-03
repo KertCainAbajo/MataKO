@@ -104,6 +104,31 @@ class UserController extends Controller
         return back()->with('status', 'Account disabled and signed out of the app.');
     }
 
+    /**
+     * Grant or remove admin access. Admins cannot remove their own, so there is always at least one admin.
+     */
+    public function toggleAdmin(Request $request, User $user): RedirectResponse
+    {
+        if ($user->is($request->user())) {
+            return back()->withErrors(['status' => 'You cannot remove your own admin access.']);
+        }
+
+        $user->is_admin = ! $user->is_admin;
+        $user->save();
+        $by = 'By admin '.$request->user()->email;
+        if ($user->is_admin) {
+            AdminActivity::record('user.admin_granted', "Made {$user->email} an admin");
+            SecurityEvent::record('admin.access_granted', user: $user, details: $by);
+
+            return back()->with('status', "{$user->name} is now an admin. They sign in to the console with their app password.");
+        }
+
+        AdminActivity::record('user.admin_revoked', "Removed admin access from {$user->email}");
+        SecurityEvent::record('admin.access_removed', user: $user, details: $by);
+
+        return back()->with('status', "{$user->name} is no longer an admin.");
+    }
+
     public function resetPassword(Request $request, User $user): RedirectResponse
     {
         $rule = $user->is_admin ? Password::min(12)->mixedCase()->numbers()->symbols() : Password::defaults();

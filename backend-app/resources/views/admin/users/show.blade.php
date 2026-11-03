@@ -50,6 +50,34 @@
         </section>
 
         <section class="admin-card space-y-6 xl:col-span-2">
+            <div @class(['flex flex-wrap items-center gap-4 rounded-2xl p-4 ring-1', 'bg-navy text-white ring-navy' => $user->is_admin, 'bg-slate-50 ring-slate-200' => ! $user->is_admin])>
+                <span @class(['flex h-11 w-11 shrink-0 items-center justify-center rounded-xl', 'bg-brand text-white' => $user->is_admin, 'bg-white text-navy ring-1 ring-slate-200' => ! $user->is_admin])>
+                    <svg class="h-6 w-6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 12.75 11.25 15 15 9.75m-3-7.036A11.959 11.959 0 0 1 3.598 6 11.99 11.99 0 0 0 3 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285Z"/></svg>
+                </span>
+                <div class="min-w-0 flex-1">
+                    <h2 class="font-bold">Admin access</h2>
+                    <p @class(['text-sm', 'text-white/70' => $user->is_admin, 'text-slate-500' => ! $user->is_admin])>
+                        @if ($isSelf)
+                            You are an admin. You cannot remove your own access.
+                        @elseif ($user->is_admin)
+                            Can sign in to this console and manage everything in it.
+                        @else
+                            App user only. Making them an admin lets them sign in here with their app password.
+                        @endif
+                    </p>
+                </div>
+                @unless ($isSelf)
+                    <form method="POST" action="{{ route('admin.users.admin', $user) }}"
+                          data-confirm="{{ $user->is_admin ? "{$user->name} will no longer be able to sign in to the admin console." : "{$user->name} will be able to sign in to this console and manage users, questions and content." }}"
+                          data-confirm-title="{{ $user->is_admin ? 'Remove admin access?' : 'Make this user an admin?' }}"
+                          data-confirm-button="{{ $user->is_admin ? 'Remove access' : 'Make admin' }}"
+                          @if ($user->is_admin) data-confirm-tone="danger" @endif>
+                        @csrf @method('PATCH')
+                        <button @class(['admin-btn-secondary' => $user->is_admin, 'admin-btn-primary' => ! $user->is_admin])>{{ $user->is_admin ? 'Remove admin' : 'Make admin' }}</button>
+                    </form>
+                @endunless
+            </div>
+
             @unless ($isSelf)
                 <div>
                     <h2 class="admin-card-title">Account access</h2>
@@ -79,14 +107,18 @@
             </div>
 
             @unless ($isSelf)
-                <details class="rounded-lg border border-red-200 p-4">
-                    <summary class="cursor-pointer text-sm font-semibold text-red-700">Delete this user</summary>
-                    <p class="mt-2 text-sm text-slate-600">This permanently deletes {{ $user->name }} and all of their assessment results. It cannot be undone.</p>
-                    <form method="POST" action="{{ route('admin.users.destroy', $user) }}" class="mt-3">
+                <div class="flex flex-wrap items-center gap-4 rounded-2xl border border-red-200 bg-red-50/50 p-4">
+                    <div class="min-w-0 flex-1">
+                        <h2 class="font-bold text-red-700">Delete this account</h2>
+                        <p class="text-sm text-slate-600">Permanently deletes {{ $user->name }} and all of their assessment results.</p>
+                    </div>
+                    <form method="POST" action="{{ route('admin.users.destroy', $user) }}"
+                          data-confirm="{{ $user->name }} ({{ $user->email }}) and all of their assessment results will be deleted. This cannot be undone."
+                          data-confirm-title="Delete this account?" data-confirm-button="Delete account" data-confirm-tone="danger">
                         @csrf @method('DELETE')
-                        <button class="admin-btn-danger">Delete permanently</button>
+                        <button class="admin-btn-danger">Delete account</button>
                     </form>
-                </details>
+                </div>
             @endunless
         </section>
     </div>
