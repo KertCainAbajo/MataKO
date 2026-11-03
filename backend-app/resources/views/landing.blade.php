@@ -55,7 +55,6 @@
                 <a href="#security" class="transition hover:text-brand">Security</a>
             </nav>
             <div class="ml-auto flex items-center gap-2">
-                <a href="{{ route('admin.login') }}" class="hidden rounded-xl px-3.5 py-2 text-sm font-semibold text-navy transition hover:bg-white sm:block">Admin</a>
                 <a href="#download" class="rounded-xl bg-brand px-4 py-2 text-sm font-semibold text-white shadow-lg shadow-brand/25 transition hover:bg-brand-600">Get the app</a>
             </div>
         </div>
@@ -253,14 +252,5 @@
         </section>
     </main>
 
-    <footer class="border-t border-navy/5">
-        <div class="mx-auto flex max-w-6xl flex-wrap items-center gap-4 px-5 py-8 text-sm text-slate-500">
-            <img src="{{ asset('images/matako-eye.png') }}" alt="" class="h-5 w-auto">
-            <span>© {{ now()->year }} MataKo · Designed and built by {{ $author }}</span>
-            <nav class="ml-auto flex gap-5" aria-label="Footer">
-                <a href="{{ route('admin.login') }}" class="hover:text-brand">Admin</a>
-            </nav>
-        </div>
-    </footer>
 </body>
 </html>

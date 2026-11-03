@@ -23,7 +23,6 @@ class LandingController extends Controller
         return view('landing', [
             'stats' => $stats,
             'apkUrl' => config('services.showcase.apk_url'),
-            'author' => config('services.showcase.author'),
         ]);
     }
 }
