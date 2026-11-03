@@ -2,7 +2,6 @@
 import { createContext, useContext } from 'react';
 import Constants from 'expo-constants';
 import {
-  Alert,
   Animated,
   AppState,
   BackHandler,
@@ -539,6 +538,78 @@ function Icon({ color, ...props }) {
   return <Ionicons color={paint(color)} {...props} />;
 }
 
+// MataKo alerts: a branded dialog in place of the plain system one. Same call as React Native's
+// Alert.alert(title, message, buttons), plus an optional { tone } that picks the icon and colour.
+const ALERT_TONES = {
+  error: { icon: 'close-circle', color: '#D92D20', tint: '#FDECEC', ring: '#FBD5D2' },
+  warning: { icon: 'alert-circle', color: '#F58216', tint: '#FFF1E5', ring: '#FFDDBF' },
+  info: { icon: 'information-circle', color: '#062A3C', tint: '#E8EEF2', ring: '#D3DDE4' },
+  success: { icon: 'checkmark-circle', color: '#12A150', tint: '#E7F7EE', ring: '#C9EED9' },
+  break: { icon: 'eye', color: '#F58216', tint: '#FFF1E5', ring: '#FFDDBF' },
+  confirm: { icon: 'help-circle', color: '#062A3C', tint: '#E8EEF2', ring: '#D3DDE4' },
+};
+const alertListeners = new Set();
+const alertQueue = [];
+const Alert = {
+  alert(title, message, buttons, options = {}) {
+    alertQueue.push({ id: Date.now() + Math.random(), title, message, buttons, tone: options.tone || (buttons?.length > 1 ? 'confirm' : 'info') });
+    alertListeners.forEach((listener) => listener());
+  },
+};
+
+function AlertHost() {
+  const [current, setCurrent] = useState(null);
+  const appear = useRef(new Animated.Value(0)).current;
+  useEffect(() => {
+    const next = () => setCurrent((shown) => shown || alertQueue.shift() || null);
+    alertListeners.add(next);
+    next();
+    return () => alertListeners.delete(next);
+  }, []);
+  useEffect(() => {
+    if (!current) return;
+    appear.setValue(0);
+    Animated.spring(appear, { toValue: 1, friction: 8, tension: 90, useNativeDriver: true }).start();
+  }, [current]);
+  if (!current) return null;
+
+  const tone = ALERT_TONES[current.tone] || ALERT_TONES.info;
+  const language = currentLanguage;
+  const label = (text) => translations[language]?.[text] || text;
+  const buttons = current.buttons?.length ? current.buttons : [{ text: label('OK') }];
+  const close = (button) => {
+    Animated.timing(appear, { toValue: 0, duration: 140, useNativeDriver: true }).start(() => {
+      setCurrent(alertQueue.shift() || null);
+      button?.onPress?.();
+    });
+  };
+  const cancel = buttons.find((button) => button.style === 'cancel');
+  // Cancel first (left), then the actions; a single button fills the width.
+  const ordered = [...buttons.filter((button) => button.style === 'cancel'), ...buttons.filter((button) => button.style !== 'cancel')];
+
+  return <Modal visible transparent statusBarTranslucent animationType="none" onRequestClose={() => close(cancel || (buttons.length === 1 ? buttons[0] : null))}>
+    <Animated.View style={[styles.alertBackdrop, { opacity: appear }]}>
+      <Animated.View accessibilityRole="alert" accessibilityViewIsModal style={[styles.alertCard, { opacity: appear, transform: [{ scale: appear.interpolate({ inputRange: [0, 1], outputRange: [0.9, 1] }) }, { translateY: appear.interpolate({ inputRange: [0, 1], outputRange: [16, 0] }) }] }]}>
+        <View style={[styles.alertRing, { backgroundColor: paint(tone.ring, 'background') }]}>
+          <View style={[styles.alertBadge, { backgroundColor: paint(tone.tint, 'background') }]}><Icon name={tone.icon} size={38} color={tone.color} /></View>
+        </View>
+        {current.title ? <Text style={styles.alertTitle}>{current.title}</Text> : null}
+        {current.message ? <Text style={styles.alertMessage}>{current.message}</Text> : null}
+        <View style={[styles.alertActions, ordered.length > 2 && styles.alertActionsStacked]}>
+          {ordered.map((button, index) => {
+            const isCancel = button.style === 'cancel';
+            const isDestructive = button.style === 'destructive';
+            return <Pressable key={`${button.text}-${index}`} accessibilityRole="button" onPress={() => close(button)}
+              style={[styles.alertButton, ordered.length > 2 && styles.alertButtonStacked, isCancel ? styles.alertButtonCancel : isDestructive ? styles.alertButtonDanger : styles.alertButtonPrimary]}>
+              <Text style={[styles.alertButtonText, isCancel && styles.alertButtonCancelText]}>{button.text || label('OK')}</Text>
+            </Pressable>;
+          })}
+        </View>
+      </Animated.View>
+    </Animated.View>
+  </Modal>;
+}
+
 // Every tappable element dips slightly when pressed, so taps feel acknowledged.
 const PRESSED = { opacity: 0.86, transform: [{ scale: 0.985 }] };
 function Pressable({ style, ...props }) {
@@ -746,7 +817,7 @@ export default function App() {
     if (!remindersOn) return undefined;
     const timer = setInterval(() => {
       bumpToday('breaks');
-      Alert.alert(t('Eye break'), t('Look 20 feet away for 20 seconds.'));
+      Alert.alert(t('Eye break'), t('Look 20 feet away for 20 seconds.'), undefined, { tone: 'break' });
     }, 20 * 60 * 1000);
     return () => clearInterval(timer);
   }, [remindersOn]);
@@ -845,7 +916,7 @@ export default function App() {
       setUser(data.user);
       return true;
     } catch (error) {
-      Alert.alert(t('Edit Profile'), t(error.message));
+      Alert.alert(t('Edit Profile'), t(error.message), undefined, { tone: 'error' });
       return false;
     } finally { setLoading(false); }
   };
@@ -862,7 +933,7 @@ export default function App() {
       setUser(data.user);
       setScreen('home');
     } catch (error) {
-      Alert.alert(t('Sign In'), t(error.message));
+      Alert.alert(t('Sign In'), t(error.message), undefined, { tone: 'error' });
     } finally { setLoading(false); }
   };
 
@@ -878,7 +949,7 @@ export default function App() {
 
   const signInWithGoogle = async () => {
     if (!GOOGLE_WEB_CLIENT_ID) {
-      Alert.alert(t('Unavailable'), t('Google sign-in is not set up yet. Use your email and password for now.'));
+      Alert.alert(t('Unavailable'), t('Google sign-in is not set up yet. Use your email and password for now.'), undefined, { tone: 'info' });
       return;
     }
     setLoading(true);
@@ -899,10 +970,10 @@ export default function App() {
     } catch (error) {
       if (error.code === statusCodes.SIGN_IN_CANCELLED || error.code === statusCodes.IN_PROGRESS) return;
       if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
-        Alert.alert(t('Continue with Google'), t('Google Play services is needed for Google sign-in. Update it and try again.'));
+        Alert.alert(t('Continue with Google'), t('Google Play services is needed for Google sign-in. Update it and try again.'), undefined, { tone: 'warning' });
         return;
       }
-      Alert.alert(t('Continue with Google'), t(error.message || 'Google sign-in failed. Please try again.'));
+      Alert.alert(t('Continue with Google'), t(error.message || 'Google sign-in failed. Please try again.'), undefined, { tone: 'error' });
     } finally { setLoading(false); }
   };
 
@@ -915,7 +986,7 @@ export default function App() {
       });
       await finishSignIn(data, true);
     } catch (error) {
-      Alert.alert(t('Create Account'), t(error.message));
+      Alert.alert(t('Create Account'), t(error.message), undefined, { tone: 'error' });
     } finally { setLoading(false); }
   };
 
@@ -939,7 +1010,7 @@ export default function App() {
       setUser(data.user);
       setScreen('welcomeNew');
     } catch (error) {
-      Alert.alert(t('Create Account'), t(error.message));
+      Alert.alert(t('Create Account'), t(error.message), undefined, { tone: 'error' });
     } finally { setLoading(false); }
   };
 
@@ -980,7 +1051,7 @@ export default function App() {
       setResult(data);
       setScreen('result');
     } catch (error) {
-      Alert.alert(t('Self-assessment'), t(error.message));
+      Alert.alert(t('Self-assessment'), t(error.message), undefined, { tone: 'error' });
     } finally { setLoading(false); }
   };
 
@@ -988,7 +1059,7 @@ export default function App() {
     try {
       const data = await request('/assessments', { token });
       setAssessments(data.assessments || []);
-    } catch (error) { Alert.alert('MataKo', t(error.message)); }
+    } catch (error) { Alert.alert('MataKo', t(error.message), undefined, { tone: 'error' }); }
   };
 
   const openHistoryResult = async (id) => {
@@ -996,7 +1067,7 @@ export default function App() {
       const data = await request(`/assessment/${id}`, { token });
       setResult(data);
       setScreen('result');
-    } catch (error) { Alert.alert('MataKo', t(error.message)); }
+    } catch (error) { Alert.alert('MataKo', t(error.message), undefined, { tone: 'error' }); }
   };
 
   const header = (title, onBack) => (
@@ -1270,7 +1341,7 @@ export default function App() {
   else if (screen.startsWith('home:')) content = renderHome();
   else content = renderHome();
 
-  return <SafeAreaProvider><SafeAreaView style={[styles.safe, monochrome && styles.grayscale]}><LanguageContext.Provider value={language}><StatusBar barStyle={display.dark ? 'light-content' : 'dark-content'} backgroundColor={paint(WARM, 'background')} /><KeyboardAvoidingView style={styles.fill} behavior={Platform.OS === 'ios' ? 'padding' : undefined}><ScreenFade key={screen}>{content}</ScreenFade></KeyboardAvoidingView></LanguageContext.Provider></SafeAreaView></SafeAreaProvider>;
+  return <SafeAreaProvider><SafeAreaView style={[styles.safe, monochrome && styles.grayscale]}><LanguageContext.Provider value={language}><StatusBar barStyle={display.dark ? 'light-content' : 'dark-content'} backgroundColor={paint(WARM, 'background')} /><KeyboardAvoidingView style={styles.fill} behavior={Platform.OS === 'ios' ? 'padding' : undefined}><ScreenFade key={screen}>{content}</ScreenFade></KeyboardAvoidingView><AlertHost /></LanguageContext.Provider></SafeAreaView></SafeAreaProvider>;
 }
 
 function AuthForm({ mode, language, onGoogle, role, onRoleChange, values: savedValues, onValuesChange, agreed = false, onAgreementChange, onSubmit, loading, onSignUp, onSignIn, onBack, onLegal }) {
@@ -1296,11 +1367,11 @@ function AuthForm({ mode, language, onGoogle, role, onRoleChange, values: savedV
     </View>
   );
   const submit = () => {
-    if (!values.email.includes('@') || !values.password) { Alert.alert(t('Sign In'), t('Enter a valid email and password.')); return; }
+    if (!values.email.includes('@') || !values.password) { Alert.alert(t('Sign In'), t('Enter a valid email and password.'), undefined, { tone: 'warning' }); return; }
     if (isRegister) {
-      if (!values.name.trim() || !values.phone.trim() || Number(values.age) < 18 || Number(values.age) > 120) { Alert.alert(t('Create Account'), t('Complete each field. You must be at least 18 to sign up.')); return; }
-      if (values.password.length < 8 || !/[A-Za-z]/.test(values.password) || !/\d/.test(values.password) || values.password !== values.password_confirmation) { Alert.alert(t('Create Account'), t('Use at least 8 characters with letters and numbers, and make sure the passwords match.')); return; }
-      if (!agreed) { Alert.alert(t('Create Account'), t('Please agree to the Terms and Privacy Policy.')); return; }
+      if (!values.name.trim() || !values.phone.trim() || Number(values.age) < 18 || Number(values.age) > 120) { Alert.alert(t('Create Account'), t('Complete each field. You must be at least 18 to sign up.'), undefined, { tone: 'warning' }); return; }
+      if (values.password.length < 8 || !/[A-Za-z]/.test(values.password) || !/\d/.test(values.password) || values.password !== values.password_confirmation) { Alert.alert(t('Create Account'), t('Use at least 8 characters with letters and numbers, and make sure the passwords match.'), undefined, { tone: 'warning' }); return; }
+      if (!agreed) { Alert.alert(t('Create Account'), t('Please agree to the Terms and Privacy Policy.'), undefined, { tone: 'warning' }); return; }
     }
     onSubmit({ ...values, remember });
   };
@@ -1327,7 +1398,7 @@ function AuthForm({ mode, language, onGoogle, role, onRoleChange, values: savedV
         {isRegister ? field('password_confirmation', 'Confirm Password', { secure: true, autoCapitalize: 'none' }) : null}
         {!isRegister ? <View style={styles.inlineRow}>
           <Pressable style={styles.inlineRow} onPress={() => setRemember(!remember)}><Text style={styles.checkbox}>{remember ? '☑' : '□'}</Text><Text style={styles.smallText}>{t('Remember me')}</Text></Pressable>
-          <Pressable onPress={() => Alert.alert(t('Forgot Password?'), t('Password reset is not configured yet.'))}><Text style={styles.link}>{t('Forgot Password?')}</Text></Pressable>
+          <Pressable onPress={() => Alert.alert(t('Forgot Password?'), t('Password reset is not configured yet.'), undefined, { tone: 'info' })}><Text style={styles.link}>{t('Forgot Password?')}</Text></Pressable>
         </View> : <View style={[styles.inlineRow, { alignItems: 'flex-start', marginVertical: 8 }]}>
           <Pressable accessibilityRole="checkbox" accessibilityState={{ checked: agreed }} onPress={() => onAgreementChange?.(!agreed)}><Text style={styles.checkbox}>{agreed ? '☑' : '□'}</Text></Pressable>
           <Text style={[styles.smallText, { flex: 1 }]}>{t('I agree to the ')}<Text style={styles.link} onPress={() => onLegal('Terms of Service')}>{t('Terms of Service')}</Text>{t(' and ')}<Text style={styles.link} onPress={() => onLegal('Privacy Policy')}>{t('Privacy Policy')}</Text>.</Text>
@@ -1335,7 +1406,7 @@ function AuthForm({ mode, language, onGoogle, role, onRoleChange, values: savedV
         <Pressable onPress={submit} disabled={loading} style={[styles.button, { marginTop: 12 }, loading && styles.disabled]}><Text style={styles.buttonText}>{loading ? (isRegister ? 'Creating account…' : 'Signing in…') : t(isRegister ? 'Create Account' : 'Sign In')}</Text></Pressable>
         <Text style={styles.separator}>────────  <Text>{t('or continue with')}</Text>  ────────</Text>
         <Pressable accessibilityRole="button" style={[styles.socialButton, loading && styles.disabled]} disabled={loading} onPress={onGoogle}><Icon name="logo-google" size={18} color={NAVY} style={{ marginRight: 8 }} /><Text style={styles.bodyText}>{t('Continue with Google')}</Text></Pressable>
-        {Platform.OS === 'ios' ? <Pressable style={styles.socialButton} onPress={() => Alert.alert(t('Unavailable'), t('Apple sign-in is not configured yet.'))}><Text style={styles.bodyText}>●  {t('Continue with Apple')}</Text></Pressable> : null}
+        {Platform.OS === 'ios' ? <Pressable style={styles.socialButton} onPress={() => Alert.alert(t('Unavailable'), t('Apple sign-in is not configured yet.'), undefined, { tone: 'info' })}><Text style={styles.bodyText}>●  {t('Continue with Apple')}</Text></Pressable> : null}
       </View>
       <Pressable onPress={isRegister ? onSignIn : onSignUp} style={styles.bottomLink}><Text style={styles.bodyText}>{t(isRegister ? 'Already have an account? ' : "Don't have an account? ")}<Text style={styles.link}>{isRegister ? t('Sign In') : t('Sign Up')}</Text></Text></Pressable>
     </ScrollView>
@@ -1349,8 +1420,8 @@ function GoogleProfileForm({ account, role: initialRole, language, loading, onSu
   const [agreed, setAgreed] = useState(false);
   const update = (key, value) => setValues((current) => ({ ...current, [key]: value }));
   const submit = () => {
-    if (!values.name.trim() || !values.phone.trim() || Number(values.age) < 18 || Number(values.age) > 120) { Alert.alert(t('Create Account'), t('Complete each field. You must be at least 18 to sign up.')); return; }
-    if (!agreed) { Alert.alert(t('Create Account'), t('Please agree to the Terms and Privacy Policy.')); return; }
+    if (!values.name.trim() || !values.phone.trim() || Number(values.age) < 18 || Number(values.age) > 120) { Alert.alert(t('Create Account'), t('Complete each field. You must be at least 18 to sign up.'), undefined, { tone: 'warning' }); return; }
+    if (!agreed) { Alert.alert(t('Create Account'), t('Please agree to the Terms and Privacy Policy.'), undefined, { tone: 'warning' }); return; }
     onSubmit(values);
   };
   const field = (key, label, options = {}) => <View style={styles.field}>
@@ -2460,6 +2531,21 @@ const styleDefs = {
   legalPage: { flex: 1, backgroundColor: WARM }, legalHeader: { height: 52, flexDirection: 'row', alignItems: 'center', backgroundColor: WHITE, paddingHorizontal: 12 }, legalBack: { width: 40, height: 48, justifyContent: 'center' }, legalBackIcon: { color: '#475467', fontSize: 34, lineHeight: 40 }, legalBackLabel: { color: '#1D2939', fontSize: 14, fontWeight: '500' }, legalTabs: { height: 48, flexDirection: 'row', backgroundColor: '#F1EEEE', borderBottomWidth: 1, borderBottomColor: '#D8D4D2' }, legalTab: { flex: 1, alignItems: 'center', justifyContent: 'center', borderBottomWidth: 2, borderBottomColor: 'transparent' }, legalTabSelected: { borderBottomColor: ORANGE }, legalTabText: { color: '#777777', fontSize: 13 }, legalTabTextSelected: { color: NAVY }, legalScroll: { flex: 1 }, legalDocument: { paddingHorizontal: 16, paddingTop: 20, paddingBottom: 24 }, legalTitle: { color: NAVY, fontSize: 16, fontWeight: '700', marginBottom: 12 }, legalSectionTitle: { color: NAVY, fontSize: 14, fontWeight: '500', marginTop: 18, marginBottom: 8 }, legalParagraph: { color: '#666666', fontSize: 11, lineHeight: 18 }, legalFooter: { backgroundColor: WHITE, paddingHorizontal: 28, paddingTop: 12, paddingBottom: 14 },
   notificationHeader: { height: 52, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', backgroundColor: WHITE, paddingHorizontal: 12 }, notificationBack: { width: 42, height: 48, justifyContent: 'center' }, notificationBackIcon: { color: '#475467', fontSize: 34, lineHeight: 40 }, notificationHeaderTitle: { color: NAVY, fontSize: 15, fontWeight: '700' }, notificationFilter: { width: 42, height: 48, alignItems: 'center', justifyContent: 'center' }, notificationFilterIcon: { color: '#777777', fontSize: 23 }, notificationList: { paddingHorizontal: 16, paddingTop: 8, paddingBottom: 24 }, notificationDate: { color: '#777777', fontSize: 11, textAlign: 'center', paddingVertical: 10 }, notificationCard: { flexDirection: 'row', alignItems: 'flex-start', backgroundColor: WHITE, borderRadius: 14, borderWidth: 1, borderColor: '#E5E7EA', padding: 12, marginVertical: 5, elevation: 1 }, notificationIconCircle: { width: 30, height: 30, borderRadius: 15, backgroundColor: ORANGE, alignItems: 'center', justifyContent: 'center', marginRight: 9 }, notificationIcon: { color: WHITE, fontSize: 17, fontWeight: '700' }, notificationContent: { flex: 1 }, notificationTitle: { color: NAVY, fontSize: 12, fontWeight: '700', marginTop: 2 }, notificationMessage: { color: '#555555', fontSize: 11, lineHeight: 17, marginTop: 9 }, notificationAction: { alignSelf: 'flex-end', paddingTop: 8, paddingHorizontal: 4 }, notificationActionText: { color: ORANGE, fontSize: 10, fontWeight: '500' }, notificationEmpty: { color: '#777777', fontSize: 11, textAlign: 'center', paddingVertical: 10 },
   welcomePage: { flex: 1, padding: 24, alignItems: 'center', justifyContent: 'space-between' }, welcomeBrand: { flex: 1, alignItems: 'center', justifyContent: 'center' }, welcomeImage: { width: 240, height: 170 },
+  alertBackdrop: { flex: 1, backgroundColor: 'rgba(6, 42, 60, 0.55)', alignItems: 'center', justifyContent: 'center', padding: 28 },
+  alertCard: { width: '100%', maxWidth: 360, backgroundColor: WHITE, borderRadius: 28, paddingTop: 26, paddingHorizontal: 22, paddingBottom: 20, alignItems: 'center', elevation: 16, shadowColor: NAVY, shadowOpacity: 0.25, shadowRadius: 30, shadowOffset: { width: 0, height: 14 } },
+  alertRing: { width: 78, height: 78, borderRadius: 39, alignItems: 'center', justifyContent: 'center', marginBottom: 16 },
+  alertBadge: { width: 60, height: 60, borderRadius: 30, alignItems: 'center', justifyContent: 'center' },
+  alertTitle: { color: NAVY, fontSize: 19, fontWeight: '800', textAlign: 'center', marginBottom: 8 },
+  alertMessage: { color: '#4A5565', fontSize: 15, lineHeight: 22, textAlign: 'center', marginBottom: 22, paddingHorizontal: 4 },
+  alertActions: { alignSelf: 'stretch', flexDirection: 'row' },
+  alertActionsStacked: { flexDirection: 'column' },
+  alertButton: { flex: 1, minHeight: 50, borderRadius: 16, alignItems: 'center', justifyContent: 'center', marginHorizontal: 5, paddingHorizontal: 12 },
+  alertButtonStacked: { flex: 0, marginHorizontal: 0, marginVertical: 5 },
+  alertButtonPrimary: { backgroundColor: ORANGE, elevation: 3 },
+  alertButtonDanger: { backgroundColor: '#D92D20', elevation: 3 },
+  alertButtonCancel: { backgroundColor: WHITE, borderWidth: 1.5, borderColor: '#E4DCD4' },
+  alertButtonText: { color: WHITE, fontSize: 16, fontWeight: '700' },
+  alertButtonCancelText: { color: NAVY },
   roleCheck: { position: 'absolute', top: 10, right: 10, zIndex: 2, width: 24, height: 24, borderRadius: 12, backgroundColor: ORANGE, alignItems: 'center', justifyContent: 'center' },
   mascotStage: { alignSelf: 'stretch', height: 162, alignItems: 'center', justifyContent: 'flex-end', overflow: 'hidden', borderRadius: 16, marginBottom: 12 },
   mascotTrack: { position: 'absolute', left: 0, right: 0, bottom: 0, height: 34, backgroundColor: '#F4ECE5' },
