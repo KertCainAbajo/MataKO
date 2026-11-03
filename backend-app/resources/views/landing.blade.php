@@ -35,9 +35,9 @@
     <script type="module" src="{{ asset('ionicons/ionicons.esm.js') }}" @nonce></script>
 </head>
 <body class="bg-[#F6F4F2] font-admin text-navy antialiased selection:bg-brand/30">
-    {{-- Header: glass bar over the dark hero --}}
-    <header id="site-header" class="fixed inset-x-0 top-0 z-50 px-3">
-        <div class="mx-auto mt-3 flex h-14 max-w-6xl items-center gap-6 rounded-2xl px-4 transition-all duration-300 sm:px-5" data-header-bar>
+    {{-- Header: sits on top of the dark hero and scrolls away with it --}}
+    <header id="site-header" class="absolute inset-x-0 top-0 z-50 px-3">
+        <div class="mx-auto mt-3 flex h-14 max-w-6xl items-center gap-6 rounded-2xl px-4 transition-all duration-300 sm:px-5">
             <a href="#top" class="flex items-center gap-2.5">
                 <img src="{{ asset('images/matako-eye.png') }}" alt="" class="h-6 w-auto">
                 <span class="text-lg font-extrabold tracking-tight text-white">MataKo</span>
@@ -344,15 +344,6 @@
     </main>
 
     <script @nonce>
-        // Header: transparent over the dark hero, frosted navy glass once the page scrolls.
-        const bar = document.querySelector('[data-header-bar]');
-        const onScroll = () => {
-            const scrolled = window.scrollY > 40;
-            ['bg-navy-900/75', 'shadow-2xl', 'ring-1', 'ring-white/10', 'backdrop-blur-xl'].forEach((name) => bar.classList.toggle(name, scrolled));
-        };
-        onScroll();
-        window.addEventListener('scroll', onScroll, { passive: true });
-
         // Sections fade up as they come into view; numbers count up once.
         const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
         const countUp = (element) => {
