@@ -1,6 +1,6 @@
 @php
     $img = fn (string $name) => asset('images/showcase/'.$name.'.webp');
-    $phone = fn (string $image, string $alt, string $extra = '') => '<div class="rounded-[2.4rem] bg-[#0b2230] p-2.5 shadow-[0_40px_80px_-24px_rgba(0,0,0,0.55)] ring-1 ring-white/10 '.$extra.'"><img src="'.asset('images/showcase/'.$image.'.webp').'" alt="'.e($alt).'" loading="lazy" width="480" height="1004" class="block w-full rounded-[1.9rem]"></div>';
+    $phone = fn (string $image, string $alt, string $extra = '') => '<div class="rounded-[2.4rem] bg-[#0A1D47] p-2.5 shadow-[0_40px_80px_-24px_rgba(0,0,0,0.55)] ring-1 ring-white/10 '.$extra.'"><img src="'.asset('images/showcase/'.$image.'.webp').'" alt="'.e($alt).'" loading="lazy" width="480" height="1004" class="block w-full rounded-[1.9rem]"></div>';
     $screens = [
         ['welcome', 'Welcome'], ['profile', 'Choose your profile'], ['home', 'Home'], ['question', 'Assessment question'],
         ['result', 'Your result'], ['progress', 'Progress'], ['eye-care', 'Eye care topics'], ['tips', 'Care tips'],
@@ -26,7 +26,7 @@
     <meta property="og:title" content="MataKo — Your vision, your power">
     <meta property="og:description" content="Check your eyes for digital eye strain, follow care plans and guided eye exercises — in English, Filipino and Cebuano.">
     <meta property="og:image" content="{{ $img('home') }}">
-    <meta name="theme-color" content="#041f2d">
+    <meta name="theme-color" content="#05163A">
     <link rel="icon" href="{{ asset('images/matako-eye.png') }}">
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=inter:400,500,600,700,800,900" rel="stylesheet">
@@ -54,78 +54,97 @@
     </header>
 
     <main id="top">
-        {{-- Hero: centred headline over an "iris" of rings, with three phones rising from the bottom edge --}}
-        <section class="relative isolate overflow-hidden rounded-b-[2.5rem] bg-[#03121B] text-white sm:rounded-b-[4rem]">
+        {{-- Hero: pure blue, orange and white. Light rays, a pointer spotlight, word-by-word headline and a 3D phone fan. --}}
+        <section class="relative isolate overflow-hidden rounded-b-[2.5rem] bg-[#05163A] text-white sm:rounded-b-[4rem]" data-hero>
             <div class="pointer-events-none absolute inset-0 -z-10" aria-hidden="true">
-                <div class="absolute inset-0 bg-[radial-gradient(ellipse_70%_55%_at_50%_-8%,rgba(64,150,196,0.30),transparent_70%)]"></div>
-                <div class="absolute inset-0 bg-[radial-gradient(rgba(255,255,255,0.09)_1px,transparent_1px)] [background-size:26px_26px] [mask-image:radial-gradient(ellipse_65%_55%_at_50%_30%,black,transparent_75%)]"></div>
-                {{-- Iris rings centred behind the phones --}}
-                <div class="absolute top-[58rem] left-1/2 sm:top-[60rem]">
-                    <div class="absolute top-1/2 left-1/2 h-[56rem] w-[56rem] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(circle,rgba(18,82,114,0.55),transparent_62%)]"></div>
-                    @foreach (['h-[22rem] w-[22rem] border-white/[0.08]', 'h-[30rem] w-[30rem] border-brand/30', 'h-[46rem] w-[46rem] border-white/[0.06]', 'h-[60rem] w-[60rem] border-white/[0.04]'] as $ring)
+                <div class="absolute inset-0 bg-[radial-gradient(ellipse_75%_60%_at_50%_-10%,#1E4FD8_0%,rgba(30,79,216,0.35)_35%,transparent_70%)]"></div>
+                <div class="absolute inset-0 bg-[repeating-conic-gradient(from_150deg_at_50%_-15%,rgba(255,255,255,0.07)_0deg_2deg,transparent_2deg_9deg)] [mask-image:radial-gradient(ellipse_60%_70%_at_50%_0%,black,transparent_75%)]"></div>
+                <div class="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.06)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.06)_1px,transparent_1px)] [background-size:72px_72px] [mask-image:radial-gradient(ellipse_70%_60%_at_50%_45%,black,transparent_80%)]"></div>
+                <div class="absolute inset-0 bg-[radial-gradient(560px_circle_at_var(--mx,50%)_var(--my,35%),rgba(255,255,255,0.09),transparent_65%)] transition-[background] duration-300"></div>
+                {{-- Iris rings behind the phones --}}
+                <div class="absolute top-[61rem] left-1/2 sm:top-[64rem]">
+                    @foreach (['h-[22rem] w-[22rem] border-white/15', 'h-[30rem] w-[30rem] border-[#F58216]/60', 'h-[42rem] w-[42rem] border-white/10', 'h-[58rem] w-[58rem] border-white/[0.06]', 'h-[76rem] w-[76rem] border-white/[0.04]'] as $ring)
                         <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full border {{ $ring }}"></div>
                     @endforeach
-                    <div class="animate-orbit absolute -top-[15rem] -left-[15rem] h-[30rem] w-[30rem] rounded-full bg-[conic-gradient(from_0deg,transparent_0deg,transparent_250deg,#FFB067_330deg,#F58216_360deg)] [mask-image:radial-gradient(farthest-side,transparent_calc(100%-2px),black_calc(100%-2px))]"></div>
-                    <div class="animate-orbit-reverse absolute -top-[23rem] -left-[23rem] h-[46rem] w-[46rem] rounded-full bg-[conic-gradient(from_180deg,transparent_0deg,transparent_290deg,rgba(125,200,240,0.7)_360deg)] [mask-image:radial-gradient(farthest-side,transparent_calc(100%-1px),black_calc(100%-1px))]"></div>
+                    <div class="animate-orbit absolute -top-[15rem] -left-[15rem] h-[30rem] w-[30rem] rounded-full">
+                        <span class="absolute top-1/2 -right-[7px] h-3.5 w-3.5 -translate-y-1/2 rounded-full bg-[#F58216] shadow-[0_0_0_4px_rgba(245,130,22,0.25),0_0_24px_6px_rgba(245,130,22,0.55)]"></span>
+                    </div>
+                    <div class="animate-orbit-reverse absolute -top-[21rem] -left-[21rem] h-[42rem] w-[42rem] rounded-full">
+                        <span class="absolute top-1/2 -left-[5px] h-2.5 w-2.5 -translate-y-1/2 rounded-full bg-white shadow-[0_0_18px_4px_rgba(255,255,255,0.6)]"></span>
+                    </div>
                 </div>
             </div>
 
-            <div class="mx-auto max-w-4xl px-5 pt-32 text-center sm:pt-36" data-reveal>
-                <p class="inline-flex items-center gap-2 rounded-full bg-white/[0.06] py-1.5 pr-4 pl-1.5 text-xs font-semibold text-slate-200 ring-1 ring-white/10 backdrop-blur">
-                    <span class="rounded-full bg-brand px-2.5 py-0.5 text-[11px] font-bold text-white">Free</span>
+            <div class="mx-auto max-w-4xl px-5 pt-32 text-center sm:pt-36">
+                <p class="hero-rise inline-flex items-center gap-2 rounded-full bg-white py-1.5 pr-4 pl-1.5 text-xs font-bold text-[#05163A] shadow-[0_10px_30px_-10px_rgba(0,0,0,0.5)]">
+                    <span class="rounded-full bg-[#F58216] px-2.5 py-0.5 text-[11px] text-white">Free</span>
                     Digital eye strain self-assessment for Android
                 </p>
-                <h1 class="mt-7 text-[3.4rem] leading-[0.95] font-black tracking-[-0.04em] sm:text-8xl">
-                    Your vision,<br>
-                    <span class="animate-shimmer bg-[linear-gradient(100deg,#FFC48A,#F58216_35%,#FFB067_55%,#F58216_80%)] [background-size:200%_auto] bg-clip-text pr-1 text-transparent">your power.</span>
+                <h1 class="mt-7 text-[3.4rem] leading-[0.95] font-black tracking-[-0.045em] sm:text-[6.5rem]">
+                    <span class="sr-only">Your vision, your power.</span>
+                    <span aria-hidden="true">
+                        @foreach (['Your', 'vision,'] as $index => $word)
+                            <span class="hero-word" @style(['animation-delay: '.(120 + $index * 110).'ms'])>{{ $word }}</span>
+                        @endforeach
+                        <br>
+                        @foreach (['your', 'power.'] as $index => $word)
+                            <span class="hero-word text-[#F58216] [text-shadow:0_0_60px_rgba(245,130,22,0.45)]" @style(['animation-delay: '.(340 + $index * 110).'ms'])>{{ $word }}</span>
+                        @endforeach
+                    </span>
                 </h1>
-                <p class="mx-auto mt-7 max-w-2xl text-lg leading-relaxed text-slate-300/90 sm:text-xl">
+                <p class="hero-rise mx-auto mt-7 max-w-2xl text-lg leading-relaxed text-white/75 [animation-delay:600ms] sm:text-xl">
                     Spot digital eye strain early. A quick self-assessment, a clear result with a care plan, and guided eye exercises — for students and professionals.
                 </p>
-                <div class="mt-10 flex flex-wrap justify-center gap-3">
-                    <a href="{{ $apkUrl ?: '#download' }}" class="group relative inline-flex items-center gap-2.5 overflow-hidden rounded-full bg-gradient-to-b from-[#FF9634] to-brand px-7 py-4 font-bold text-white shadow-[0_0_0_1px_rgba(255,255,255,0.15)_inset,0_18px_40px_-12px_rgba(245,130,22,0.8)] transition hover:-translate-y-0.5">
-                        <span class="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/30 to-transparent transition duration-700 group-hover:translate-x-full"></span>
+                <div class="hero-rise mt-10 flex flex-wrap justify-center gap-3 [animation-delay:720ms]">
+                    <a href="{{ $apkUrl ?: '#download' }}" class="group relative inline-flex items-center gap-2.5 overflow-hidden rounded-full bg-[#F58216] px-7 py-4 font-bold text-white shadow-[0_16px_40px_-10px_rgba(245,130,22,0.75)] transition hover:-translate-y-0.5 hover:shadow-[0_22px_50px_-10px_rgba(245,130,22,0.9)]">
+                        <span class="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/40 to-transparent transition duration-700 group-hover:translate-x-full"></span>
                         <ion-icon name="logo-android" class="text-xl"></ion-icon> Download for Android
                         <ion-icon name="arrow-forward" class="transition group-hover:translate-x-1"></ion-icon>
                     </a>
-                    <a href="#screens" class="inline-flex items-center gap-2 rounded-full bg-white/[0.06] px-7 py-4 font-bold text-white ring-1 ring-white/15 backdrop-blur transition hover:-translate-y-0.5 hover:bg-white/10">
+                    <a href="#screens" class="inline-flex items-center gap-2 rounded-full px-7 py-4 font-bold text-white ring-2 ring-white/30 transition hover:-translate-y-0.5 hover:bg-white hover:text-[#05163A] hover:ring-white">
                         Explore the app <ion-icon name="chevron-down" class="text-lg"></ion-icon>
                     </a>
                 </div>
-                <dl class="mx-auto mt-10 flex max-w-xl justify-center divide-x divide-white/10">
+                <dl class="hero-rise mx-auto mt-12 flex max-w-xl justify-center divide-x divide-white/15 [animation-delay:840ms]">
                     @foreach ([[$stats['questions'], 'Question check-up'], [$stats['exercises'], 'Guided exercises'], [3, 'Languages']] as [$value, $label])
                         <div class="flex flex-1 flex-col items-center px-3">
-                            <dd class="text-3xl font-black tabular-nums sm:text-4xl" data-count="{{ $value }}">{{ $value }}</dd>
-                            <dt class="order-last mt-1 text-xs font-medium tracking-wide text-slate-400 sm:text-sm">{{ $label }}</dt>
+                            <dd class="text-3xl font-black text-white tabular-nums sm:text-4xl" data-count="{{ $value }}">{{ $value }}</dd>
+                            <dt class="order-last mt-1 text-xs font-semibold tracking-wide text-white/60 sm:text-sm">{{ $label }}</dt>
                         </div>
                     @endforeach
                 </dl>
             </div>
 
-            {{-- Phone fan --}}
-            <div class="relative mx-auto mt-14 h-[24rem] max-w-6xl sm:h-[30rem]" data-reveal>
-                <div class="absolute top-16 left-1/2 w-40 -translate-x-[128%] -rotate-[9deg] opacity-80 sm:w-52">{!! $phone('question', 'Assessment question screen') !!}</div>
-                <div class="absolute top-16 left-1/2 w-40 translate-x-[28%] rotate-[9deg] opacity-80 sm:w-52">{!! $phone('result', 'Assessment result screen') !!}</div>
-                <div class="absolute top-0 left-1/2 z-10 w-52 -translate-x-1/2 sm:w-64">{!! $phone('home', 'MataKo home screen', 'shadow-[0_40px_120px_-20px_rgba(245,130,22,0.35)]') !!}</div>
+            {{-- Phone fan: tilts toward the pointer --}}
+            <div class="hero-rise relative mx-auto mt-14 h-[24rem] max-w-6xl [animation-delay:950ms] [perspective:1400px] sm:h-[30rem]">
+                <div class="absolute inset-0 transition-transform duration-500 ease-out [transform-style:preserve-3d]" data-tilt>
+                    <div class="absolute top-16 left-1/2 w-40 -translate-x-[128%] -rotate-[9deg] brightness-[0.82] sm:w-52">{!! $phone('question', 'Assessment question screen') !!}</div>
+                    <div class="absolute top-16 left-1/2 w-40 translate-x-[28%] rotate-[9deg] brightness-[0.82] sm:w-52">{!! $phone('result', 'Assessment result screen') !!}</div>
+                    <div class="absolute top-0 left-1/2 z-10 w-52 -translate-x-1/2 [transform:translateZ(60px)] sm:w-64">{!! $phone('home', 'MataKo home screen', 'ring-2 ring-white/25 shadow-[0_50px_100px_-20px_rgba(0,0,0,0.7)]') !!}</div>
+                </div>
 
-                <div class="animate-float absolute top-12 left-[calc(50%-31rem)] z-20 hidden w-56 rounded-2xl bg-[#0A2231]/90 p-4 text-left shadow-2xl ring-1 ring-white/10 backdrop-blur-xl lg:block">
-                    <div class="flex items-center gap-3">
-                        <span class="flex h-10 w-10 items-center justify-center rounded-xl bg-red-500/15 text-red-300 ring-1 ring-red-400/30"><ion-icon name="pulse" class="text-xl"></ion-icon></span>
-                        <div><p class="text-[11px] font-semibold tracking-wider text-slate-400 uppercase">Result ready</p><p class="text-sm font-bold">Severe Eye Strain</p></div>
-                    </div>
-                    <div class="mt-3 h-1.5 overflow-hidden rounded-full bg-white/10"><div class="h-full w-[82%] rounded-full bg-gradient-to-r from-amber-400 to-red-400"></div></div>
-                    <p class="mt-2 text-xs text-slate-400">Care plan included</p>
-                </div>
-                <div class="animate-float-slow absolute top-40 right-[calc(50%-31rem)] z-20 hidden w-52 rounded-2xl bg-[#0A2231]/90 p-4 text-left shadow-2xl ring-1 ring-white/10 backdrop-blur-xl [animation-delay:-3s] lg:block">
-                    <p class="flex items-center gap-2 text-sm font-bold"><span class="flex h-8 w-8 items-center justify-center rounded-lg bg-brand/15 text-orange-300 ring-1 ring-brand/30"><ion-icon name="timer-outline"></ion-icon></span>Eye Palming</p>
-                    <p class="mt-3 font-mono text-3xl font-black tracking-tight text-white">01:00</p>
-                    <div class="mt-3 flex gap-1.5">
-                        @foreach (['EN', 'FIL', 'CEB'] as $index => $code)
-                            <span @class(['rounded-md px-2 py-0.5 text-[11px] font-bold', 'bg-brand text-white' => $index === 0, 'bg-white/10 text-slate-300' => $index > 0])>{{ $code }}</span>
-                        @endforeach
+                <div class="absolute top-12 left-[calc(50%-31rem)] z-20 hidden transition-[translate] duration-500 ease-out lg:block" data-depth="-28">
+                    <div class="animate-float w-56 rounded-2xl bg-white p-4 text-left text-[#05163A] shadow-[0_30px_60px_-20px_rgba(0,0,0,0.6)]">
+                        <div class="flex items-center gap-3">
+                            <span class="flex h-10 w-10 items-center justify-center rounded-xl bg-[#F58216] text-white"><ion-icon name="pulse" class="text-xl"></ion-icon></span>
+                            <div><p class="text-[11px] font-bold tracking-wider text-[#05163A]/50 uppercase">Result ready</p><p class="text-sm font-black">Severe Eye Strain</p></div>
+                        </div>
+                        <div class="mt-3 h-1.5 overflow-hidden rounded-full bg-[#05163A]/10"><div class="h-full w-[82%] rounded-full bg-[#F58216]"></div></div>
+                        <p class="mt-2 text-xs font-semibold text-[#05163A]/60">Care plan included</p>
                     </div>
                 </div>
-                <div class="absolute inset-x-0 bottom-0 z-10 h-28 bg-gradient-to-t from-[#03121B] to-transparent"></div>
+                <div class="absolute top-40 right-[calc(50%-31rem)] z-20 hidden transition-[translate] duration-500 ease-out lg:block" data-depth="32">
+                    <div class="animate-float-slow w-52 rounded-2xl bg-white p-4 text-left text-[#05163A] shadow-[0_30px_60px_-20px_rgba(0,0,0,0.6)] [animation-delay:-3s]">
+                        <p class="flex items-center gap-2 text-sm font-black"><span class="flex h-8 w-8 items-center justify-center rounded-lg bg-[#05163A] text-white"><ion-icon name="timer-outline"></ion-icon></span>Eye Palming</p>
+                        <p class="mt-3 font-mono text-3xl font-black tracking-tight">01:00</p>
+                        <div class="mt-3 flex gap-1.5">
+                            @foreach (['EN', 'FIL', 'CEB'] as $index => $code)
+                                <span @class(['rounded-md px-2 py-0.5 text-[11px] font-bold', 'bg-[#F58216] text-white' => $index === 0, 'bg-[#05163A]/10 text-[#05163A]' => $index > 0])>{{ $code }}</span>
+                            @endforeach
+                        </div>
+                    </div>
+                </div>
+                <div class="absolute inset-x-0 bottom-0 z-30 h-28 bg-gradient-to-t from-[#05163A] to-transparent"></div>
             </div>
         </section>
 
@@ -161,9 +180,9 @@
 
             <div class="mt-14 grid gap-5 lg:grid-cols-6">
                 {{-- Assessment: dark card with the iris rings and the question screen --}}
-                <article class="group relative isolate flex min-h-[32rem] flex-col overflow-hidden rounded-[2rem] bg-[#03121B] p-8 text-white shadow-[0_30px_60px_-30px_rgba(3,18,27,0.7)] lg:col-span-3 lg:row-span-2" data-reveal>
+                <article class="group relative isolate flex min-h-[32rem] flex-col overflow-hidden rounded-[2rem] bg-[#05163A] p-8 text-white shadow-[0_30px_60px_-30px_rgba(5,22,58,0.7)] lg:col-span-3 lg:row-span-2" data-reveal>
                     <div class="pointer-events-none absolute inset-0 -z-10" aria-hidden="true">
-                        <div class="absolute inset-0 bg-[radial-gradient(ellipse_70%_60%_at_80%_95%,rgba(40,120,165,0.45),transparent_70%)]"></div>
+                        <div class="absolute inset-0 bg-[radial-gradient(ellipse_70%_60%_at_80%_95%,rgba(30,79,216,0.45),transparent_70%)]"></div>
                         <div class="absolute right-[-6rem] bottom-[-8rem] h-[30rem] w-[30rem] rounded-full border border-white/[0.06]"></div>
                         <div class="absolute right-[-1rem] bottom-[-3rem] h-[20rem] w-[20rem] rounded-full border border-brand/30"></div>
                         <div class="animate-orbit absolute right-[-1rem] bottom-[-3rem] h-[20rem] w-[20rem] rounded-full bg-[conic-gradient(from_0deg,transparent_0deg,transparent_260deg,#FFB067_330deg,#F58216_360deg)] [mask-image:radial-gradient(farthest-side,transparent_calc(100%-2px),black_calc(100%-2px))]"></div>
@@ -289,7 +308,7 @@
                     <div class="absolute top-1/2 right-[16.66%] left-[16.66%] h-1 origin-left -translate-y-1/2 scale-x-0 rounded-full bg-gradient-to-r from-brand via-[#FFB067] to-navy transition-transform delay-300 duration-[1600ms] ease-out group-[.is-visible]:scale-x-100"></div>
                     @foreach ([1, 2, 3] as $step)
                         <div class="relative flex justify-center">
-                            <span @class(['flex h-14 w-14 items-center justify-center rounded-full text-lg font-black shadow-[0_10px_30px_-10px_rgba(6,42,60,0.45)] ring-[6px] ring-[#F6F4F2]', 'bg-gradient-to-br from-brand to-[#FF9A3D] text-white' => $step === 1, 'bg-[#03121B] text-white' => $step === 2, 'bg-white text-navy ring-offset-0' => $step === 3])>0{{ $step }}</span>
+                            <span @class(['flex h-14 w-14 items-center justify-center rounded-full text-lg font-black shadow-[0_10px_30px_-10px_rgba(6,42,60,0.45)] ring-[6px] ring-[#F6F4F2]', 'bg-gradient-to-br from-brand to-[#FF9A3D] text-white' => $step === 1, 'bg-[#05163A] text-white' => $step === 2, 'bg-white text-navy ring-offset-0' => $step === 3])>0{{ $step }}</span>
                         </div>
                     @endforeach
                 </div>
@@ -301,10 +320,10 @@
                         ['result', 'Get your result', 'See your level, the score breakdown and a care plan to follow.', 'sparkles-outline', 'Instant'],
                     ] as $index => [$image, $title, $text, $icon, $chip])
                         @php $dark = $index === 1; @endphp
-                        <li @class(['group relative isolate flex h-[34rem] flex-col overflow-hidden rounded-[2rem] p-8 transition duration-500 hover:-translate-y-1.5', 'bg-[#03121B] text-white shadow-[0_34px_70px_-30px_rgba(3,18,27,0.75)]' => $dark, 'bg-white ring-1 ring-navy/[0.06] shadow-[0_14px_34px_-18px_rgba(6,42,60,0.16)] hover:shadow-[0_34px_64px_-28px_rgba(6,42,60,0.28)]' => ! $dark]) data-reveal @style(['transition-delay: '.($index * 120).'ms'])>
+                        <li @class(['group relative isolate flex h-[34rem] flex-col overflow-hidden rounded-[2rem] p-8 transition duration-500 hover:-translate-y-1.5', 'bg-[#05163A] text-white shadow-[0_34px_70px_-30px_rgba(5,22,58,0.75)]' => $dark, 'bg-white ring-1 ring-navy/[0.06] shadow-[0_14px_34px_-18px_rgba(6,42,60,0.16)] hover:shadow-[0_34px_64px_-28px_rgba(6,42,60,0.28)]' => ! $dark]) data-reveal @style(['transition-delay: '.($index * 120).'ms'])>
                             @if ($dark)
                                 <div class="pointer-events-none absolute inset-0 -z-10" aria-hidden="true">
-                                    <div class="absolute inset-0 bg-[radial-gradient(ellipse_80%_55%_at_50%_100%,rgba(40,120,165,0.5),transparent_70%)]"></div>
+                                    <div class="absolute inset-0 bg-[radial-gradient(ellipse_80%_55%_at_50%_100%,rgba(30,79,216,0.5),transparent_70%)]"></div>
                                     <div class="absolute bottom-[-9rem] left-1/2 h-[24rem] w-[24rem] -translate-x-1/2 rounded-full border border-brand/30"></div>
                                     <div class="absolute bottom-[-13rem] left-1/2 h-[32rem] w-[32rem] -translate-x-1/2 rounded-full border border-white/[0.06]"></div>
                                 </div>
@@ -381,13 +400,13 @@
             ];
         @endphp
         <section id="admin" class="scroll-mt-24 px-3 sm:px-5">
-            <div class="relative isolate overflow-hidden rounded-[2.5rem] bg-[#03121B] px-5 pt-24 pb-16 text-white sm:rounded-[3.5rem]">
+            <div class="relative isolate overflow-hidden rounded-[2.5rem] bg-[#05163A] px-5 pt-24 pb-16 text-white sm:rounded-[3.5rem]">
                 <div class="pointer-events-none absolute inset-0 -z-10" aria-hidden="true">
-                    <div class="absolute inset-0 bg-[radial-gradient(ellipse_65%_45%_at_50%_0%,rgba(64,150,196,0.32),transparent_70%)]"></div>
+                    <div class="absolute inset-0 bg-[radial-gradient(ellipse_65%_45%_at_50%_0%,rgba(30,79,216,0.32),transparent_70%)]"></div>
                     <div class="absolute inset-0 bg-[radial-gradient(rgba(255,255,255,0.08)_1px,transparent_1px)] [background-size:26px_26px] [mask-image:radial-gradient(ellipse_60%_45%_at_50%_15%,black,transparent_75%)]"></div>
                     <div class="absolute top-[44rem] left-1/2 h-[52rem] w-[52rem] -translate-x-1/2 -translate-y-1/2 rounded-full border border-white/[0.05]"></div>
                     <div class="absolute top-[44rem] left-1/2 h-[38rem] w-[38rem] -translate-x-1/2 -translate-y-1/2 rounded-full border border-brand/20"></div>
-                    <div class="absolute top-[44rem] left-1/2 h-[46rem] w-[60rem] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(closest-side,rgba(18,82,114,0.55),transparent)]"></div>
+                    <div class="absolute top-[44rem] left-1/2 h-[46rem] w-[60rem] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(closest-side,rgba(30,79,216,0.3),transparent)]"></div>
                 </div>
 
                 <div class="mx-auto max-w-3xl text-center" data-reveal>
@@ -407,7 +426,7 @@
                 </div>
 
                 <div class="group mx-auto mt-10 max-w-5xl [perspective:2200px]" data-reveal>
-                    <figure class="overflow-hidden rounded-2xl bg-[#0B2230] p-1.5 shadow-[0_60px_120px_-40px_rgba(0,0,0,0.85),0_0_0_1px_rgba(255,255,255,0.08)] transition duration-[1400ms] ease-out [transform:rotateX(14deg)_scale(0.94)] group-[.is-visible]:[transform:none] sm:rounded-3xl">
+                    <figure class="overflow-hidden rounded-2xl bg-[#0B2559] p-1.5 shadow-[0_60px_120px_-40px_rgba(0,0,0,0.85),0_0_0_1px_rgba(255,255,255,0.08)] transition duration-[1400ms] ease-out [transform:rotateX(14deg)_scale(0.94)] group-[.is-visible]:[transform:none] sm:rounded-3xl">
                         <div class="flex items-center gap-3 px-3 py-2.5">
                             <div class="flex gap-1.5"><span class="h-2.5 w-2.5 rounded-full bg-[#FF5F57]"></span><span class="h-2.5 w-2.5 rounded-full bg-[#FEBC2E]"></span><span class="h-2.5 w-2.5 rounded-full bg-[#28C840]"></span></div>
                             <div class="mx-auto flex min-w-0 items-center gap-1.5 rounded-lg bg-white/[0.06] px-3 py-1 text-xs text-slate-400 ring-1 ring-white/10 sm:w-80 sm:justify-center">
@@ -491,9 +510,9 @@
 
         {{-- Download --}}
         <section id="download" class="scroll-mt-24 px-5 pb-28">
-            <div class="relative isolate mx-auto max-w-6xl overflow-hidden rounded-[2.75rem] bg-[#03121B] px-8 py-16 text-white shadow-2xl sm:px-16" data-reveal>
+            <div class="relative isolate mx-auto max-w-6xl overflow-hidden rounded-[2.75rem] bg-[#05163A] px-8 py-16 text-white shadow-2xl sm:px-16" data-reveal>
                 <div class="pointer-events-none absolute inset-0 -z-10" aria-hidden="true">
-                    <div class="absolute inset-0 bg-[radial-gradient(ellipse_60%_80%_at_80%_50%,rgba(40,120,165,0.38),transparent_70%)]"></div>
+                    <div class="absolute inset-0 bg-[radial-gradient(ellipse_60%_80%_at_80%_50%,rgba(30,79,216,0.38),transparent_70%)]"></div>
                     <div class="absolute top-1/2 right-[6%] h-[30rem] w-[30rem] -translate-y-1/2 rounded-full border border-white/[0.07]"></div>
                     <div class="absolute top-1/2 right-[calc(6%+5rem)] h-[20rem] w-[20rem] -translate-y-1/2 rounded-full border border-brand/25"></div>
                     <div class="animate-orbit absolute top-1/2 right-[6%] -mt-[15rem] h-[30rem] w-[30rem] rounded-full bg-[conic-gradient(from_0deg,transparent_0deg,transparent_260deg,#FFB067_330deg,#F58216_360deg)] [mask-image:radial-gradient(farthest-side,transparent_calc(100%-2px),black_calc(100%-2px))]"></div>
@@ -546,6 +565,26 @@
             observer.unobserve(entry.target);
         }), { threshold: 0.12 });
         document.querySelectorAll('[data-reveal]').forEach((element) => observer.observe(element));
+
+        // Hero: a soft spotlight follows the pointer and the phone fan tilts toward it.
+        const hero = document.querySelector('[data-hero]');
+        if (hero && !reduce && window.matchMedia('(pointer: fine)').matches) {
+            const tilt = hero.querySelector('[data-tilt]');
+            const layers = [...hero.querySelectorAll('[data-depth]')];
+            hero.addEventListener('pointermove', (event) => {
+                const box = hero.getBoundingClientRect();
+                const x = (event.clientX - box.left) / box.width - 0.5;
+                const y = (event.clientY - box.top) / box.height - 0.5;
+                hero.style.setProperty('--mx', `${event.clientX - box.left}px`);
+                hero.style.setProperty('--my', `${event.clientY - box.top}px`);
+                tilt.style.transform = `rotateX(${(-y * 8).toFixed(2)}deg) rotateY(${(x * 14).toFixed(2)}deg)`;
+                layers.forEach((layer) => { layer.style.translate = `${(x * layer.dataset.depth).toFixed(1)}px ${(y * layer.dataset.depth).toFixed(1)}px`; });
+            });
+            hero.addEventListener('pointerleave', () => {
+                tilt.style.transform = '';
+                layers.forEach((layer) => { layer.style.translate = ''; });
+            });
+        }
 
         // Admin console tabs swap the screenshot and the address bar.
         const adminTabs = [...document.querySelectorAll('[data-admin-tab]')];

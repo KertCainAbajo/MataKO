@@ -69,7 +69,16 @@ nav[role='navigation'] svg { @apply h-5 w-5; }
 .js [data-reveal] { opacity: 0; transform: translateY(28px); transition: opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1), transform 0.8s cubic-bezier(0.22, 1, 0.36, 1); }
 .js [data-reveal].is-visible { opacity: 1; transform: none; }
 
+/* Hero entrance: the headline rises in word by word, then the rest follows. */
+@keyframes hero-rise {
+    from { opacity: 0; transform: translateY(0.45em); filter: blur(10px); }
+    to { opacity: 1; transform: none; filter: none; }
+}
+.hero-word { display: inline-block; }
+.js .hero-word, .js .hero-rise { animation: hero-rise 1s cubic-bezier(0.22, 1, 0.36, 1) both; }
+
 @media (prefers-reduced-motion: reduce) {
     .js [data-reveal] { opacity: 1; transform: none; transition: none; }
+    .js .hero-word, .js .hero-rise { animation: none; }
     .animate-float, .animate-float-slow, .animate-shimmer, .animate-marquee, .animate-orbit, .animate-orbit-reverse { animation: none !important; }
 }
