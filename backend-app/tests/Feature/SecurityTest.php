@@ -319,4 +319,39 @@ class SecurityTest extends TestCase
 
         $this->assertSame(['new@example.com'], SecurityEvent::pluck('email')->all());
     }
+
+    // Found by the black-box QA run
+
+    public function test_a_non_numeric_result_id_is_not_found_instead_of_a_server_error(): void
+    {
+        $user = User::factory()->create();
+
+        foreach (['abc', '1 OR 1=1', '1;DROP TABLE users'] as $id) {
+            $this->actingAs($user, 'sanctum')->getJson('/api/assessment/'.rawurlencode($id))->assertNotFound();
+        }
+    }
+
+    public function test_csv_exports_neutralise_spreadsheet_formulas(): void
+    {
+        $admin = User::factory()->admin()->create();
+        $user = User::factory()->create(['name' => '=HYPERLINK("http://evil.example","Click")']);
+        $user->assessments()->create(['total_score' => 0, 'max_score' => 32, 'risk_level' => 'LOW']);
+
+        $csv = $this->actingAs($admin)->get(route('admin.assessments.export'))->streamedContent();
+
+        $this->assertStringContainsString("\"'=HYPERLINK(", $csv);
+        $this->assertStringNotContainsString(',"=HYPERLINK(', $csv);
+    }
+
+    public function test_app_sign_ins_do_not_use_up_the_admin_sign_in_limit(): void
+    {
+        User::factory()->admin()->create(['email' => 'boss@example.com']);
+        foreach (range(1, 5) as $attempt) {
+            $this->postJson('/api/login', ['email' => "someone{$attempt}@example.com", 'password' => 'x']);
+        }
+        $this->postJson('/api/login', ['email' => 'someone6@example.com', 'password' => 'x'])->assertStatus(429);
+
+        $this->withoutVite()->post(route('admin.login.store'), ['email' => 'boss@example.com', 'password' => 'password'])
+            ->assertRedirect(route('admin.dashboard'));
+    }
 }

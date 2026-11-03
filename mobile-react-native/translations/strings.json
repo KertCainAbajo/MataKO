@@ -1706,5 +1706,17 @@
  "Use at least 8 characters with letters and numbers, and make sure the passwords match.": [
   "Gumamit ng hindi bababa sa 8 character na may mga letra at numero, at tiyaking magkapareho ang mga password.",
   "Gamit og labing menos 8 ka karakter nga adunay mga letra ug numero, ug siguroha nga parehas ang mga password."
+ ],
+ "Studying, classes and schoolwork": [
+  "Pag-aaral, klase at gawain sa paaralan",
+  "Pagtuon, klase ug buluhaton sa eskwelahan"
+ ],
+ "Office, remote and screen-based work": [
+  "Opisina, remote at trabahong nasa screen",
+  "Opisina, remote ug trabaho atubangan sa screen"
+ ],
+ "You can change this later in your profile.": [
+  "Maaari mo itong baguhin mamaya sa iyong profile.",
+  "Mahimo nimo kining usbon unya sa imong profile."
  ]
 }

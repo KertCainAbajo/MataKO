@@ -40,6 +40,12 @@ class AppServiceProvider extends ServiceProvider
         // App users: at least 8 characters with letters and numbers.
         Password::defaults(fn () => Password::min(8)->letters()->numbers());
 
+        // Sign-in limits per address. Each sign-in page counts separately, so using the app does not use up
+        // the admin's attempts on the same network. (The per-account lockout in LoginGuard works on top.)
+        foreach (['app-login' => 5, 'admin-login' => 5, 'two-factor' => 5, 'google-login' => 10] as $name => $perMinute) {
+            RateLimiter::for($name, fn (Request $request): Limit => Limit::perMinute($perMinute)->by($name.'|'.$request->ip()));
+        }
+
         // Sign-up: a few accounts per minute and per hour from one address, to stop mass account creation.
         RateLimiter::for('register', fn (Request $request): array => [
             Limit::perMinute(3)->by($request->ip()),

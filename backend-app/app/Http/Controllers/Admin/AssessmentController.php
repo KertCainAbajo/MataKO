@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\AdminActivity;
 use App\Models\Assessment;
 use App\Models\User;
+use App\Support\Csv;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -58,7 +59,7 @@ class AssessmentController extends Controller
             fputcsv($output, ['ID', 'Date', 'User', 'Email', 'User type', 'Score', 'Max score', 'Result', 'Answers']);
             $query->chunkById(200, function ($assessments) use ($output): void {
                 foreach ($assessments as $assessment) {
-                    fputcsv($output, [
+                    fputcsv($output, Csv::row([
                         $assessment->id,
                         $assessment->created_at?->toDateTimeString(),
                         $assessment->user?->name,
@@ -68,7 +69,7 @@ class AssessmentController extends Controller
                         $assessment->max_score,
                         $assessment->risk_level,
                         $assessment->symptoms->map(fn ($symptom): string => "{$symptom->symptom_name}: {$symptom->value}")->implode('; '),
-                    ]);
+                    ]));
                 }
             });
             fclose($output);

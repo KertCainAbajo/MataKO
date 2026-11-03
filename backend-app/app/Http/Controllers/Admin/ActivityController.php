@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\AdminActivity;
 use App\Models\User;
+use App\Support\Csv;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -85,7 +86,7 @@ class ActivityController extends Controller
             $query->chunk(200, function ($activities) use ($output, $tz): void {
                 foreach ($activities as $activity) {
                     $when = $activity->created_at->copy()->timezone($tz);
-                    fputcsv($output, [$when->toDateString(), $when->format('H:i:s'), $activity->admin?->name ?? 'Removed admin', self::typeOf($activity->action), $activity->description]);
+                    fputcsv($output, Csv::row([$when->toDateString(), $when->format('H:i:s'), $activity->admin?->name ?? 'Removed admin', self::typeOf($activity->action), $activity->description]));
                 }
             });
             fclose($output);

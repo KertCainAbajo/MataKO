@@ -11,7 +11,7 @@ import {
   KeyboardAvoidingView,
   Modal,
   Platform,
-  Pressable,
+  Pressable as NativePressable,
   RefreshControl,
   ScrollView,
   StatusBar,
@@ -539,6 +539,37 @@ function Icon({ color, ...props }) {
   return <Ionicons color={paint(color)} {...props} />;
 }
 
+// Every tappable element dips slightly when pressed, so taps feel acknowledged.
+const PRESSED = { opacity: 0.86, transform: [{ scale: 0.985 }] };
+function Pressable({ style, ...props }) {
+  const interactive = Boolean(props.onPress || props.onLongPress) && !props.disabled;
+  return <NativePressable
+    {...props}
+    style={(state) => {
+      const base = typeof style === 'function' ? style(state) : style;
+      return interactive && state.pressed ? [base, PRESSED] : base;
+    }}
+  />;
+}
+
+// A profile-type character standing on its card's floor strip.
+function RoleMascot({ source, selected }) {
+  return <View style={styles.mascotStage}>
+    <View style={[styles.mascotTrack, selected && styles.mascotTrackSelected]} />
+    <View style={[styles.mascotShadow, { transform: [{ scaleY: 0.13 }] }]} />
+    <Image source={source} resizeMode="contain" style={styles.mascotImage} />
+  </View>;
+}
+
+// Each new screen fades and rises in gently instead of appearing abruptly.
+function ScreenFade({ children }) {
+  const progress = useRef(new Animated.Value(0)).current;
+  useEffect(() => {
+    Animated.timing(progress, { toValue: 1, duration: 240, easing: Easing.out(Easing.cubic), useNativeDriver: true }).start();
+  }, [progress]);
+  return <Animated.View style={{ flex: 1, opacity: progress, transform: [{ translateY: progress.interpolate({ inputRange: [0, 1], outputRange: [10, 0] }) }] }}>{children}</Animated.View>;
+}
+
 function Text({ children, style, ...props }) {
   const language = useContext(LanguageContext);
   const translateChild = (child) => {
@@ -986,11 +1017,16 @@ export default function App() {
 
   const renderWelcome = () => (
     <View style={styles.welcomePage}>
+      <View pointerEvents="none" style={styles.welcomeGlowTop} />
+      <View pointerEvents="none" style={styles.welcomeGlowBottom} />
       <View style={styles.welcomeBrand}>
+        <View pointerEvents="none" style={styles.welcomeHalo} />
         <Image source={require('./assets/images/mata.png')} style={styles.welcomeImage} resizeMode="contain" />
         <Text style={styles.tagline}>{t('YOUR VISION, YOUR POWER.')}</Text>
       </View>
-      {button(t('Get Started'), () => setScreen('profile'))}
+      <View style={styles.welcomeActions}>
+        {button(t('Get Started'), () => setScreen('profile'))}
+      </View>
     </View>
   );
 
@@ -1000,12 +1036,19 @@ export default function App() {
       <ScrollView contentContainerStyle={styles.page}>
         <Text style={styles.title}>{t('Select Your Profile Type')}</Text>
         <Text style={styles.muted}>{t('This will help us tailor your experience.')}</Text>
-        {['student', 'professional'].map((item) => (
-          <Pressable key={item} onPress={() => setRole(item)} style={[styles.roleCard, role === item && styles.roleSelected]}>
-            <Image source={item === 'student' ? require('./assets/images/student.png') : require('./assets/images/employee.png')} style={styles.roleImage} resizeMode="contain" />
-            <Text style={styles.roleText}>{t(item === 'student' ? 'Select Student' : 'Select Professional')}</Text>
-          </Pressable>
-        ))}
+        {[
+          ['student', require('./assets/images/student.png')],
+          ['professional', require('./assets/images/employee.png')],
+        ].map(([item, image]) => {
+          const selected = role === item;
+          return <Pressable key={item} accessibilityRole="radio" accessibilityState={{ checked: selected }} onPress={() => setRole(item)} style={[styles.roleCard, selected && styles.roleSelected]}>
+            {selected ? <View style={styles.roleCheck}><Icon name="checkmark" size={14} color={WHITE} /></View> : null}
+            <RoleMascot source={image} selected={selected} />
+            <View style={[styles.roleButton, selected && styles.roleButtonSelected]}>
+              <Text style={styles.roleButtonText}>{t(item === 'student' ? 'Select Student' : 'Select Professional')}</Text>
+            </View>
+          </Pressable>;
+        })}
         {button(t('Proceed'), () => setScreen('language'))}
         <Pressable onPress={() => setScreen('login')}><Text style={styles.linkCenter}>{t('Skip for now')}</Text></Pressable>
       </ScrollView>
@@ -1021,7 +1064,7 @@ export default function App() {
         <Text style={[styles.muted, { marginTop: 18 }]}>{t('Choose your language:')}</Text>
         {LANGUAGES.map((item) => (
           <Pressable key={item} onPress={() => saveLanguage(item)} style={[styles.languageChoice, item === language && styles.languageSelected]}>
-            <Text style={styles.bodyText}>{item === 'English' ? '🇺🇸' : '🇵🇭'}  {item}</Text><Text style={styles.bodyText}>{item === language ? '●' : '○'}</Text>
+            <Text style={styles.bodyText}>{item === 'English' ? '🇺🇸' : '🇵🇭'}  {item}</Text><View style={[styles.radioOuter, item === language && styles.radioOuterOn]}>{item === language ? <View style={styles.radioInner} /> : null}</View>
           </Pressable>
         ))}
         {button(t('Proceed'), () => setScreen('login'))}
@@ -1227,7 +1270,7 @@ export default function App() {
   else if (screen.startsWith('home:')) content = renderHome();
   else content = renderHome();
 
-  return <SafeAreaProvider><SafeAreaView style={[styles.safe, monochrome && styles.grayscale]}><LanguageContext.Provider value={language}><StatusBar barStyle={display.dark ? 'light-content' : 'dark-content'} backgroundColor={paint(WARM, 'background')} /><KeyboardAvoidingView style={styles.fill} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>{content}</KeyboardAvoidingView></LanguageContext.Provider></SafeAreaView></SafeAreaProvider>;
+  return <SafeAreaProvider><SafeAreaView style={[styles.safe, monochrome && styles.grayscale]}><LanguageContext.Provider value={language}><StatusBar barStyle={display.dark ? 'light-content' : 'dark-content'} backgroundColor={paint(WARM, 'background')} /><KeyboardAvoidingView style={styles.fill} behavior={Platform.OS === 'ios' ? 'padding' : undefined}><ScreenFade key={screen}>{content}</ScreenFade></KeyboardAvoidingView></LanguageContext.Provider></SafeAreaView></SafeAreaProvider>;
 }
 
 function AuthForm({ mode, language, onGoogle, role, onRoleChange, values: savedValues, onValuesChange, agreed = false, onAgreementChange, onSubmit, loading, onSignUp, onSignIn, onBack, onLegal }) {
@@ -1590,7 +1633,7 @@ function Home({ user, assessments, remindersOn, remindersToday, appMinutes, mono
       <Image accessibilityLabel="MataKo" source={logoSource()} style={styles.homeLogo} resizeMode="contain" />
       <View style={styles.inlineRow}>
         <Pressable accessibilityRole="button" accessibilityLabel="Notifications" hitSlop={8} onPress={onNotification} style={styles.headerAction}>
-          <Text style={styles.headerIcon}>🔔</Text>
+          <View style={styles.bellCircle}><Icon name="notifications-outline" size={21} color={NAVY} /></View>
         </Pressable>
         <Pressable accessibilityRole="button" accessibilityLabel="Profile" hitSlop={8} onPress={() => chooseTab('profile')} style={styles.avatarButton}>
           <Text style={styles.avatar}>{user?.name?.[0]?.toUpperCase() || 'U'}</Text>
@@ -1598,7 +1641,7 @@ function Home({ user, assessments, remindersOn, remindersToday, appMinutes, mono
       </View>
     </View>}
     {content}
-    {progressDetail ? null : <View style={styles.bottomNav}>{[['home', 'home', 'Home'], ['progress', 'trending-up', 'Progress'], ['eyeCare', 'eye', 'Eye Care'], ['tips', 'heart', 'Tips'], ['settings', 'settings-sharp', 'Settings']].map(([key, icon, label]) => <Pressable key={key} accessibilityRole="tab" accessibilityState={{ selected: selectedTab === key }} style={styles.navItem} onPress={() => chooseTab(key)}><Icon name={icon} size={22} color={selectedTab === key ? ORANGE : '#9A9A9A'} /><Text numberOfLines={1} adjustsFontSizeToFit style={[styles.navLabel, selectedTab === key && styles.navSelected]}>{t(`${label} (tab)`) === `${label} (tab)` ? t(label) : t(`${label} (tab)`)}</Text></Pressable>)}</View>}
+    {progressDetail ? null : <View style={styles.bottomNav}>{[['home', 'home', 'Home'], ['progress', 'trending-up', 'Progress'], ['eyeCare', 'eye', 'Eye Care'], ['tips', 'heart', 'Tips'], ['settings', 'settings-sharp', 'Settings']].map(([key, icon, label]) => <Pressable key={key} accessibilityRole="tab" accessibilityState={{ selected: selectedTab === key }} style={styles.navItem} onPress={() => chooseTab(key)}><View style={[styles.navIconWrap, selectedTab === key && styles.navIconActive]}><Icon name={selectedTab === key ? icon : `${icon.replace('-sharp', '')}-outline`} size={21} color={selectedTab === key ? ORANGE : '#8A94A3'} /></View><Text numberOfLines={1} adjustsFontSizeToFit style={[styles.navLabel, selectedTab === key && styles.navSelected]}>{t(`${label} (tab)`) === `${label} (tab)` ? t(label) : t(`${label} (tab)`)}</Text></Pressable>)}</View>}
     <Modal visible={featurePrompt !== null} transparent animationType="fade" statusBarTranslucent onRequestClose={() => setFeaturePrompt(null)}>
       <View style={styles.assessmentPromptBackdrop}>
         <View style={styles.assessmentPrompt}>
@@ -2416,13 +2459,66 @@ const styleDefs = {
   legalPage: { flex: 1, backgroundColor: WARM }, legalHeader: { height: 52, flexDirection: 'row', alignItems: 'center', backgroundColor: WHITE, paddingHorizontal: 12 }, legalBack: { width: 40, height: 48, justifyContent: 'center' }, legalBackIcon: { color: '#475467', fontSize: 34, lineHeight: 40 }, legalBackLabel: { color: '#1D2939', fontSize: 14, fontWeight: '500' }, legalTabs: { height: 48, flexDirection: 'row', backgroundColor: '#F1EEEE', borderBottomWidth: 1, borderBottomColor: '#D8D4D2' }, legalTab: { flex: 1, alignItems: 'center', justifyContent: 'center', borderBottomWidth: 2, borderBottomColor: 'transparent' }, legalTabSelected: { borderBottomColor: ORANGE }, legalTabText: { color: '#777777', fontSize: 13 }, legalTabTextSelected: { color: NAVY }, legalScroll: { flex: 1 }, legalDocument: { paddingHorizontal: 16, paddingTop: 20, paddingBottom: 24 }, legalTitle: { color: NAVY, fontSize: 16, fontWeight: '700', marginBottom: 12 }, legalSectionTitle: { color: NAVY, fontSize: 14, fontWeight: '500', marginTop: 18, marginBottom: 8 }, legalParagraph: { color: '#666666', fontSize: 11, lineHeight: 18 }, legalFooter: { backgroundColor: WHITE, paddingHorizontal: 28, paddingTop: 12, paddingBottom: 14 },
   notificationHeader: { height: 52, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', backgroundColor: WHITE, paddingHorizontal: 12 }, notificationBack: { width: 42, height: 48, justifyContent: 'center' }, notificationBackIcon: { color: '#475467', fontSize: 34, lineHeight: 40 }, notificationHeaderTitle: { color: NAVY, fontSize: 15, fontWeight: '700' }, notificationFilter: { width: 42, height: 48, alignItems: 'center', justifyContent: 'center' }, notificationFilterIcon: { color: '#777777', fontSize: 23 }, notificationList: { paddingHorizontal: 16, paddingTop: 8, paddingBottom: 24 }, notificationDate: { color: '#777777', fontSize: 11, textAlign: 'center', paddingVertical: 10 }, notificationCard: { flexDirection: 'row', alignItems: 'flex-start', backgroundColor: WHITE, borderRadius: 14, borderWidth: 1, borderColor: '#E5E7EA', padding: 12, marginVertical: 5, elevation: 1 }, notificationIconCircle: { width: 30, height: 30, borderRadius: 15, backgroundColor: ORANGE, alignItems: 'center', justifyContent: 'center', marginRight: 9 }, notificationIcon: { color: WHITE, fontSize: 17, fontWeight: '700' }, notificationContent: { flex: 1 }, notificationTitle: { color: NAVY, fontSize: 12, fontWeight: '700', marginTop: 2 }, notificationMessage: { color: '#555555', fontSize: 11, lineHeight: 17, marginTop: 9 }, notificationAction: { alignSelf: 'flex-end', paddingTop: 8, paddingHorizontal: 4 }, notificationActionText: { color: ORANGE, fontSize: 10, fontWeight: '500' }, notificationEmpty: { color: '#777777', fontSize: 11, textAlign: 'center', paddingVertical: 10 },
   welcomePage: { flex: 1, padding: 24, alignItems: 'center', justifyContent: 'space-between' }, welcomeBrand: { flex: 1, alignItems: 'center', justifyContent: 'center' }, welcomeImage: { width: 240, height: 170 },
+  roleCheck: { position: 'absolute', top: 10, right: 10, zIndex: 2, width: 24, height: 24, borderRadius: 12, backgroundColor: ORANGE, alignItems: 'center', justifyContent: 'center' },
+  mascotStage: { alignSelf: 'stretch', height: 162, alignItems: 'center', justifyContent: 'flex-end', overflow: 'hidden', borderRadius: 16, marginBottom: 12 },
+  mascotTrack: { position: 'absolute', left: 0, right: 0, bottom: 0, height: 34, backgroundColor: '#F4ECE5' },
+  mascotTrackSelected: { backgroundColor: '#FFE6D2' },
+  mascotShadow: { position: 'absolute', bottom: -26, alignSelf: 'center', width: 76, height: 76, borderRadius: 38, backgroundColor: NAVY, opacity: 0.12 },
+  mascotImage: { width: 128, height: 146, marginBottom: 12 },
+  roleButton: { alignSelf: 'stretch', minHeight: 48, borderRadius: 14, backgroundColor: NAVY, alignItems: 'center', justifyContent: 'center' },
+  roleButtonSelected: { backgroundColor: '#0B3A52' },
+  roleButtonText: { color: WHITE, fontSize: 16, fontWeight: '600' },
+  welcomeGlowTop: { position: 'absolute', top: -120, right: -110, width: 300, height: 300, borderRadius: 150, backgroundColor: '#FBE3CE' },
+  welcomeGlowBottom: { position: 'absolute', bottom: -150, left: -120, width: 320, height: 320, borderRadius: 160, borderWidth: 36, borderColor: '#F8E9DC' },
+  welcomeHalo: { position: 'absolute', width: 280, height: 280, borderRadius: 140, backgroundColor: '#FFFDFB' },
+  welcomeActions: { alignSelf: 'stretch', paddingHorizontal: 8, marginBottom: 8 },
+  bellCircle: { width: 38, height: 38, borderRadius: 19, backgroundColor: '#FFEEDF', alignItems: 'center', justifyContent: 'center' },
+  radioOuter: { width: 22, height: 22, borderRadius: 11, borderWidth: 2, borderColor: '#C9C0B7', alignItems: 'center', justifyContent: 'center' },
+  radioOuterOn: { borderColor: ORANGE },
+  radioInner: { width: 10, height: 10, borderRadius: 5, backgroundColor: ORANGE },
   tagline: { color: '#777777', fontSize: 12, letterSpacing: 0.4, textAlign: 'center', marginTop: 8 }, authPage: { padding: 20, paddingBottom: 32, alignItems: 'stretch' }, authLogo: { alignSelf: 'center', width: 170, height: 58, marginTop: 6 }, authSubtitle: { color: '#526174', fontSize: 14, textAlign: 'center', marginVertical: 22 }, authCard: { backgroundColor: WHITE, borderRadius: 20, padding: 20, elevation: 3 }, field: { marginBottom: 14, position: 'relative' }, fieldLabel: { color: NAVY, fontWeight: '600', fontSize: 12, marginBottom: 7 }, input: { backgroundColor: WHITE, minHeight: 46, borderWidth: 1, borderColor: '#D6DDE4', borderRadius: 10, paddingHorizontal: 13, paddingVertical: 10, color: NAVY }, showPassword: { position: 'absolute', right: 12, bottom: 13, color: ORANGE, fontSize: 12 },
   header: { minHeight: 54, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 14, backgroundColor: WHITE }, headerTitle: { color: NAVY, fontSize: 17, fontWeight: '600' }, back: { width: 42, alignItems: 'center' }, backText: { fontSize: 36, lineHeight: 40, color: NAVY }, homeHeader: { height: 54, backgroundColor: WHITE, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 16 }, brandText: { color: NAVY, fontSize: 21, fontWeight: '700' }, homeLogo: { width: 116, height: 42 }, headerAction: { width: 48, height: 48, alignItems: 'center', justifyContent: 'center' }, headerIcon: { color: ORANGE, fontSize: 24 }, avatarButton: { width: 44, height: 44, alignItems: 'center', justifyContent: 'center' }, avatar: { overflow: 'hidden', backgroundColor: NAVY, color: WHITE, fontSize: 14, fontWeight: '700', textAlign: 'center', textAlignVertical: 'center', width: 30, height: 30, borderRadius: 15 },
   page: { padding: 20, paddingBottom: 28 }, title: { color: NAVY, fontSize: 22, fontWeight: '700', textAlign: 'center', marginBottom: 8 }, muted: { color: '#666666', fontSize: 12, lineHeight: 18, marginBottom: 12 }, bodyText: { color: NAVY, fontSize: 14, lineHeight: 21 }, card: { backgroundColor: WHITE, borderRadius: 15, padding: 16, marginVertical: 7, elevation: 1 }, cardTitle: { color: NAVY, fontSize: 15, fontWeight: '700', marginBottom: 6 }, button: { minHeight: 48, backgroundColor: ORANGE, borderRadius: 12, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 16, marginVertical: 7, elevation: 2 }, buttonText: { color: WHITE, fontWeight: '700', fontSize: 15, textAlign: 'center' }, buttonSecondary: { backgroundColor: NAVY }, buttonSecondaryText: { color: WHITE }, disabled: { opacity: 0.55 }, link: { color: ORANGE, fontWeight: '600', fontSize: 12 }, linkCenter: { color: '#777777', fontSize: 13, textAlign: 'center', padding: 12, textDecorationLine: 'underline' },
-  roleCard: { backgroundColor: WHITE, borderRadius: 12, borderWidth: 1, borderColor: '#E2E2E2', marginVertical: 9, padding: 12, alignItems: 'center' }, roleSelected: { borderColor: ORANGE, backgroundColor: '#FFF8F1' }, roleImage: { width: 142, height: 144 }, roleText: { color: WHITE, backgroundColor: NAVY, overflow: 'hidden', borderRadius: 7, textAlign: 'center', width: '100%', padding: 12, fontSize: 16 }, languageImage: { width: 200, height: 170, alignSelf: 'center', marginVertical: 6 }, languageChoice: { backgroundColor: WHITE, borderRadius: 9, padding: 14, marginVertical: 5, flexDirection: 'row', justifyContent: 'space-between', borderWidth: 1, borderColor: '#DDDDDD' }, languageSelected: { borderColor: ORANGE, backgroundColor: '#FFF8F1' }, languagePill: { borderWidth: 1, borderColor: '#D9DEE4', borderRadius: 18, paddingHorizontal: 12, paddingVertical: 8, margin: 4 },
+  roleCard: { backgroundColor: WHITE, borderRadius: 22, borderWidth: 1.5, borderColor: '#EDE6DF', marginVertical: 9, padding: 12, alignItems: 'center', elevation: 2 }, roleSelected: { borderColor: ORANGE, backgroundColor: '#FFF8F1', elevation: 5 }, roleImage: { width: 142, height: 144 }, roleText: { color: WHITE, backgroundColor: NAVY, overflow: 'hidden', borderRadius: 7, textAlign: 'center', width: '100%', padding: 12, fontSize: 16 }, languageImage: { width: 200, height: 170, alignSelf: 'center', marginVertical: 6 }, languageChoice: { backgroundColor: WHITE, borderRadius: 9, padding: 14, marginVertical: 5, flexDirection: 'row', justifyContent: 'space-between', borderWidth: 1, borderColor: '#DDDDDD' }, languageSelected: { borderColor: ORANGE, backgroundColor: '#FFF8F1' }, languagePill: { borderWidth: 1, borderColor: '#D9DEE4', borderRadius: 18, paddingHorizontal: 12, paddingVertical: 8, margin: 4 },
   homePage: { paddingHorizontal: 18, paddingTop: 14, paddingBottom: 24 }, greeting: { flexDirection: 'row', alignItems: 'center', minHeight: 96 }, greetingCard: { padding: 16, minHeight: 108, marginBottom: 10 }, greetingTitle: { color: NAVY, fontSize: 18, fontWeight: '700', marginBottom: 8 }, flex: { flex: 1 }, greetingImage: { width: 112, height: 104 }, featureCard: { minHeight: 110, flexDirection: 'row', alignItems: 'center', backgroundColor: NAVY, borderRadius: 13, paddingHorizontal: 18, paddingVertical: 16, marginVertical: 6, elevation: 3 }, featureIconCircle: { width: 38, height: 38, borderRadius: 19, backgroundColor: WHITE, alignItems: 'center', justifyContent: 'center', marginRight: 12 }, featureCopy: { flex: 1 }, featureTitle: { color: WHITE, fontSize: 15, lineHeight: 19, fontWeight: '700', marginBottom: 5 }, featureSubtitle: { color: '#D7E0E6', fontSize: 11, lineHeight: 16 }, featureArrow: { color: WHITE, fontSize: 30, paddingLeft: 8 }, clipboardIcon: { width: 15, height: 18, backgroundColor: ORANGE, borderRadius: 2, alignItems: 'center', paddingTop: 3 }, clipboardClip: { position: 'absolute', top: -2, width: 8, height: 4, borderRadius: 2, borderWidth: 1, borderColor: ORANGE, backgroundColor: WHITE }, clipboardCheck: { color: WHITE, fontSize: 8, lineHeight: 8, fontWeight: '700' }, clipboardLine: { width: 8, height: 1, backgroundColor: WHITE, marginTop: 2 }, heartIcon: { color: ORANGE, fontSize: 23, lineHeight: 27 }, clockIcon: { width: 19, height: 19, borderRadius: 10, backgroundColor: ORANGE, position: 'relative' }, clockHandLong: { position: 'absolute', width: 2, height: 6, top: 4, left: 8, backgroundColor: WHITE, borderRadius: 1 }, clockHandShort: { position: 'absolute', width: 5, height: 2, top: 9, left: 9, backgroundColor: WHITE, borderRadius: 1 }, settingsIcon: { color: ORANGE, fontSize: 22, lineHeight: 26 }, statRow: { flexDirection: 'row', justifyContent: 'space-around', paddingTop: 10 }, stat: { color: NAVY, fontSize: 22, textAlign: 'center', lineHeight: 27 }, smallText: { color: '#666666', fontSize: 11 }, tipRow: { flexDirection: 'row', alignItems: 'flex-start' }, tipIconCircle: { width: 32, height: 32, borderRadius: 16, backgroundColor: ORANGE, alignItems: 'center', justifyContent: 'center', marginRight: 10 }, eyeTipGlyph: { width: 16, height: 20, alignItems: 'center', justifyContent: 'center' }, eyeTipBulb: { width: 13, height: 13, borderRadius: 7, backgroundColor: WHITE, alignItems: 'center', justifyContent: 'center' }, eyeTipHighlight: { width: 3, height: 3, borderRadius: 2, backgroundColor: ORANGE, position: 'absolute', top: 2, left: 3 }, eyeTipBulbNeck: { width: 7, height: 2, backgroundColor: WHITE, marginTop: -1 }, eyeTipBulbBase: { width: 6, height: 2, borderRadius: 1, backgroundColor: WHITE, marginTop: 1 }, activityRow: { flexDirection: 'row', alignItems: 'center', paddingTop: 10 }, activityIconCircle: { width: 26, height: 26, borderRadius: 13, backgroundColor: ORANGE, alignItems: 'center', justifyContent: 'center', marginRight: 8 }, activityIcon: { color: WHITE, fontSize: 15, fontWeight: '700' }, activityCopy: { flex: 1 }, activityTitle: { color: NAVY, fontSize: 12, marginBottom: 2 }, retakeButton: { backgroundColor: NAVY, borderRadius: 6, paddingVertical: 5, paddingHorizontal: 10 }, retakeText: { color: WHITE, fontSize: 10, fontWeight: '600' }, recommendation: { color: NAVY, paddingVertical: 6, fontSize: 14 }, resultEye: { color: ORANGE, fontSize: 56, textAlign: 'center' }, resultRisk: { fontSize: 35, fontWeight: '800', textAlign: 'center' },
-  bottomNav: { height: 62, backgroundColor: WHITE, flexDirection: 'row', borderTopWidth: 1, borderTopColor: '#E8E6E4', justifyContent: 'space-around', alignItems: 'center' }, navItem: { flex: 1, alignItems: 'center' }, navIcon: { fontSize: 18, color: '#9A9A9A' }, navLabel: { fontSize: 10, color: '#9A9A9A', marginTop: 3 }, navSelected: { color: ORANGE, fontWeight: '700' }, switchRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginTop: 10 }, inlineRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }, checkbox: { color: NAVY, fontSize: 18, marginRight: 7 }, separator: { color: '#7A8492', fontSize: 11, textAlign: 'center', marginVertical: 16 }, socialButton: { minHeight: 42, borderRadius: 10, borderWidth: 1, borderColor: '#E0E3E8', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', marginTop: 9 }, bottomLink: { alignItems: 'center', marginTop: 18 }, tourImage: { width: '100%', height: 260, marginVertical: 10 }, wrapRow: { flexDirection: 'row', flexWrap: 'wrap', marginTop: 10 },
+  bottomNav: { height: 70, backgroundColor: WHITE, flexDirection: 'row', borderTopLeftRadius: 22, borderTopRightRadius: 22, justifyContent: 'space-around', alignItems: 'center', paddingTop: 4, elevation: 14 }, navItem: { flex: 1, alignItems: 'center' }, navIconWrap: { width: 46, height: 30, borderRadius: 15, alignItems: 'center', justifyContent: 'center' }, navIconActive: { backgroundColor: '#FFEEDF' }, navIcon: { fontSize: 18, color: '#8A94A3' }, navLabel: { fontSize: 10, color: '#8A94A3', marginTop: 3 }, navSelected: { color: ORANGE, fontWeight: '700' }, switchRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginTop: 10 }, inlineRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }, checkbox: { color: NAVY, fontSize: 18, marginRight: 7 }, separator: { color: '#7A8492', fontSize: 11, textAlign: 'center', marginVertical: 16 }, socialButton: { minHeight: 42, borderRadius: 10, borderWidth: 1, borderColor: '#E0E3E8', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', marginTop: 9 }, bottomLink: { alignItems: 'center', marginTop: 18 }, tourImage: { width: '100%', height: 260, marginVertical: 10 }, wrapRow: { flexDirection: 'row', flexWrap: 'wrap', marginTop: 10 },
 };
+
+// Design refinement applied to every style above, so all screens share one calm, eye-friendly finish:
+// rounder corners, warm low-glare surfaces instead of stark white, soft navy-tinted shadows, warmer
+// hairlines, and small text nudged up with comfortable line spacing.
+const PAPER = '#FFFDFB';
+const SOFT_BORDERS = new Set(['#ECECEC', '#E4E7EC', '#E0E3E8', '#E8E6E4', '#E9E9E9', '#EAECF0', '#E5E7EB', '#EEEEEE']);
+const FIELD_BORDERS = new Set(['#D6DDE4', '#D9DEE4', '#D0D5DD']);
+const RADIUS_KEYS = ['borderRadius', 'borderTopLeftRadius', 'borderTopRightRadius', 'borderBottomLeftRadius', 'borderBottomRightRadius'];
+const roundUp = (radius) => (radius <= 0 ? radius : radius <= 4 ? 10 : radius <= 6 ? 12 : radius <= 8 ? 14 : radius <= 12 ? 16 : radius);
+function refineStyle(style) {
+  const out = { ...style };
+  // Circles and pills (radius at least half their size) keep their shape.
+  const size = Math.min(...[out.width, out.height].filter((value) => typeof value === 'number'));
+  RADIUS_KEYS.forEach((key) => {
+    if (typeof out[key] === 'number' && !(Number.isFinite(size) && out[key] * 2 >= size - 1)) out[key] = roundUp(out[key]);
+  });
+  if (out.backgroundColor === WHITE) out.backgroundColor = PAPER;
+  ['borderColor', 'borderTopColor', 'borderBottomColor'].forEach((key) => {
+    if (SOFT_BORDERS.has(out[key])) out[key] = '#EDE6DF';
+    else if (FIELD_BORDERS.has(out[key])) out[key] = '#DCD3CA';
+  });
+  if (out.color === '#666666') out.color = '#5B6573';
+  if (out.color === '#9A9A9A') out.color = '#8A94A3';
+  if (typeof out.elevation === 'number' && out.elevation > 0) {
+    Object.assign(out, { shadowColor: NAVY, shadowOffset: { width: 0, height: 6 }, shadowOpacity: 0.08, shadowRadius: 16, elevation: Math.min(out.elevation + 1, 4) });
+  }
+  if (typeof out.fontSize === 'number' && out.fontSize <= 11) {
+    out.fontSize += 1;
+    if (typeof out.lineHeight === 'number') out.lineHeight += 2;
+  }
+  if (typeof out.fontSize === 'number' && typeof out.lineHeight === 'number' && out.lineHeight < out.fontSize * 1.45 && out.fontSize <= 16) {
+    out.lineHeight = Math.round(out.fontSize * 1.5);
+  }
+  return out;
+}
+const refinedDefs = Object.fromEntries(Object.entries(styleDefs).map(([name, style]) => [name, name === 'bottomNav' ? { ...refineStyle(style), elevation: 14 } : refineStyle(style)]));
 
 // Display theme. The style definitions above are the light design; Dark Mode, High Contrast and the
 // Text Contrast slider are derived from them by remapping colours, so every screen follows automatically.
@@ -2491,7 +2587,7 @@ function applyTheme(theme) {
   const key = `${theme.dark}-${theme.highContrast}-${theme.textContrast}-${theme.monochrome}`;
   currentTheme = theme;
   if (!styleCache[key]) {
-    styleCache[key] = StyleSheet.create(themedDefs(styleDefs, theme));
+    styleCache[key] = StyleSheet.create(themedDefs(refinedDefs, theme));
     Object.values(styleCache[key]).forEach((style) => themedStyles.add(style));
   }
   styles = styleCache[key];

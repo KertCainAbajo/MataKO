@@ -21,9 +21,9 @@ Route::get('/', function () {
 Route::prefix('admin')->name('admin.')->group(function () {
     Route::middleware('guest')->group(function () {
         Route::get('/login', [AuthController::class, 'create'])->name('login');
-        Route::post('/login', [AuthController::class, 'store'])->middleware('throttle:5,1')->name('login.store');
+        Route::post('/login', [AuthController::class, 'store'])->middleware('throttle:admin-login')->name('login.store');
         Route::get('/two-factor', [AuthController::class, 'twoFactor'])->name('two-factor');
-        Route::post('/two-factor', [AuthController::class, 'verifyTwoFactor'])->middleware('throttle:5,1')->name('two-factor.verify');
+        Route::post('/two-factor', [AuthController::class, 'verifyTwoFactor'])->middleware('throttle:two-factor')->name('two-factor.verify');
     });
 
     Route::middleware(['auth', 'auth.session', 'admin', 'admin.idle'])->group(function () {
