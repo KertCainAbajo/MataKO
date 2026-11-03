@@ -300,7 +300,7 @@
                         ['question', 'Answer the check-up', 'Rate how often you feel each symptom: Never, Occasionally or Often.', 'list-outline', $stats['questions'].' questions'],
                         ['result', 'Get your result', 'See your level, the score breakdown and a care plan to follow.', 'sparkles-outline', 'Instant'],
                     ] as $index => [$image, $title, $text, $icon, $chip])
-                        @php($dark = $index === 1)
+                        @php $dark = $index === 1; @endphp
                         <li @class(['group relative isolate flex h-[34rem] flex-col overflow-hidden rounded-[2rem] p-8 transition duration-500 hover:-translate-y-1.5', 'bg-[#03121B] text-white shadow-[0_34px_70px_-30px_rgba(3,18,27,0.75)]' => $dark, 'bg-white ring-1 ring-navy/[0.06] shadow-[0_14px_34px_-18px_rgba(6,42,60,0.16)] hover:shadow-[0_34px_64px_-28px_rgba(6,42,60,0.28)]' => ! $dark]) data-reveal @style(['transition-delay: '.($index * 120).'ms'])>
                             @if ($dark)
                                 <div class="pointer-events-none absolute inset-0 -z-10" aria-hidden="true">
@@ -371,40 +371,73 @@
             </div>
         </section>
 
-        {{-- Admin console --}}
-        <section id="admin" class="relative isolate scroll-mt-24 overflow-hidden bg-[#03121B] text-white">
-            <div class="pointer-events-none absolute inset-0 -z-10" aria-hidden="true">
-                <div class="absolute inset-0 bg-[radial-gradient(ellipse_55%_65%_at_72%_45%,rgba(40,120,165,0.35),transparent_70%)]"></div>
-                <div class="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.04)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.04)_1px,transparent_1px)] [background-size:56px_56px] [mask-image:radial-gradient(ellipse_at_70%_50%,black,transparent_70%)]"></div>
-            </div>
-            <div class="mx-auto grid max-w-6xl items-center gap-16 px-5 py-28 lg:grid-cols-[0.85fr_1.15fr]">
-                <div data-reveal>
-                    <p class="text-sm font-bold tracking-[0.2em] text-orange-300 uppercase">Admin console</p>
-                    <h2 class="mt-3 text-4xl font-black tracking-tight sm:text-5xl">Run the whole app from the web.</h2>
-                    <ul class="mt-9 space-y-5">
-                        @foreach ([
-                            ['create', 'Edit questions, tips, exercises and results — changes reach the app right away.'],
-                            ['sparkles', 'Picks a matching mascot picture as you type a new question.'],
-                            ['language', 'Built-in machine translation drafts Filipino and Cebuano for review.'],
-                            ['bar-chart', 'Results, users, CSV exports and a full activity log.'],
-                            ['shield-checkmark', 'A security center with sign-in alerts and protection status.'],
-                        ] as [$icon, $text])
-                            <li class="flex gap-4"><span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-white/10 ring-1 ring-white/15"><ion-icon name="{{ $icon }}" class="text-lg text-orange-300"></ion-icon></span><span class="pt-1.5 text-slate-200">{{ $text }}</span></li>
+        {{-- Admin console: rounded dark stage, tabbed browser that flattens into view, feature cards below --}}
+        @php
+            $host = parse_url(url('/'), PHP_URL_HOST);
+            $adminShots = [
+                ['admin-questions', 'Questions', 'list-outline', '/admin/questions', 'Admin console: the questions list'],
+                ['admin-question-edit', 'Question editor', 'create-outline', '/admin/questions/1/edit', 'Admin console: editing a question with translations'],
+                ['admin-content', 'App content', 'albums-outline', '/admin/tips', 'Admin console: app content'],
+            ];
+        @endphp
+        <section id="admin" class="scroll-mt-24 px-3 sm:px-5">
+            <div class="relative isolate overflow-hidden rounded-[2.5rem] bg-[#03121B] px-5 pt-24 pb-16 text-white sm:rounded-[3.5rem]">
+                <div class="pointer-events-none absolute inset-0 -z-10" aria-hidden="true">
+                    <div class="absolute inset-0 bg-[radial-gradient(ellipse_65%_45%_at_50%_0%,rgba(64,150,196,0.32),transparent_70%)]"></div>
+                    <div class="absolute inset-0 bg-[radial-gradient(rgba(255,255,255,0.08)_1px,transparent_1px)] [background-size:26px_26px] [mask-image:radial-gradient(ellipse_60%_45%_at_50%_15%,black,transparent_75%)]"></div>
+                    <div class="absolute top-[44rem] left-1/2 h-[52rem] w-[52rem] -translate-x-1/2 -translate-y-1/2 rounded-full border border-white/[0.05]"></div>
+                    <div class="absolute top-[44rem] left-1/2 h-[38rem] w-[38rem] -translate-x-1/2 -translate-y-1/2 rounded-full border border-brand/20"></div>
+                    <div class="absolute top-[44rem] left-1/2 h-[46rem] w-[60rem] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(closest-side,rgba(18,82,114,0.55),transparent)]"></div>
+                </div>
+
+                <div class="mx-auto max-w-3xl text-center" data-reveal>
+                    <p class="inline-flex items-center gap-3 text-sm font-bold tracking-[0.2em] text-orange-300 uppercase"><span class="h-px w-8 bg-orange-300/70"></span>Admin console<span class="h-px w-8 bg-orange-300/70"></span></p>
+                    <h2 class="mt-4 text-4xl leading-[1.05] font-black tracking-[-0.03em] sm:text-6xl">Run the whole app from the web.</h2>
+                    <p class="mx-auto mt-5 max-w-xl text-lg text-slate-300">Questions, tips, exercises and results — edited in one place and live in the app right away.</p>
+                </div>
+
+                <div class="mt-10 flex justify-center" data-reveal>
+                    <div class="inline-flex flex-wrap justify-center gap-1 rounded-2xl bg-white/[0.06] p-1.5 ring-1 ring-white/10 backdrop-blur" role="tablist" aria-label="Admin screens">
+                        @foreach ($adminShots as $index => [$image, $label, $icon, $path])
+                            <button type="button" role="tab" data-admin-tab="{{ $index }}" data-path="{{ $host.$path }}" aria-selected="{{ $index === 0 ? 'true' : 'false' }}" class="inline-flex items-center gap-2 rounded-xl px-4 py-2 text-sm font-semibold text-slate-300 transition hover:text-white aria-selected:bg-white aria-selected:text-navy aria-selected:shadow-lg">
+                                <ion-icon name="{{ $icon }}" class="text-base"></ion-icon>{{ $label }}
+                            </button>
                         @endforeach
-                    </ul>
+                    </div>
                 </div>
-                <div class="relative [perspective:1800px]" data-reveal>
-                    <figure class="overflow-hidden rounded-2xl bg-white shadow-[0_50px_100px_-30px_rgba(0,0,0,0.7)] ring-1 ring-white/10 transition duration-700 [transform:rotateY(-10deg)_rotateX(4deg)] hover:[transform:none]">
-                        <div class="flex items-center gap-1.5 bg-slate-100 px-4 py-2.5">
-                            <span class="h-2.5 w-2.5 rounded-full bg-red-400"></span><span class="h-2.5 w-2.5 rounded-full bg-amber-400"></span><span class="h-2.5 w-2.5 rounded-full bg-emerald-400"></span>
-                            <span class="ml-3 flex items-center gap-1.5 truncate rounded-md bg-white px-3 py-0.5 text-[11px] text-slate-500"><ion-icon name="lock-closed" class="text-emerald-500"></ion-icon>{{ parse_url(url('/'), PHP_URL_HOST) }}/admin</span>
+
+                <div class="group mx-auto mt-10 max-w-5xl [perspective:2200px]" data-reveal>
+                    <figure class="overflow-hidden rounded-2xl bg-[#0B2230] p-1.5 shadow-[0_60px_120px_-40px_rgba(0,0,0,0.85),0_0_0_1px_rgba(255,255,255,0.08)] transition duration-[1400ms] ease-out [transform:rotateX(14deg)_scale(0.94)] group-[.is-visible]:[transform:none] sm:rounded-3xl">
+                        <div class="flex items-center gap-3 px-3 py-2.5">
+                            <div class="flex gap-1.5"><span class="h-2.5 w-2.5 rounded-full bg-[#FF5F57]"></span><span class="h-2.5 w-2.5 rounded-full bg-[#FEBC2E]"></span><span class="h-2.5 w-2.5 rounded-full bg-[#28C840]"></span></div>
+                            <div class="mx-auto flex min-w-0 items-center gap-1.5 rounded-lg bg-white/[0.06] px-3 py-1 text-xs text-slate-400 ring-1 ring-white/10 sm:w-80 sm:justify-center">
+                                <ion-icon name="lock-closed" class="shrink-0 text-emerald-400"></ion-icon><span class="truncate" data-admin-url>{{ $host.$adminShots[0][3] }}</span>
+                            </div>
+                            <span class="hidden w-12 sm:block"></span>
                         </div>
-                        <img src="{{ $img('admin-questions') }}" alt="Admin console: questions" loading="lazy" width="1600" height="1000" class="block w-full">
-                    </figure>
-                    <figure class="animate-float-slow absolute -bottom-12 -left-10 hidden w-1/2 overflow-hidden rounded-xl shadow-2xl ring-4 ring-navy md:block">
-                        <img src="{{ $img('admin-question-edit') }}" alt="Admin console: editing a question with translations" loading="lazy" width="1600" height="1000" class="block w-full">
+                        <div class="relative overflow-hidden rounded-xl bg-white sm:rounded-2xl">
+                            @foreach ($adminShots as $index => [$image, $label, $icon, $path, $alt])
+                                <img src="{{ $img($image) }}" alt="{{ $alt }}" loading="lazy" width="1600" height="1000" data-admin-shot @class(['block w-full transition duration-500', 'absolute inset-0 h-full object-cover object-top opacity-0' => $index > 0])>
+                            @endforeach
+                        </div>
                     </figure>
                 </div>
+
+                <ul class="mx-auto mt-14 grid max-w-6xl gap-3 sm:grid-cols-2 lg:grid-cols-5">
+                    @foreach ([
+                        ['create', 'Live editing', 'Changes reach the app right away.'],
+                        ['sparkles', 'Smart pictures', 'Suggests a matching mascot as you type a question.'],
+                        ['language', 'Auto-translate', 'Drafts Filipino and Cebuano for review.'],
+                        ['bar-chart', 'Results & exports', 'Users, results, CSV exports and an activity log.'],
+                        ['shield-checkmark', 'Security center', 'Sign-in alerts and protection status.'],
+                    ] as $index => [$icon, $title, $text])
+                        <li class="group/item rounded-2xl bg-white/[0.04] p-5 ring-1 ring-white/10 transition duration-300 hover:-translate-y-1 hover:bg-white/[0.07] hover:ring-brand/40" data-reveal @style(['transition-delay: '.($index * 80).'ms'])>
+                            <span class="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-brand to-[#FF9A3D] shadow-lg shadow-brand/25 transition group-hover/item:scale-110"><ion-icon name="{{ $icon }}" class="text-lg"></ion-icon></span>
+                            <h3 class="mt-4 font-bold">{{ $title }}</h3>
+                            <p class="mt-1 text-sm leading-relaxed text-slate-400">{{ $text }}</p>
+                        </li>
+                    @endforeach
+                </ul>
             </div>
         </section>
 
@@ -483,6 +516,16 @@
             observer.unobserve(entry.target);
         }), { threshold: 0.12 });
         document.querySelectorAll('[data-reveal]').forEach((element) => observer.observe(element));
+
+        // Admin console tabs swap the screenshot and the address bar.
+        const adminTabs = [...document.querySelectorAll('[data-admin-tab]')];
+        const adminShots = [...document.querySelectorAll('[data-admin-shot]')];
+        const adminUrl = document.querySelector('[data-admin-url]');
+        adminTabs.forEach((tab, index) => tab.addEventListener('click', () => {
+            adminTabs.forEach((other) => other.setAttribute('aria-selected', String(other === tab)));
+            adminShots.forEach((shot, shotIndex) => shot.classList.toggle('opacity-0', shotIndex !== index));
+            adminUrl.textContent = tab.dataset.path;
+        }));
 
         // Screen carousel: whichever screen sits in the middle is the active one.
         const gallery = document.getElementById('gallery');
