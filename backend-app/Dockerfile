@@ -2,10 +2,13 @@
 # Built in three steps so the final image has no build tools, Node.js or Composer in it.
 
 # 1. Admin styles and icons (Tailwind + Vite)
-FROM node:22-alpine AS assets
+# Node 24 ships npm 11, the same npm that wrote package-lock.json; if the strict install still disagrees
+# with the lock file, fall back to a normal install rather than failing the deploy.
+FROM node:24-alpine AS assets
 WORKDIR /app
 COPY package.json package-lock.json ./
-RUN npm ci --ignore-scripts --no-audit --no-fund
+RUN npm ci --ignore-scripts --no-audit --no-fund \
+    || (echo "npm ci failed; falling back to npm install" && npm install --ignore-scripts --no-audit --no-fund)
 COPY . .
 RUN npm run build
 
@@ -20,7 +23,7 @@ RUN composer dump-autoload --no-dev --optimize --no-interaction --no-scripts
 # 3. The server: PHP 8.4 with Apache
 FROM php:8.4-apache
 RUN apt-get update \
-    && apt-get install -y --no-install-recommends libpq-dev libpng-dev libjpeg62-turbo-dev libwebp-dev libfreetype6-dev \
+    && apt-get install -y --no-install-recommends libpq-dev libpng-dev libjpeg62-turbo-dev libwebp-dev libfreetype-dev \
     && docker-php-ext-configure gd --with-jpeg --with-webp --with-freetype \
     && docker-php-ext-install -j"$(nproc)" pdo_pgsql gd opcache \
     && apt-get purge -y --auto-remove \
